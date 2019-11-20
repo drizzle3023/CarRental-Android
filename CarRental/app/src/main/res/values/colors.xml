@@ -5,4 +5,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorSplashBackground">#7126b4</color>
     <color name="colorSplashText">#FFFFFF</color>
+    <color name="colorOnboardingBackcolor">#97E9FF</color>
+    <color name="colorOnboardingTextColor">#323232</color>
+    <color name="colorTransparent">#dadada</color>
 </resources>

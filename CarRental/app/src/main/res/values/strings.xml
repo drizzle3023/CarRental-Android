@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">CarRental</string>
+
     <string name="splash_text">Excess Insurance for Rental Cars</string>
+
+    <string name="GOT_IT">GOT IT</string>
+    <string name="illustration_title1">Excess Insurance \n for rental cars</string>
+    <string name="illustration_subtitle1">Excess Insurance for Rental Cars</string>
+    <string name="illustration_content1">CoverEx is easy to use and only takes a few minutes to activate.</string>
+    <string name="illustration_title2">Stay covered \n and Save money</string>
+    <string name="illustration_subtitle2"></string>
+    <string name="illustration_content2">One subscription gives you multiple rental coverages </string>
+
 </resources>

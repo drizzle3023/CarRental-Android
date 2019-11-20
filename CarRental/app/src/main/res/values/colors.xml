@@ -8,4 +8,12 @@
     <color name="colorOnboardingBackcolor">#97E9FF</color>
     <color name="colorOnboardingTextColor">#323232</color>
     <color name="colorTransparent">#dadada</color>
+    <color name="colorMainBack">#EFEFEF</color>
+    <color name="colorNavigationBar">#F5FFFFFF</color>
+    <color name="colorDivider">#33000000</color>
+
+    <color name="colorCoverageTitle">#323232</color>
+    <color name="colorCoverageContent">#99A7AA</color>
+    <color name="colorCoverageBottom">#EBF8F8F8</color>
+
 </resources>

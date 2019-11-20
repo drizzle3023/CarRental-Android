@@ -11,4 +11,8 @@
     <string name="illustration_subtitle2"></string>
     <string name="illustration_content2">One subscription gives you multiple rental coverages </string>
 
+    <string name="coverageTitle">My Coverage</string>
+    <string name="coverageEmptyTitle">Rental Coverage</string>
+    <string name="coverageEmptyContent">One subscription gives you multiple rental coverages</string>
+
 </resources>

@@ -21,7 +21,7 @@ public class MyCoverageEmptyActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_onboarding);
+        setContentView(R.layout.activity_coverage_empty);
 
         buttonBack = findViewById(R.id.coverageBackbutton);
         buttonBack.setOnClickListener(new View.OnClickListener() {
@@ -32,6 +32,15 @@ public class MyCoverageEmptyActivity extends Activity {
             }
         });
 
+        buttonLearnMore = findViewById(R.id.coverageButtonLearnmore);
+        buttonLearnMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent=new Intent(MyCoverageEmptyActivity.this,SubscriptionNewActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

@@ -33,7 +33,7 @@ public class OnboardingActivity extends Activity {
             public void onClick(View view)
             {
                 Log.d("CarRental", "Gotit pressed");
-                Intent intent=new Intent(OnboardingActivity.this,MainActivity.class);
+                Intent intent=new Intent(OnboardingActivity.this,MyCoverageEmptyActivity.class);
                 startActivity(intent);
             }
         });

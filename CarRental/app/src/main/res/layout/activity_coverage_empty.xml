@@ -9,8 +9,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="100dp"
         android:background="@color/colorNavigationBar">
+
+        <ImageButton
+            android:id="@+id/coverageButtonContact"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:src="@drawable/icon_contact"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -23,16 +32,6 @@
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="17sp" />
-
-        <ImageButton
-            android:id="@+id/coverageButtonContact"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@null"
-            android:src="@drawable/icon_contact"
-            tools:srcCompat="@drawable/icon_contact" />
 
         <View
             android:id="@+id/view"
@@ -69,8 +68,7 @@
                 android:fadeScrollbars="false"
                 android:scaleX="1"
                 android:scaleY="1"
-                android:src="@drawable/coverage_backtoprevious"
-                tools:srcCompat="@drawable/coverage_backtoprevious" />
+                android:src="@drawable/coverage_backtoprevious"/>
 
             <TextView
                 android:id="@+id/textView3"
@@ -119,8 +117,7 @@
             android:layout_marginLeft="7dp"
             android:layout_marginTop="6dp"
             android:background="@null"
-            android:src="@drawable/help"
-            tools:srcCompat="@drawable/help" />
+            android:src="@drawable/help"/>
 
     </RelativeLayout>
 
@@ -190,7 +187,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="2dp"
                 android:background="@null"
-                tools:srcCompat="@drawable/icon_my_coverage" />
+                android:src="@drawable/icon_my_coverage" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -217,7 +214,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="2dp"
                 android:background="@null"
-                tools:srcCompat="@drawable/icon_profile" />
+                android:src="@drawable/icon_profile" />
 
             <TextView
                 android:id="@+id/textView7"

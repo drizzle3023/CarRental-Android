@@ -16,4 +16,9 @@
     <color name="colorCoverageContent">#99A7AA</color>
     <color name="colorCoverageBottom">#EBF8F8F8</color>
 
+    <color name="colorSubscriptionTitle">#7126b4</color>
+    <color name="colorSubscriptionWhatYouGet">#7227B5</color>
+    <color name="colorSubscriptionContent">#323232</color>
+
+
 </resources>

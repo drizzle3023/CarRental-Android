@@ -33,12 +33,22 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                 finish();
             }
         });
+
+        Button buttonSubscribe = (Button) findViewById(R.id.subscribe_button);
+        buttonSubscribe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent=new Intent(SubscriptionNewActivity.this,SignUpLoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position,long id) {
-        Toast.makeText(getApplicationContext(), countryNames[position], Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), countryNames[position], Toast.LENGTH_LONG).show();
     }
 
     @Override

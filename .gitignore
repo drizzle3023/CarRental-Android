@@ -5,3 +5,6 @@ CarRental/.idea/gradle.xml
 CarRental/.idea/misc.xml
 CarRental/.idea/runConfigurations.xml
 CarRental/.idea/vcs.xml
+*.apk
+CarRental/app/release/output.json
+deeds.postman_collection.json

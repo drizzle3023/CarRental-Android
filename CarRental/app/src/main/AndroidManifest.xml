@@ -20,6 +20,8 @@
         <activity android:name=".OnboardingActivity"/>
         <activity android:name=".MyCoverageEmptyActivity"/>
         <activity android:name=".SubscriptionNewActivity"/>
+        <activity android:name=".SignUpLoginActivity"/>
+
     </application>
 
 </manifest>

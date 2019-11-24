@@ -20,5 +20,9 @@
     <color name="colorSubscriptionWhatYouGet">#7227B5</color>
     <color name="colorSubscriptionContent">#323232</color>
 
+    <color name="colorNormalBlue">#7126b4</color>
+    <color name="colorNormalText">#323232</color>
+
+
 
 </resources>

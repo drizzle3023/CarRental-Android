@@ -15,4 +15,7 @@
     <string name="coverageEmptyTitle">Rental Coverage</string>
     <string name="coverageEmptyContent">One subscription gives you multiple rental coverages</string>
 
+    <string name="historyTitle">History</string>
+    <string name="emptyHistory">Your coverage activity ( Coverages and claims ) will show up here.</string>
+
 </resources>

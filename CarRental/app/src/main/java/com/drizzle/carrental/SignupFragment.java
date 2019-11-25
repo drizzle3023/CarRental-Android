@@ -10,17 +10,17 @@ import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.mukesh.countrypicker.Country;
-import com.mukesh.countrypicker.CountryPicker;
+//import com.mukesh.countrypicker.Country;
+//import com.mukesh.countrypicker.CountryPicker;
 
-import butterknife.BindView;
+//import butterknife.BindView;
 
 public class SignupFragment extends Fragment {
 
-    private Country selectedCountry = null;
+    //private Country selectedCountry = null;
 
-    @BindView(R.id.text_country_prefix)
-    TextView countryPrefixTextView;
+//    @BindView(R.id.text_country_prefix)
+//    TextView countryPrefixTextView;
 
     boolean ifAgreeTerm = false;
     private Button createAccountButton;
@@ -86,13 +86,13 @@ public class SignupFragment extends Fragment {
 //    }
 
     void updateCountryViewInfo() {
-        if (this.selectedCountry == null) {
-            return;
-        }
-
-        this.countryPrefixTextView.setText("");
-
-        this.countryPrefixTextView.setText(this.selectedCountry.getDialCode());
+//        if (this.selectedCountry == null) {
+//            return;
+//        }
+//
+//        this.countryPrefixTextView.setText("");
+//
+//        this.countryPrefixTextView.setText(this.selectedCountry.getDialCode());
 
 
     }

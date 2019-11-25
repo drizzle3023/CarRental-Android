@@ -22,7 +22,7 @@
 
     <color name="colorNormalBlue">#7126b4</color>
     <color name="colorNormalText">#323232</color>
-
+    <color name="colorNormalTitle">#000000</color>
 
 
 </resources>

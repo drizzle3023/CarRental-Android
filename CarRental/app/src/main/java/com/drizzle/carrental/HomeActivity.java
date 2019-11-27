@@ -14,27 +14,37 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class CoverageActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     protected Fragment curFragment;
+    protected BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coverage_ready);
 
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
+
+
+        showFragment(R.id.frame_coverage, CoverageFragment.class);
+
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        if (menuItem.getItemId() == R.id.frame_history) {
-            //showFragment(menuItem.getItemId(), HistoryFragment.class);
+        if (menuItem.getItemId() == R.id.navigation_history) {
+            showFragment(R.id.frame_history, HistoryFragment.class);
         }
-        else if (menuItem.getItemId() == R.id.frame_coverage) {
-            //showFragment(menuItem.getItemId(), CoverageFragment.class);
+        else if (menuItem.getItemId() == R.id.navigation_coverage) {
+            showFragment(R.id.frame_coverage, CoverageFragment.class);
         }
-        else if (menuItem.getItemId() == R.id.frame_profile) {
-            //showFragment(menuItem.getItemId(), CoverageFragment.class);
+        else if (menuItem.getItemId() == R.id.navigation_profile) {
+            showFragment(R.id.frame_profile, ProfileFragment.class);
         }
 
         return true;

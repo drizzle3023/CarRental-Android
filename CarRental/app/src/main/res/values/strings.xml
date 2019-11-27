@@ -18,4 +18,7 @@
     <string name="historyTitle">History</string>
     <string name="emptyHistory">Your coverage activity ( Coverages and claims ) will show up here.</string>
 
+    <string name="accountTitle">Account</string>
+
+
 </resources>

@@ -30,31 +30,29 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         loginButton = (Button) view.findViewById(R.id.login_button);
-        countryNumber = (TextView)  view.findViewById(R.id.text_country_prefix);
+        countryNumber = (TextView) view.findViewById(R.id.text_country_prefix);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
 
-                //                Intent intent=new Intent(getContext(),SignUpLoginActivity.class);
+                Intent intent = new Intent(getContext(), HomeActivity.class);
 
-//                startActivity(intent);
+                startActivity(intent);
 
             }
         });
 
         countryNumber.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                CountryPicker.Builder builder = new CountryPicker.Builder().with(getActivity()).listener (new OnCountryPickerListener() {
+            public void onClick(View view) {
+                CountryPicker.Builder builder = new CountryPicker.Builder().with(getActivity()).listener(new OnCountryPickerListener() {
                     @Override
                     public void onSelectCountry(Country country) {
                         selectedCountry = country;
 
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        if (imm.isAcceptingText()){
+                        if (imm.isAcceptingText()) {
                             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                         }
 

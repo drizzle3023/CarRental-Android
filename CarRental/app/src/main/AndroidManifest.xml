@@ -22,7 +22,7 @@
         <activity android:name=".SubscriptionNewActivity"/>
         <activity android:name=".SignUpLoginActivity"/>
         <activity android:name=".VerifyCodeActivity"/>
-        <activity android:name=".CoverageActivity"/>
+        <activity android:name=".HomeActivity"/>
         <activity android:name=".SubscribeSuccessActivity"/>
         <activity android:name=".PaymentActivity"/>
 

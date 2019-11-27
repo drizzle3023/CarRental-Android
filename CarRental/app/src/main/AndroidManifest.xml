@@ -23,6 +23,8 @@
         <activity android:name=".SignUpLoginActivity"/>
         <activity android:name=".VerifyCodeActivity"/>
         <activity android:name=".CoverageActivity"/>
+        <activity android:name=".SubscribeSuccessActivity"/>
+        <activity android:name=".PaymentActivity"/>
 
     </application>
 

@@ -29,7 +29,7 @@ public class VerifyCodeActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(VerifyCodeActivity.this, CoverageActivity.class);
+                Intent intent = new Intent(VerifyCodeActivity.this, PaymentActivity.class);
                 startActivity(intent);
 
             }

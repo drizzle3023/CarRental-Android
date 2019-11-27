@@ -80,7 +80,7 @@
         android:itemBackground="@null"
         android:textColor="@color/colorOtpTextvalid"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:textSize="21sp"
+        android:textSize="24sp"
         app:hideLineWhenFilled="false"
         app:itemCount="4"
         app:itemSpacing="12dp"

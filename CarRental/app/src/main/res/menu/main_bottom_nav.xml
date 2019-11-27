@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_history"
         android:icon="@drawable/icon_history"
         android:title="History" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_coverage"
         android:icon="@drawable/icon_my_coverage"
         android:title="My Coverage"/>
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/icon_profile"
         android:title="Profile" />
 </menu>

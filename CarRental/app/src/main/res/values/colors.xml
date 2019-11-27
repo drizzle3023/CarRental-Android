@@ -24,5 +24,13 @@
     <color name="colorNormalText">#323232</color>
     <color name="colorNormalTitle">#000000</color>
 
+    <color name="colorOtpTextInvalid">#AAB5B8</color>
+    <color name="colorOtpTextvalid">#000000</color>
+    <color name="colorOtpLineInvalid">#CDD7D9</color>
+    <color name="colorOtpLineValid">#CDD7D9</color>
+
+
+
+
 
 </resources>

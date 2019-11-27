@@ -17,6 +17,8 @@ public class SignUpLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_login);
 
+        showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
+
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.signup_login_radiogroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {

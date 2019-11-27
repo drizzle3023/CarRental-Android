@@ -6,48 +6,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <EditText
         android:id="@+id/signup_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="36dp"
         android:layout_marginTop="35dp"
         android:layout_marginRight="36dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="15dp"
         android:fontFamily="@font/sf_pro_display_regular"
         android:hint="Name"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 
-    <View
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginRight="36dp"
-        android:layout_marginBottom="25dp"
-        android:background="@color/colorDivider" />
-
-    <TextView
+    <EditText
         android:id="@+id/email_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="36dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="15dp"
         android:fontFamily="@font/sf_pro_display_regular"
         android:hint="Email"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
-
-    <View
-        android:id="@+id/view4"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginRight="36dp"
-        android:layout_marginBottom="30dp"
-        android:background="@color/colorDivider" />
 
     <TextView
         android:id="@+id/textView10"
@@ -146,7 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="36dp"
-        android:background="@drawable/inactive_createaccount"
+        android:background="@drawable/inactive_button"
         android:fontFamily="@font/sf_pro_display_regular"
         android:text="Create account"
         android:textAllCaps="false"

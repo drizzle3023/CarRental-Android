@@ -21,6 +21,8 @@
         <activity android:name=".MyCoverageEmptyActivity"/>
         <activity android:name=".SubscriptionNewActivity"/>
         <activity android:name=".SignUpLoginActivity"/>
+        <activity android:name=".VerifyCodeActivity"/>
+        <activity android:name=".CoverageActivity"/>
 
     </application>
 

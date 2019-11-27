@@ -27,8 +27,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.navigation:navigation-fragment:2.1.0'
     implementation 'androidx.navigation:navigation-ui:2.1.0'
-    //implementation 'com.jakewharton:butterknife:10.2.0'
 
-    //implementation 'com.github.mukeshsolanki:country-picker-android:2.0.1'
+    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.0.3'
+    implementation 'com.github.mukeshsolanki:country-picker-android:2.0.1'
+
 
 }

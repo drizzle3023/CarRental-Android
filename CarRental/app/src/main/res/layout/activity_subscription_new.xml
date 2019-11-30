@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="17dp"
         android:layout_marginRight="17dp"
-        android:background="@drawable/coverage_radius_content"
+        android:background="@drawable/subscription_description_back"
         android:orientation="vertical">
 
         <TextView

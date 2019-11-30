@@ -11,14 +11,18 @@
     <string name="illustration_subtitle2"></string>
     <string name="illustration_content2">One subscription gives you multiple rental coverages </string>
 
-    <string name="coverageTitle">My Coverage</string>
-    <string name="coverageEmptyTitle">Rental Coverage</string>
-    <string name="coverageEmptyContent">One subscription gives you multiple rental coverages</string>
+    <string name="coverage_title">My Coverage</string>
+    <string name="coverage_empty_title">Rental Coverage</string>
+    <string name="coverage_empty_content">One subscription gives you multiple rental coverages</string>
 
-    <string name="historyTitle">History</string>
-    <string name="emptyHistory">Your coverage activity ( Coverages and claims ) will show up here.</string>
+    <string name="history_title">History</string>
+    <string name="empty_history">Your coverage activity ( Coverages and claims ) will show up here.</string>
 
-    <string name="accountTitle">Account</string>
+    <string name="account_title">Account</string>
+    <string name="record_car_description">Record a video around the car to show the current state of the vehicle. This will allow for faster responses in the future if you need to submit a claim. </string>
+
+    <string name="add_damage_image_description">e.g.Front glass broken and front bumper</string>
+
 
 
 </resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/coverageBackbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="46dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:cropToPadding="false"
+            android:fadeScrollbars="false"
+            android:scaleX="1"
+            android:scaleY="1"
+            android:src="@drawable/payment_success"/>
+
+        <TextView
+            android:id="@+id/subscriptionNewDescriptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="35dp"
+            android:paddingLeft="35dp"
+            android:paddingRight="49dp"
+            android:textAlignment="center"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="Your claim was successfully delivered"
+            android:textAllCaps="false"
+            android:textColor="@color/colorNormalText"
+            android:textSize="20sp"/>
+
+
+        <TextView
+            android:id="@+id/subscriptionNewDescription3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="33dp"
+            android:layout_marginRight="49dp"
+            android:fontFamily="@font/sf_pro_display_regular"
+            android:text="As soon as possible we will inform you of new developments"
+            android:textAlignment="center"
+            android:textColor="@color/colorSubscriptionContent"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -22,4 +22,39 @@
 
     </style>
 
+    <style name="AppTheme.SubtitleTextView">
+
+        <item name="android:textColor">@color/colorNormalBlue</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/sf_pro_display_bold</item>
+
+    </style>
+
+    <style name="AppTheme.StartCoverageButtonLabel">
+
+        <item name="android:textColor">@color/colorNormalBlue</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+
+    </style>
+
+
+    <style name="AppTheme.ProfileTipLabel">
+
+        <item name="android:textColor">@color/colorNormalBlue</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
+
+    </style>
+
+    <style name="AppTheme.DescriptionTextView">
+
+        <item name="android:textColor">@color/colorDescriptionTextView</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+
+    </style>
+
+
 </resources>

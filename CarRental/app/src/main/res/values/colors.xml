@@ -29,8 +29,9 @@
     <color name="colorOtpLineInvalid">#CDD7D9</color>
     <color name="colorOtpLineValid">#CDD7D9</color>
 
+    <color name="colorDescriptionTextView">#99A0B0</color>
 
-
+    <color name="colorSubmitclaimSliderDisabled">#D8D8D8</color>
 
 
 </resources>

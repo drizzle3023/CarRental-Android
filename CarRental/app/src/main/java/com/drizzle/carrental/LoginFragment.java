@@ -46,6 +46,7 @@ public class LoginFragment extends Fragment {
         countryNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 CountryPicker.Builder builder = new CountryPicker.Builder().with(getActivity()).listener(new OnCountryPickerListener() {
                     @Override
                     public void onSelectCountry(Country country) {
@@ -59,8 +60,10 @@ public class LoginFragment extends Fragment {
                         updateCountryViewInfo();
                     }
                 });
+
                 CountryPicker picker = builder.build();
                 picker.showDialog(getActivity());
+
             }
         });
 

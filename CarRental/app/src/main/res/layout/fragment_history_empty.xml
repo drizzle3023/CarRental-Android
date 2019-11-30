@@ -29,7 +29,7 @@
         android:fontFamily="@font/sf_pro_display_regular"
         android:textColor="@color/colorNormalText"
         android:textAlignment="center"
-        android:text="@string/emptyHistory"
+        android:text="@string/empty_history"
         android:textSize="15sp" />
 
     <Space

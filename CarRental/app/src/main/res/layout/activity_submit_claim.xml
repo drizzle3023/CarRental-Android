@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/colorOnboardingBackcolor"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Space
+                android:id="@+id/button_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="Submit Claim"
+                android:textColor="@color/colorCoverageTitle"
+                android:textSize="17sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="9dp"
+            android:background="@null"
+            android:src="@drawable/back" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.warkiz.widget.IndicatorSeekBar
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="42dp"
+            app:isb_indicator_color="@color/colorNormalBlue"
+            app:isb_indicator_text_color="#D8D8D8"
+            app:isb_indicator_text_size="18sp"
+            app:isb_max="4"
+            app:isb_min="1"
+            app:isb_only_thumb_draggable="false"
+            app:isb_progress="2"
+            app:isb_seek_smoothly="true"
+            app:isb_show_indicator="rounded_rectangle"
+            app:isb_show_tick_marks_type="oval"
+            app:isb_show_tick_texts="false"
+            app:isb_thumb_color="@color/colorNormalBlue"
+            app:isb_thumb_size="8dp"
+            app:isb_tick_marks_size="8dp"
+            app:isb_tick_texts_size="15sp"
+            app:isb_ticks_count="4"
+            app:isb_track_background_size="2dp"
+            app:isb_track_progress_color="#D8D8D8"
+            app:isb_track_progress_size="2dp" />
+
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="29dp"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/sf_pro_display_semibold"
+            android:textSize="17sp"
+            android:text="Start by adding a photo of your rental car contract" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/frame_add_car_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:id="@+id/frame_select_damaged_zone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@+id/frame_add_damaged_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@+id/frame_add_personal_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginRight="27dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/gradient_button"
+        android:text="Next"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="17sp" />
+
+
+</LinearLayout>

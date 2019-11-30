@@ -1,10 +1,7 @@
 package com.drizzle.carrental;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     protected Fragment curFragment;
     protected BottomNavigationView bottomNavigationView;
@@ -29,22 +26,39 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
 
-
-        showFragment(R.id.frame_coverage, CoverageFragment.class);
+        if (((MyApplication) this.getApplication()).isLoggedIn()) {
+            showFragment(R.id.frame_coverage, CoverageFragment.class);
+        }
+        else {
+            showFragment(R.id.frame_coverage, CoverageEmptyFragment.class);
+        }
 
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        if (menuItem.getItemId() == R.id.navigation_history) {
-            showFragment(R.id.frame_history, HistoryFragment.class);
+        if (((MyApplication) this.getApplication()).isLoggedIn()) {
+
+            if (menuItem.getItemId() == R.id.navigation_history) {
+                showFragment(R.id.frame_history, HistoryFragment.class);
+            } else if (menuItem.getItemId() == R.id.navigation_coverage) {
+                showFragment(R.id.frame_coverage, CoverageFragment.class);
+            } else if (menuItem.getItemId() == R.id.navigation_profile) {
+                showFragment(R.id.frame_profile, ProfileFragment.class);
+            }
+
         }
-        else if (menuItem.getItemId() == R.id.navigation_coverage) {
-            showFragment(R.id.frame_coverage, CoverageFragment.class);
-        }
-        else if (menuItem.getItemId() == R.id.navigation_profile) {
-            showFragment(R.id.frame_profile, ProfileFragment.class);
+        else {
+
+            if (menuItem.getItemId() == R.id.navigation_history) {
+                showFragment(R.id.frame_history, HistoryFragment.class);
+            } else if (menuItem.getItemId() == R.id.navigation_coverage) {
+                showFragment(R.id.frame_coverage, CoverageEmptyFragment.class);
+            } else if (menuItem.getItemId() == R.id.navigation_profile) {
+                showFragment(R.id.frame_profile, ProfileFragment.class);
+            }
+
         }
 
         return true;

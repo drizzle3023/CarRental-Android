@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".MyApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -18,7 +19,7 @@
         </activity>
         <activity android:name=".MainActivity"/>
         <activity android:name=".OnboardingActivity"/>
-        <activity android:name=".MyCoverageEmptyActivity"/>
+        <activity android:name=".CoverageEmptyFragment"/>
         <activity android:name=".SubscriptionNewActivity"/>
         <activity android:name=".SignUpLoginActivity"/>
         <activity android:name=".VerifyCodeActivity"/>

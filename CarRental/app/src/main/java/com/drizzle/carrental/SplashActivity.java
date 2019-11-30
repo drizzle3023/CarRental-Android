@@ -13,6 +13,8 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        ((MyApplication) getApplication()).setLoggedIn(false);
+
         handler=new Handler();
         handler.postDelayed(new Runnable() {
             @Override

@@ -36,6 +36,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                ((MyApplication) getActivity().getApplication()).setLoggedIn(true);
+
                 Intent intent = new Intent(getContext(), HomeActivity.class);
 
                 startActivity(intent);

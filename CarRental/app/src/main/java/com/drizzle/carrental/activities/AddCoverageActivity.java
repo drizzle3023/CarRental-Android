@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.drizzle.carrental.R;
 
 public class AddCoverageActivity extends Activity implements View.OnClickListener {
 

@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,6 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.drizzle.carrental.fragments.CoverageEmptyFragment;
+import com.drizzle.carrental.fragments.CoverageFragment;
+import com.drizzle.carrental.fragments.HistoryFragment;
+import com.drizzle.carrental.fragments.ProfileFragmentFull;
+import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.fragments.ProfileFragmentEmpty;
+import com.drizzle.carrental.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -26,7 +33,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
 
-        if (((MyApplication) this.getApplication()).isLoggedIn()) {
+        if (((Globals) this.getApplication()).isLoggedIn()) {
             showFragment(R.id.frame_coverage, CoverageFragment.class);
         }
         else {
@@ -38,14 +45,14 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        if (((MyApplication) this.getApplication()).isLoggedIn()) {
+        if (((Globals) this.getApplication()).isLoggedIn()) {
 
             if (menuItem.getItemId() == R.id.navigation_history) {
                 showFragment(R.id.frame_history, HistoryFragment.class);
             } else if (menuItem.getItemId() == R.id.navigation_coverage) {
                 showFragment(R.id.frame_coverage, CoverageFragment.class);
             } else if (menuItem.getItemId() == R.id.navigation_profile) {
-                showFragment(R.id.frame_profile, ProfileFragment.class);
+                showFragment(R.id.frame_profile, ProfileFragmentFull.class);
             }
 
         }
@@ -56,7 +63,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             } else if (menuItem.getItemId() == R.id.navigation_coverage) {
                 showFragment(R.id.frame_coverage, CoverageEmptyFragment.class);
             } else if (menuItem.getItemId() == R.id.navigation_profile) {
-                showFragment(R.id.frame_profile, ProfileFragment.class);
+                showFragment(R.id.frame_profile, ProfileFragmentEmpty.class);
             }
 
         }

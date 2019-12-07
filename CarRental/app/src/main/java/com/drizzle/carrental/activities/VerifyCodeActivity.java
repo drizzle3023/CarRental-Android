@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 
+import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.R;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
 
@@ -29,7 +31,7 @@ public class VerifyCodeActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                ((MyApplication) getApplication()).setLoggedIn(true);
+                ((Globals) getApplication()).setLoggedIn(true);
 
                 Intent intent = new Intent(VerifyCodeActivity.this, PaymentActivity.class);
                 startActivity(intent);

@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+
+import com.drizzle.carrental.R;
 
 public class OnboardingActivity extends Activity {
 

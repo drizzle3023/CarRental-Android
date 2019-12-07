@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,14 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class HistoryEmptyFragment extends Fragment {
+import com.drizzle.carrental.R;
+
+public class ProfileFragmentFull extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_history_empty, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile_full, container, false);
         return view;
+
     }
 }
-

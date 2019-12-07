@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.R;
+import com.drizzle.carrental.activities.HomeActivity;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
@@ -36,7 +39,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                ((MyApplication) getActivity().getApplication()).setLoggedIn(true);
+                ((Globals) getActivity().getApplication()).setLoggedIn(true);
 
                 Intent intent = new Intent(getContext(), HomeActivity.class);
 

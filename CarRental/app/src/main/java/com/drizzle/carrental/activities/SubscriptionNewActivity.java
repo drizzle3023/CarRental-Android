@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.*;
 import android.view.View;
+
+import com.drizzle.carrental.components.CustomAdapter;
+import com.drizzle.carrental.R;
 
 public class SubscriptionNewActivity extends Activity implements AdapterView.OnItemSelectedListener {
 

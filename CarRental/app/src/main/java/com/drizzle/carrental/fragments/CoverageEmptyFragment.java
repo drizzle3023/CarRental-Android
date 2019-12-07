@@ -1,4 +1,4 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.widget.*;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.drizzle.carrental.R;
+import com.drizzle.carrental.activities.SubscriptionNewActivity;
 
 public class CoverageEmptyFragment extends Fragment {
 
@@ -40,7 +43,7 @@ public class CoverageEmptyFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                Intent intent=new Intent(getActivity(),SubscriptionNewActivity.class);
+                Intent intent=new Intent(getActivity(), SubscriptionNewActivity.class);
                 startActivity(intent);
             }
         });

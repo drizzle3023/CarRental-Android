@@ -33,5 +33,8 @@
 
     <color name="colorSubmitclaimSliderDisabled">#D8D8D8</color>
 
+    <color name="colorProfileButton">#7227B5</color>
+
+
 
 </resources>

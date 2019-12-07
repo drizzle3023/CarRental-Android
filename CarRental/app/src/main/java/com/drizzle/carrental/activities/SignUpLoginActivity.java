@@ -1,36 +1,47 @@
-package com.drizzle.carrental;
+package com.drizzle.carrental.activities;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.*;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class HistoryFragment extends Fragment {
+import com.drizzle.carrental.fragments.LoginFragment;
+import com.drizzle.carrental.R;
+import com.drizzle.carrental.fragments.SignupFragment;
+
+public class SignUpLoginActivity extends AppCompatActivity {
 
     protected Fragment curFragment;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_signup_login);
 
-        View view = inflater.inflate(R.layout.fragment_history, container, false);
-        showFragment(R.id.framecontainer_history_empty, HistoryEmptyFragment.class, null);
+        showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
 
-        return view;
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.signup_login_radiogroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                if (checkedId == R.id.radio_signup) {
+                    showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
+                }
+                else {
+                    showFragment(R.id.frame_login_frag_container, LoginFragment.class);
+                }
+            }
+        });
 
     }
 
-
     public void showFragment(int layoutId, Class fragClass) {
-
         showFragment(layoutId, fragClass, null);
-
     }
 
     public void showFragment(int layoutId, Class fragClass, Bundle bundle) {
@@ -41,7 +52,7 @@ public class HistoryFragment extends Fragment {
         if (curFragment != null && fragClass.isInstance(curFragment))
             return;
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
@@ -67,8 +78,6 @@ public class HistoryFragment extends Fragment {
 
         curFragment = fragment;
         fragmentTransaction.commit();
-
     }
-
 
 }

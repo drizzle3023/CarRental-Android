@@ -2,7 +2,7 @@ package com.drizzle.carrental.globals;
 
 import android.app.Application;
 
-import com.drizzle.carrental.components.MyProfile;
+import com.drizzle.carrental.models.MyProfile;
 
 import lombok.Getter;
 import lombok.Setter;

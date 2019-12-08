@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="23dp">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/textView2"
@@ -34,22 +33,33 @@
         android:text="Profile" />
 
     <TextView
-        android:id="@+id/link_login"
+        android:id="@+id/textview_name"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        style="@style/AppTheme.ProfileButton"
+        style="@style/AppTheme.ProfileItem"
         android:layout_marginLeft="23dp"
-        android:text="Login" />
+        android:text="John" />
 
     <TextView
-        android:id="@+id/link_signup"
+        android:id="@+id/textview_phonenumber"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        style="@style/AppTheme.ProfileItem"
+        android:layout_marginLeft="23dp"
+        android:paddingTop="5dp"
+        android:text="+86 13522171058" />
+
+    <TextView
+        android:id="@+id/link_add_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:layout_marginLeft="23dp"
         style="@style/AppTheme.ProfileButton"
-        android:text="Sign up" />
+        android:paddingTop="5dp"
+        android:text="+ Add email" />
 
     <View
         android:id="@+id/view7"
@@ -71,12 +81,22 @@
         android:text="Support" />
 
     <TextView
-        android:id="@+id/link_faqs"
+        android:id="@+id/link_feedback"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         style="@style/AppTheme.ProfileButton"
         android:layout_marginLeft="23dp"
+        android:text="Feedback" />
+
+    <TextView
+        android:id="@+id/link_faqs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        style="@style/AppTheme.ProfileButton"
+        android:layout_marginLeft="23dp"
+        android:paddingTop="5dp"
         android:text="FAQs" />
 
     <View
@@ -100,7 +120,7 @@
     <TextView
         android:id="@+id/link_card_no"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         style="@style/AppTheme.ProfileButton"
         android:layout_marginLeft="23dp"
@@ -127,7 +147,7 @@
     <TextView
         android:id="@+id/link_permissions"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         style="@style/AppTheme.ProfileButton"
         android:layout_marginLeft="23dp"
@@ -154,10 +174,20 @@
     <TextView
         android:id="@+id/link_about"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         style="@style/AppTheme.ProfileButton"
         android:layout_marginLeft="23dp"
         android:text="About" />
+
+    <TextView
+        android:id="@+id/link_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        style="@style/AppTheme.ProfileButton"
+        android:layout_marginLeft="23dp"
+        android:paddingTop="5dp"
+        android:text="Log out" />
 
 </LinearLayout>

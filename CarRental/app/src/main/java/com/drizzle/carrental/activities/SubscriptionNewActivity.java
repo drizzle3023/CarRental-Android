@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.widget.*;
 import android.view.View;
 
-import com.drizzle.carrental.components.CustomAdapter;
+import com.drizzle.carrental.components.CustomAdapterSubscriptionCarTypeSelect;
 import com.drizzle.carrental.R;
 
 public class SubscriptionNewActivity extends Activity implements AdapterView.OnItemSelectedListener {
@@ -19,13 +19,14 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription_new);
 
         Spinner spinner = (Spinner) findViewById(R.id.subscriptionCarTypeSpinner);
         spinner.setOnItemSelectedListener(this);
 
-        CustomAdapter customAdapter=new CustomAdapter(getApplicationContext(),flags,countryNames);
+        CustomAdapterSubscriptionCarTypeSelect customAdapter=new CustomAdapterSubscriptionCarTypeSelect(getApplicationContext(),flags,countryNames);
         spinner.setAdapter(customAdapter);
 
         buttonBack = findViewById(R.id.subscriptionNewBack);
@@ -46,6 +47,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                 startActivity(intent);
             }
         });
+        
     }
 
     //Performing action onItemSelected and onNothing selected

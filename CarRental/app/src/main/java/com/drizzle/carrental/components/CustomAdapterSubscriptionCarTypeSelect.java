@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import com.drizzle.carrental.R;
 
-public class CustomAdapter extends BaseAdapter {
+public class CustomAdapterSubscriptionCarTypeSelect extends BaseAdapter {
     Context context;
     int flags[];
     String[] countryNames;
     LayoutInflater inflter;
 
-    public CustomAdapter(Context applicationContext, int[] flags, String[] countryNames) {
+    public CustomAdapterSubscriptionCarTypeSelect(Context applicationContext, int[] flags, String[] countryNames) {
         this.context = applicationContext;
         this.flags = flags;
         this.countryNames = countryNames;

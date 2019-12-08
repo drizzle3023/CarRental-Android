@@ -22,7 +22,8 @@
     <string name="record_car_description">Record a video around the car to show the current state of the vehicle. This will allow for faster responses in the future if you need to submit a claim. </string>
 
     <string name="add_damage_image_description">e.g.Front glass broken and front bumper</string>
-
+    <string name="one_claim_active">1 Claim Active</string>
+    <string name="one_claim_resolved">1 Claim Resolved</string>
 
 
 </resources>

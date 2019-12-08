@@ -66,6 +66,16 @@
 
     </style>
 
+    <style name="AppTheme.ProfileItem">
+
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+
+    </style>
+
+
     <style name="AppTheme.ProfileCategoryCaption">
 
         <item name="android:textColor">@android:color/black</item>
@@ -74,6 +84,44 @@
         <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
 
     </style>
+
+
+    <style name="AppTheme.HistoryRowItemTitle">
+
+        <item name="android:textColor">@color/colorNormalText</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+
+    </style>
+
+    <style name="AppTheme.HistoryRowItemState">
+
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+
+    </style>
+
+    <style name="AppTheme.HistoryRowItemDisabled">
+
+        <item name="android:textColor">@color/colorPlaceHolder</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+
+    </style>
+
+    <style name="AppTheme.HistoryRowItemEnabled">
+
+        <item name="android:textColor">@color/colorNormalBlue</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+
+    </style>
+
 
 
 </resources>

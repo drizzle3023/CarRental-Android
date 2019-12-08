@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
@@ -23,19 +24,11 @@
         android:layout_alignParentBottom="true"
         android:background="@color/colorDivider" />
 
-    <FrameLayout
+    <ListView
+        android:id="@+id/list_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        />
 
-        <FrameLayout
-            android:id="@+id/framecontainer_history_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <FrameLayout
-            android:id="@+id/framecontainer_history_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
 
 </LinearLayout>

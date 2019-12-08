@@ -1,4 +1,4 @@
-package com.drizzle.carrental.components;
+package com.drizzle.carrental.models;
 
 import java.util.GregorianCalendar;
 
@@ -21,6 +21,6 @@ public class MyProfile {
 
     private String address;
 
-    private String creditCard;
+    private String creditCardNo;
 
 }

@@ -6,19 +6,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.drizzle.carrental.components.MyProfile;
+import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
 
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class SplashActivity extends Activity {
 
-    Globals globalInfos = ((Globals) this.getApplication());
 
     Handler handler;
     @Override
@@ -33,6 +29,7 @@ public class SplashActivity extends Activity {
         SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         String strApiToken = prefs.getString(Constants.SHARED_PREFERENCE_KEY_API_TOKEN, null);
 
+        strApiToken = "apitoken";
         if (strApiToken != null) {
 
             //check validation of API token
@@ -49,9 +46,10 @@ public class SplashActivity extends Activity {
             profile.setAddress("Beijing, China");
             profile.setPhoneNumber("+8613522171058");
             profile.setBirthday(new GregorianCalendar(1996, 1, 1));
-            profile.setCreditCard("4242 4242 4242");
+            profile.setCreditCardNo("4242 4242 4242");
 
             ((Globals) this.getApplication()).setLoggedIn(true);
+            ((Globals) this.getApplication()).setProfile(profile);
 
             handler=new Handler();
             handler.postDelayed(new Runnable() {

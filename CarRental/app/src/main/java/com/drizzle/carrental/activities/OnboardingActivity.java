@@ -22,6 +22,7 @@ public class OnboardingActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
@@ -59,24 +60,30 @@ public class OnboardingActivity extends Activity {
                 updateContent();
             }
         });
+        
     }
 
     private void updateContent() {
+
         if (dotPage == 1) {
+
             buttonDot.setImageResource(R.drawable.dot_2);
             buttonIllustrator.setImageResource(R.drawable.illustration_pig);
             textIllustrationTitle.setText(R.string.illustration_title1);
             textIllustrationSubTitle.setText(R.string.illustration_subtitle1);
             textIllustrationContent.setText(R.string.illustration_content1);
             dotPage = 2;
+
         }
         else {
+
             buttonDot.setImageResource(R.drawable.dot_1);
             buttonIllustrator.setImageResource(R.drawable.illustration_car);
             textIllustrationTitle.setText(R.string.illustration_title2);
             textIllustrationSubTitle.setText(R.string.illustration_subtitle2);
             textIllustrationContent.setText(R.string.illustration_content2);
             dotPage = 1;
+
         }
     }
 }

@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.SubscriptionNewActivity;
 
-public class CoverageEmptyFragment extends Fragment {
+public class CoverageFragmentEmpty extends Fragment {
 
     private ImageButton buttonBack;
     private ImageButton buttonContact;

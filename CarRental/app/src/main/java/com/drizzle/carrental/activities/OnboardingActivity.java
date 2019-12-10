@@ -11,6 +11,8 @@ import com.drizzle.carrental.R;
 
 public class OnboardingActivity extends Activity {
 
+    public static int RESULT_CODE_BACK = 100;
+
     private TextView buttonGotit;
     private ImageButton buttonIllustrator;
     private ImageButton buttonDot;
@@ -63,6 +65,8 @@ public class OnboardingActivity extends Activity {
         
     }
 
+
+
     private void updateContent() {
 
         if (dotPage == 1) {
@@ -85,5 +89,10 @@ public class OnboardingActivity extends Activity {
             dotPage = 1;
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 }

@@ -17,7 +17,7 @@ public class SubscribeSuccessActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscribesuccess);
 
-        buttonGotIt = findViewById(R.id.subscribe_button);
+        buttonGotIt = findViewById(R.id.button_subscribe);
         buttonGotIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)

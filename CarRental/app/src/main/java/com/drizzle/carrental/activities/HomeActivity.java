@@ -116,4 +116,9 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     }
 
+    @Override
+    public void onBackPressed() {
+        this.finish();
+    }
+
 }

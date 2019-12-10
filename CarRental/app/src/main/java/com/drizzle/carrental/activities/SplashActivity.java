@@ -17,6 +17,7 @@ public class SplashActivity extends Activity {
 
 
     Handler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -29,7 +30,6 @@ public class SplashActivity extends Activity {
         SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         String strApiToken = prefs.getString(Constants.SHARED_PREFERENCE_KEY_API_TOKEN, null);
 
-        strApiToken = "apitoken";
         if (strApiToken != null) {
 
             //check validation of API token
@@ -51,34 +51,36 @@ public class SplashActivity extends Activity {
             ((Globals) this.getApplication()).setLoggedIn(true);
             ((Globals) this.getApplication()).setProfile(profile);
 
-            handler=new Handler();
+            handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent=new Intent(SplashActivity.this,HomeActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
                 }
-            },3000);
+            }, 3000);
 
-        }
-        else {
+        } else {
 
             ((Globals) this.getApplication()).setLoggedIn(false);
 
-            handler=new Handler();
+            handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent=new Intent(SplashActivity.this,OnboardingActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
                     startActivity(intent);
                     finish();
                 }
-            },3000);
+            }, 3000);
 
         }
 
 
-
     }
+
+
+
+
 }

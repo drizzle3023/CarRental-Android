@@ -1,4 +1,4 @@
-package com.drizzle.carrental.components;
+package com.drizzle.carrental.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,17 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.drizzle.carrental.R;
-import com.drizzle.carrental.globals.Constants;
-import com.drizzle.carrental.models.HistoryModel;
+import com.drizzle.carrental.models.History;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class CustomAdapterForHistoryListView extends ArrayAdapter<HistoryModel> implements View.OnClickListener {
+public class CustomAdapterForHistoryListView extends ArrayAdapter<History> implements View.OnClickListener {
 
-    private ArrayList<HistoryModel> dataSet;
+    private ArrayList<History> dataSet;
     Context mContext;
 
     // View lookup cache
@@ -37,7 +34,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<HistoryModel> 
 
     }
 
-    public CustomAdapterForHistoryListView(ArrayList<HistoryModel> data, Context context) {
+    public CustomAdapterForHistoryListView(ArrayList<History> data, Context context) {
         super(context, R.layout.history_row_list_item, data);
 
         this.dataSet = data;
@@ -51,7 +48,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<HistoryModel> 
         int position = (Integer) v.getTag();
         Object object = getItem(position);
 
-        HistoryModel historyModel = (HistoryModel) object;
+        History historyModel = (History) object;
 
         switch (v.getId()) {
             case R.id.imageButton:
@@ -65,7 +62,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<HistoryModel> 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        HistoryModel historyModel = getItem(position);
+        History historyModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 

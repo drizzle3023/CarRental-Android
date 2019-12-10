@@ -11,11 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
-import com.drizzle.carrental.components.CustomAdapterForHistoryListView;
+import com.drizzle.carrental.adapters.CustomAdapterForHistoryListView;
 import com.drizzle.carrental.enumerators.ClaimState;
 import com.drizzle.carrental.enumerators.PaymentState;
 import com.drizzle.carrental.models.Claim;
-import com.drizzle.carrental.models.HistoryModel;
+import com.drizzle.carrental.models.History;
 import com.drizzle.carrental.models.Payment;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.GregorianCalendar;
 
 public class HistoryFragmentFull extends Fragment {
 
-    ArrayList<HistoryModel> dataModels;
+    ArrayList<History> dataModels;
     ListView listView;
     private static CustomAdapterForHistoryListView adapter;
 
@@ -47,7 +47,7 @@ public class HistoryFragmentFull extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                HistoryModel historyModel = dataModels.get(position);
+                History historyModel = dataModels.get(position);
 
             }
         });
@@ -69,7 +69,7 @@ public class HistoryFragmentFull extends Fragment {
 
         for (int i = 0; i < 10; i ++) {
 
-            HistoryModel historyModel = new HistoryModel();
+            History historyModel = new History();
             if (i % 2 == 0) {
                 Claim claim = new Claim();
 
@@ -86,8 +86,8 @@ public class HistoryFragmentFull extends Fragment {
                 claim.setDateFrom(new GregorianCalendar(2019, 2,2));
                 claim.setDateTo(new GregorianCalendar(2020, 2,1));
                 claim.setLocation("New York, United States");
-                claim.getCarURLs().add("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiByJGVsqbmAhUUIIgKHV7LDxgQjRx6BAgBEAQ&url=https%3A%2F%2Fcars.usnews.com%2Fcars-trucks%2Fbest-midsize-cars-for-the-money&psig=AOvVaw0GG1NL47H4V_K0iuIxZJe0&ust=1575906172816711");
-                claim.getCarURLs().add("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiT8861sqbmAhVOFYgKHddOCO8QjRx6BAgBEAQ&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FSport_utility_vehicle&psig=AOvVaw0GG1NL47H4V_K0iuIxZJe0&ust=1575906172816711");
+                claim.getCarURLs().add("http://i.imgur.com/DvpvklR.png");
+                claim.getCarURLs().add("https://png.pngtree.com/element_our/20190523/ourlarge/pngtree-car-driving-box-type-long-motor-vehicle-line-image_1088711.jpg");
 
                 historyModel.setClaim(claim);
                 historyModel.setPaymentOrClaim(false);

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class HistoryModel {
+public class History {
 
     boolean isPaymentOrClaim;
 

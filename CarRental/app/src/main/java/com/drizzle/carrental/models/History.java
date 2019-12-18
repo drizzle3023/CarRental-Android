@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class History {
 
-    boolean isPaymentOrClaim;
+    boolean isPaymentOrCoverage;
 
-    Payment payment; //valid only when isPaymentOrClaim is true
+    Payment payment; //valid only when isPaymentOrCoverage is true
 
-    Claim claim; //valid only when isPaymentOrClaim is false
+    Coverage coverage; //valid only when isPaymentOrCoverage is false
 
 
 

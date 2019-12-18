@@ -53,7 +53,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/textiew_price"
+            android:id="@+id/textview_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -102,33 +102,41 @@
             android:layout_marginBottom="25dp"
             android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/checkbox_us"
+            <RadioGroup
+                android:id="@+id/radio_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:button="@null"
-                android:checked="true"
-                android:drawableLeft="@drawable/checkbox_selector"
-                android:drawablePadding="10dp"
-                android:fontFamily="@font/sf_pro_text_semibold"
-                android:text="United States"
-                android:textColor="@color/colorSubscriptionContent"
-                android:textSize="13sp" />
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/checkbox_europe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@null"
-                android:drawableLeft="@drawable/checkbox_selector"
-                android:drawablePadding="10dp"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:text="Europe"
-                android:textColor="@color/colorSubscriptionContent"
-                android:textSize="13sp" />
+                <RadioButton
+                    android:id="@+id/checkbox_us"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawableLeft="@drawable/checkbox_selector"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:text="United States"
+                    android:textColor="@color/colorSubscriptionContent"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/checkbox_europe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/checkbox_selector"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/sf_pro_display_semibold"
+                    android:text="Europe"
+                    android:textColor="@color/colorSubscriptionContent"
+                    android:textSize="13sp" />
+            </RadioGroup>
+
         </LinearLayout>
     </LinearLayout>
 

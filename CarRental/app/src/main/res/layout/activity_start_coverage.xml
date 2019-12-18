@@ -19,7 +19,7 @@
             android:orientation="horizontal">
 
             <Space
-                android:id="@+id/button_back"
+                android:id="@+id/spacer1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -74,13 +74,14 @@
         android:paddingRight="15dp">
 
         <FrameLayout
+            android:id="@+id/layout_pickup_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/pickup_location"
+                android:id="@+id/textview_pickup_location"
                 style="@style/AppTheme.StartCoverageButtonLabel"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -113,13 +114,14 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/layout_rental_company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/rental_company"
+                android:id="@+id/textview_rental_company"
                 style="@style/AppTheme.StartCoverageButtonLabel"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -147,6 +149,7 @@
             android:orientation="horizontal">
 
             <FrameLayout
+                android:id="@+id/layout_start_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -155,7 +158,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/start_date"
+                    android:id="@+id/textview_start_date"
                     style="@style/AppTheme.StartCoverageButtonLabel"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -178,6 +181,7 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/layout_dropoff_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -186,7 +190,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/end_date"
+                    android:id="@+id/textview_end_date"
                     style="@style/AppTheme.StartCoverageButtonLabel"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"

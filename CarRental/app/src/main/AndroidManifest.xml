@@ -27,7 +27,9 @@
         <activity android:name=".activities.SubscribeSuccessActivity"/>
         <activity android:name=".activities.PaymentActivity"/>
         <activity android:name=".activities.AddCoverageActivity" />
-
+        <service
+            android:name=".GetAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>

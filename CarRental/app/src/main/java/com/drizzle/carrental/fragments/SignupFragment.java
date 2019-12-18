@@ -23,7 +23,7 @@ import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 
 //import butterknife.BindView;
 
-public class SignupFragment extends Fragment {
+public class SignupFragment extends Fragment implements View.OnClickListener {
 
     //private Country selectedCountry = null;
 
@@ -35,8 +35,30 @@ public class SignupFragment extends Fragment {
     boolean ifAgreeTerm = false;
     private Button createAccountButton;
     private CheckBox agreeTermCheckbox;
-    private TextView countryNumber;
-    private TextView phoneNumber;
+    private EditText countryNumber;
+    private EditText phoneNumber;
+
+    private void getControlHandlersAndLinkActions(View view) {
+
+        createAccountButton = (Button) view.findViewById(R.id.createaccount_button);
+        agreeTermCheckbox = (CheckBox) view.findViewById(R.id.agree_term_checkbox);
+        countryNumber = (EditText)  view.findViewById(R.id.text_country_prefix);
+
+
+        createAccountButton.setOnClickListener(this);
+        agreeTermCheckbox.setOnClickListener(this);
+        countryNumber.setOnClickListener(this);
+
+    }
+
+
+    private void initVariables() {
+
+    }
+
+    private void updateView() {
+
+    }
 
     @Nullable
     @Override
@@ -44,63 +66,12 @@ public class SignupFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
-        createAccountButton = (Button) view.findViewById(R.id.createaccount_button);
-        agreeTermCheckbox = (CheckBox) view.findViewById(R.id.agree_term_checkbox);
-        countryNumber = (TextView)  view.findViewById(R.id.text_country_prefix);
+        getControlHandlersAndLinkActions(view);
 
-        createAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                // do signup
-                if (ifAgreeTerm) {
-                    Intent intent = new Intent( getActivity(), VerifyCodeActivity.class);
-                    getActivity().startActivity(intent);
-                }
-                else {
-                    return;
-                }
+        initVariables();
 
+        updateView();
 
-            }
-        });
-
-        agreeTermCheckbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                if (agreeTermCheckbox.isChecked()) {
-                    ifAgreeTerm = true;
-                }
-                else {
-                    ifAgreeTerm = false;
-                }
-                updateSignupButtonStyle();
-            }
-        });
-
-
-        countryNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                CountryPicker.Builder builder = new CountryPicker.Builder().with(getActivity()).listener (new OnCountryPickerListener() {
-                    @Override
-                    public void onSelectCountry(Country country) {
-                        selectedCountry = country;
-
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        if (imm.isAcceptingText()){
-                            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                        }
-
-                        updateCountryViewInfo();
-                    }
-                });
-                CountryPicker picker = builder.build();
-                picker.showDialog(getActivity());
-            }
-        });
 
         return view;
     }
@@ -121,5 +92,49 @@ public class SignupFragment extends Fragment {
         else {
             createAccountButton.setBackgroundResource(R.drawable.inactive_button);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view.getId() == R.id.createaccount_button) {
+            if (ifAgreeTerm) {
+                Intent intent = new Intent( getActivity(), VerifyCodeActivity.class);
+                getActivity().startActivity(intent);
+            }
+            else {
+                return;
+            }
+
+        }
+
+        else if (view.getId() == R.id.agree_term_checkbox) {
+            if (agreeTermCheckbox.isChecked()) {
+                ifAgreeTerm = true;
+            }
+            else {
+                ifAgreeTerm = false;
+            }
+            updateSignupButtonStyle();
+        }
+
+        else if (view.getId() == R.id.text_country_prefix) {
+            CountryPicker.Builder builder = new CountryPicker.Builder().with(getActivity()).listener (new OnCountryPickerListener() {
+                @Override
+                public void onSelectCountry(Country country) {
+                    selectedCountry = country;
+
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    if (imm.isAcceptingText()){
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    }
+
+                    updateCountryViewInfo();
+                }
+            });
+            CountryPicker picker = builder.build();
+            picker.showDialog(getActivity());
+        }
+
     }
 }

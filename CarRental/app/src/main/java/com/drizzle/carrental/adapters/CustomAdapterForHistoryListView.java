@@ -96,7 +96,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
         result.startAnimation(animation);
         lastPosition = position;
 
-        if (historyModel.isPaymentOrClaim()) {
+        if (historyModel.isPaymentOrCoverage()) {
             viewHolder.textViewActiveState.setVisibility(View.GONE);
             viewHolder.textViewTitle.setText(historyModel.getPayment().getTitle());
             viewHolder.textViewState.setText(historyModel.getPayment().getState().toString());
@@ -107,23 +107,23 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
 
         } else {
 
-            if (historyModel.getClaim().isActiveState()) {
+            if (historyModel.getCoverage().isActiveState()) {
                 viewHolder.textViewActiveState.setText(R.string.one_claim_active);
                 viewHolder.textViewActiveState.setTextAppearance(R.style.AppTheme_HistoryRowItemEnabled);
             } else {
                 viewHolder.textViewActiveState.setText(R.string.one_claim_resolved);
                 viewHolder.textViewActiveState.setTextAppearance(R.style.AppTheme_HistoryRowItemEnabled);
             }
-            viewHolder.textViewTitle.setText(historyModel.getClaim().getTitle());
-            viewHolder.textViewState.setText(historyModel.getClaim().getState().toString());
-            viewHolder.textViewPeriod.setText(historyModel.getClaim().getPeriod());
+            viewHolder.textViewTitle.setText(historyModel.getCoverage().getTitle());
+            viewHolder.textViewState.setText(historyModel.getCoverage().getState().toString());
+            viewHolder.textViewPeriod.setText(historyModel.getCoverage().getPeriod());
             String image_url="";
-            if (!historyModel.getClaim().getCarURLs().isEmpty()) {
-                image_url = historyModel.getClaim().getCarURLs().get(0);
+            if (!historyModel.getCoverage().getCarURLs().isEmpty()) {
+                image_url = historyModel.getCoverage().getCarURLs().get(0);
             }
             Picasso.get().load(image_url).placeholder(R.drawable.icon_add_coverage).into(viewHolder.imageButton);
 
-            viewHolder.textViewLocation.setText(historyModel.getClaim().getLocation());
+            viewHolder.textViewLocation.setText(historyModel.getCoverage().getLocationAddress());
 
         }
 

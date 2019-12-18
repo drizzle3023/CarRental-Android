@@ -51,7 +51,7 @@
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/buttonEdit"
+                android:id="@+id/button_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -98,6 +98,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/layout_coverage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -140,7 +141,7 @@
                         android:text="LOCATION" />
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/button_location"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
@@ -154,7 +155,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/textView11"
+                        android:id="@+id/textview_company"
                         style="@style/AppTheme.DescriptionTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -164,7 +165,7 @@
                         android:textAllCaps="true" />
 
                     <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/button_company"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
@@ -188,7 +189,7 @@
                         android:textAllCaps="false" />
 
                     <Button
-                        android:id="@+id/button4"
+                        android:id="@+id/button_period"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
@@ -258,6 +259,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/layout_video_vehicle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -290,9 +292,10 @@
 
 
                     <ImageButton
-                        android:id="@+id/imageButton7"
+                        android:id="@+id/button_video_vehicle"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
+                        android:scaleType="fitXY"
                         android:background="@drawable/video_thumbnails"
                         android:src="@drawable/test" />
 
@@ -344,6 +347,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/layout_video_mile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -376,9 +380,10 @@
 
 
                     <ImageButton
-                        android:id="@+id/imageButton8"
+                        android:id="@+id/button_video_mile"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
+                        android:scaleType="fitXY"
                         android:background="@drawable/video_thumbnails"
                         android:src="@drawable/test" />
 
@@ -390,7 +395,7 @@
                     android:layout_height="match_parent">
 
                     <ImageButton
-                        android:id="@+id/delete_miles"
+                        android:id="@+id/button_delete_miles"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"

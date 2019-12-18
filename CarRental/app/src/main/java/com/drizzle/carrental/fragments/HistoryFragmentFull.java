@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.adapters.CustomAdapterForHistoryListView;
-import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.enumerators.PaymentState;
-import com.drizzle.carrental.models.Claim;
+import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.History;
 import com.drizzle.carrental.models.Payment;
 
@@ -71,26 +71,26 @@ public class HistoryFragmentFull extends Fragment {
 
             History historyModel = new History();
             if (i % 2 == 0) {
-                Claim claim = new Claim();
+                Coverage coverage = new Coverage();
 
                 if (i % 3 == 0) {
-                    claim.setActiveState(true);
+                    coverage.setActiveState(true);
                 }
                 else {
-                    claim.setActiveState(false);
+                    coverage.setActiveState(false);
                 }
 
 
-                claim.setTitle("Budge Rental Car");
-                claim.setState(ClaimState.COVERED);
-                claim.setDateFrom(new GregorianCalendar(2019, 2,2));
-                claim.setDateTo(new GregorianCalendar(2020, 2,1));
-                claim.setLocation("New York, United States");
-                claim.getCarURLs().add("http://i.imgur.com/DvpvklR.png");
-                claim.getCarURLs().add("https://png.pngtree.com/element_our/20190523/ourlarge/pngtree-car-driving-box-type-long-motor-vehicle-line-image_1088711.jpg");
+                coverage.setTitle("Budge Rental Car");
+                coverage.setState(CoverageState.COVERED);
+                coverage.setDateFrom(new GregorianCalendar(2019, 2,2));
+                coverage.setDateTo(new GregorianCalendar(2020, 2,1));
+                coverage.setLocationAddress("New York, United States");
+                coverage.getCarURLs().add("http://i.imgur.com/DvpvklR.png");
+                coverage.getCarURLs().add("https://png.pngtree.com/element_our/20190523/ourlarge/pngtree-car-driving-box-type-long-motor-vehicle-line-image_1088711.jpg");
 
-                historyModel.setClaim(claim);
-                historyModel.setPaymentOrClaim(false);
+                historyModel.setCoverage(coverage);
+                historyModel.setPaymentOrCoverage(false);
 
             }
             else {
@@ -102,7 +102,7 @@ public class HistoryFragmentFull extends Fragment {
                 payment.setInformation("49.99€ / per year");
 
                 historyModel.setPayment(payment);
-                historyModel.setPaymentOrClaim(true);
+                historyModel.setPaymentOrCoverage(true);
 
             }
 

@@ -14,9 +14,10 @@ import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.models.SubscriptionModel;
 import com.drizzle.carrental.models.VehicleType;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class SubscriptionNewActivity extends Activity implements AdapterView.OnItemSelectedListener, View.OnClickListener, CheckBox.OnCheckedChangeListener {
+public class SubscriptionNewActivity extends Activity implements AdapterView.OnItemSelectedListener, View.OnClickListener, RadioButton.OnCheckedChangeListener {
 
 
     //variables to fetch data from database
@@ -29,8 +30,9 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     private Spinner spinner;
     private Button buttonSubscribe;
     private ImageButton buttonBack;
-    private CheckBox checkBoxUs;
-    private CheckBox checkBoxEurope;
+    private RadioButton checkBoxUs;
+    private RadioButton checkBoxEurope;
+    private TextView textViewPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +61,14 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         buttonSubscribe = (Button) findViewById(R.id.button_subscribe);
         buttonSubscribe.setOnClickListener(this);
 
-        checkBoxUs = (CheckBox) findViewById(R.id.checkbox_us);
-        checkBoxEurope = (CheckBox) findViewById(R.id.checkbox_europe);
+        checkBoxUs = (RadioButton) findViewById(R.id.checkbox_us);
+        checkBoxEurope = (RadioButton) findViewById(R.id.checkbox_europe);
 
         checkBoxUs.setOnCheckedChangeListener(this);
         checkBoxEurope.setOnCheckedChangeListener(this);
+
+        textViewPrice = (TextView) findViewById(R.id.textview_price);
+
 
     }
 
@@ -72,6 +77,9 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         CustomAdapterSubscriptionCarTypeSelect customAdapter = new CustomAdapterSubscriptionCarTypeSelect(getApplicationContext(), vehicleTypes);
         spinner.setAdapter(customAdapter);
 
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        textViewPrice.setText(df.format(subscriptionInfo.getPricePerYear()) + "€ / per year");
 
     }
 
@@ -79,7 +87,9 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
         vehicleTypes = new ArrayList<>();
         serviceAreas = new ArrayList<>();
+        subscriptionInfo = new SubscriptionModel();
 
+        subscriptionInfo.setPricePerYear(49.99);
 
         /**
          * Fetch data  from server
@@ -152,16 +162,13 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
         if (compoundButton.getId() == R.id.checkbox_us) {
 
-            checkBoxEurope.setChecked(false);
             Globals.selectedVehicleType = vehicleTypes.get(1);
 
         }
         else if (compoundButton.getId() == R.id.checkbox_europe) {
 
-            checkBoxUs.setChecked(false);
             Globals.selectedVehicleType = vehicleTypes.get(0);
 
         }

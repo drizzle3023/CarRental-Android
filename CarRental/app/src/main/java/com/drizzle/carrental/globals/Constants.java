@@ -6,5 +6,5 @@ public class Constants {
 
     public static final String SHARED_PREFERENCE_KEY_API_TOKEN = "api_token";
 
-    public static final String DATE_FORMAT = "d MMM yyyy";
+    public static final String DATE_FORMAT = "d MMM";
 }

@@ -30,6 +30,7 @@ public class SplashActivity extends Activity {
         SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         String strApiToken = prefs.getString(Constants.SHARED_PREFERENCE_KEY_API_TOKEN, null);
 
+        //strApiToken = "apitoken";
         if (strApiToken != null) {
 
             //check validation of API token

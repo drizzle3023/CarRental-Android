@@ -25,5 +25,6 @@
     <string name="one_claim_active">1 Claim Active</string>
     <string name="one_claim_resolved">1 Claim Resolved</string>
 
+    <string name="euro_character">€</string>
 
 </resources>

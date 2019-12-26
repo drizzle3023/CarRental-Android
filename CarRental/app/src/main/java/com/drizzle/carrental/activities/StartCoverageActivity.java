@@ -85,7 +85,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    private void startLocationUpdating() {
+    private void getCurrentAddress() {
 
         addressResultReceiver = new LocationAddressResultReceiver(new Handler());
 
@@ -96,11 +96,12 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             public void onLocationResult(LocationResult locationResult) {
                 currentLocation = locationResult.getLocations().get(0);
                 getAddress();
+                fusedLocationClient.removeLocationUpdates(locationCallback);
             };
         };
         startLocationUpdates();
-
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +109,11 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_coverage);
 
+        getControlHandlersAndLinkActions();
 
     }
+
+
 
     @Override
     public void onClick(View view) {
@@ -126,15 +130,16 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         }
         if (view.getId() == R.id.layout_pickup_location) {
 
-            startLocationUpdating();
+            getCurrentAddress();
         }
 
     }
 
     @SuppressWarnings("MissingPermission")
     private void startLocationUpdates() {
-        if (ContextCompat.checkSelfPermission (this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -154,7 +159,9 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private void getAddress() {
 
         if (!Geocoder.isPresent()) {
-
+            Toast.makeText(this,
+                    "Can't find current address, ",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -163,6 +170,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         intent.putExtra("add_location", currentLocation);
         startService(intent);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -218,15 +226,16 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     @Override
     protected void onResume() {
+
         super.onResume();
-        startLocationUpdates();
+
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
-        fusedLocationClient.removeLocationUpdates(locationCallback);
-    }
 
+        super.onPause();
+
+    }
 
 }

@@ -28,6 +28,4 @@ public class Globals extends Application {
     public static ServiceArea selectedServiceArea = new ServiceArea();
 
 
-
-
 }

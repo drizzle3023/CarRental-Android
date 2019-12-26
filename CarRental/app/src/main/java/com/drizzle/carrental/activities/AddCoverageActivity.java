@@ -212,24 +212,57 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
             case R.id.button_start_coverage:
 
                 navigateToAddCoveragePage();
-
                 break;
 
             case R.id.caption_record_car:
             case R.id.button_record_car:
+
+                navigateToRecordVehicleActivity();
                 break;
 
             case R.id.caption_record_mile:
             case R.id.button_record_mile:
+
+                navigateToRecordMileActivity();
                 break;
 
+            case R.id.button_add:
+
+                completeAddCoverage();
+                break;
         }
     }
 
+
+    /**
+     * navigate to add new coverage activity
+     */
     private void navigateToAddCoveragePage() {
 
-        Intent intent = new Intent(AddCoverageActivity.this, HomeActivity.class);
+        Intent intent = new Intent(AddCoverageActivity.this, StartCoverageActivity.class);
         startActivity(intent);
+    }
 
+    /**
+     * navigate to record vehicle activity
+     */
+    private void  navigateToRecordVehicleActivity() {
+
+        Intent intent = new Intent(AddCoverageActivity.this, RecordVehicleActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * navigate to record vehicle activity
+     */
+    private void  navigateToRecordMileActivity() {
+
+        Intent intent = new Intent(AddCoverageActivity.this, RecordMileActivity.class);
+        startActivity(intent);
+    }
+
+    private void completeAddCoverage() {
+
+        finish();
     }
 }

@@ -26,5 +26,8 @@
     <string name="one_claim_resolved">1 Claim Resolved</string>
 
     <string name="euro_character">€</string>
+    <string name="app_record">Rec</string>
+    <string name="app_record_stop">Stop</string>
+    <string name="app_record_done">Done</string>
 
 </resources>

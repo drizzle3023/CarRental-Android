@@ -60,47 +60,41 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="42dp"
             android:layout_gravity="center"
-            android:textColor="@android:color/black"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/sf_pro_display_semibold"
-            android:textSize="17sp"
+            android:text="Record a video of your car"
+            android:textColor="@android:color/black"
             android:textFontWeight="600"
-            android:text="Record a video of your car" />
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/colorNormalText"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:text="@string/record_car_description"
             android:textAlignment="center"
-            android:padding="25dp"
-            android:text="@string/record_car_description" />
+            android:textColor="@color/colorNormalText" />
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:src="@drawable/illustration_record_car"/>
-
+            android:src="@drawable/illustration_record_car" />
 
 
     </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAlignment="center"
-        android:text="The recording must included: \nAll sides of the car and the license plate." />
+        android:text="The recording must included: \nAll sides of the car and the license plate."
+        android:textAlignment="center" />
 
 
     <Button
@@ -108,9 +102,9 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginLeft="27dp"
+        android:layout_marginTop="60dp"
         android:layout_marginRight="27dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="60dp"
         android:background="@drawable/gradient_button"
         android:text="Start Recording now"
         android:textAllCaps="false"

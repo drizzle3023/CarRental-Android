@@ -1,6 +1,7 @@
 package com.drizzle.carrental.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,18 +102,22 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             case APPROVED:
                 viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_approved);
                 viewHolder.textViewClaimStatus.setText(R.string.text_claim_state_approved);
+                viewHolder.textViewClaimStatus.setTextColor(getContext().getResources().getColor(R.color.colorClaimListClaimStateApproved, null));
                 break;
             case NOT_APPROVED:
                 viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_not_approved);
                 viewHolder.textViewClaimStatus.setText(R.string.text_claim_state_not_approved);
+                viewHolder.textViewClaimStatus.setTextColor(getContext().getResources().getColor(R.color.colorClaimListClaimStateNotApproved, null));
                 break;
             case INCOMPLETE:
                 viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_incomplete);
                 viewHolder.textViewClaimStatus.setText(R.string.text_claim_state_incomplete);
+                viewHolder.textViewClaimStatus.setTextColor(getContext().getResources().getColor(R.color.colorClaimListClaimStateIncomplete, null));
                 break;
             case EXPERT_UNDERGOING:
                 viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_expert_undergoing);
                 viewHolder.textViewClaimStatus.setText(R.string.text_claim_state_expert_undergoing);
+                viewHolder.textViewClaimStatus.setTextColor(getContext().getResources().getColor(R.color.colorClaimListClaimStateExpertUndergoing, null));
                 break;
             default:
                 break;

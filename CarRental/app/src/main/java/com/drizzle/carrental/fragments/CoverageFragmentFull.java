@@ -12,16 +12,21 @@ import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.AddCoverageActivity;
+import com.drizzle.carrental.activities.ClaimsActivity;
 
 public class CoverageFragmentFull extends Fragment implements View.OnClickListener {
 
     private ImageButton buttonStartCoverage;
+    private Button buttonClaims;
+
 
     private void getControlHandlersAndLinkActions(View view) {
 
-        buttonStartCoverage = (ImageButton) view.findViewById(R.id.button_start_coverage);
+        buttonStartCoverage = view.findViewById(R.id.button_start_coverage);
+        buttonClaims = view.findViewById(R.id.button_claims);
 
         buttonStartCoverage.setOnClickListener(this);
+        buttonClaims.setOnClickListener(this);
 
     }
 
@@ -53,11 +58,31 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == R.id.button_start_coverage) {
-            Intent intent=new Intent(getActivity(), AddCoverageActivity.class);
-            startActivity(intent);
-        }
+        switch (view.getId()) {
 
+            case R.id.button_start_coverage:
+                navigateToAddCoverageActivity();
+                break;
+            case R.id.button_claims:
+                navigateToClaimsActivity();
+                break;
+        }
+    }
+
+    /**
+     * navigateToAddCoverageActivity
+     */
+    private void navigateToAddCoverageActivity() {
+        Intent intent = new Intent(getActivity(), AddCoverageActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * navigateToClaimsActivity
+     */
+    private void navigateToClaimsActivity() {
+        Intent intent = new Intent(getActivity(), ClaimsActivity.class);
+        startActivity(intent);
     }
 }
 

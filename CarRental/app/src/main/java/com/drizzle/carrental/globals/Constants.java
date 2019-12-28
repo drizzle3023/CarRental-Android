@@ -8,4 +8,7 @@ public class Constants {
 
     public static final String DATE_FORMAT = "d MMM";
 
+    public static final String DATE_FORMAT_FOR_CLAIM = "EEEE, MMMM dd, yyyy";
+
+
 }

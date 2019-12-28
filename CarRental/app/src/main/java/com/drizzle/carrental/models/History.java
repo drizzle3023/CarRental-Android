@@ -12,7 +12,5 @@ public class History {
     Payment payment; //valid only when isPaymentOrCoverage is true
 
     Coverage coverage; //valid only when isPaymentOrCoverage is false
-
-
-
+    
 }

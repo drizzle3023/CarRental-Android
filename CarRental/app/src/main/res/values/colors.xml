@@ -31,11 +31,30 @@
 
     <color name="colorDescriptionTextView">#99A0B0</color>
 
-    <color name="colorSubmitclaimSliderDisabled">#D8D8D8</color>
+    <color name="colorSubmitClaimSliderDisabled">#D8D8D8</color>
 
     <color name="colorProfileButton">#7227B5</color>
 
     <color name="colorPlaceHolder">#9AA4B7</color>
+
+    <color name="colorClaimListClaimDate">#99A7AA</color>
+
+    <color name="colorClaimListClaimLocation">#99A7AA</color>
+
+    <color name="colorClaimListClaimStateIncomplete">#10B5D8</color>
+
+    <color name="colorClaimListClaimStateNotApproved">#FF235D</color>
+
+    <color name="colorClaimListClaimStateApproved">#B8E986</color>
+
+    <color name="colorClaimListClaimStateExpertUndergoing">#F9BB00</color>
+
+    <color name="colorClaimListFileClaimButtonBackground">#E7E3F0</color>
+
+
+
+
+
 
 
 </resources>

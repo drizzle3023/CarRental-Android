@@ -55,6 +55,7 @@
         <activity android:name=".activities.RecordVehicleActivity" />
         <activity android:name=".activities.BaseCameraActivity" />
         <activity android:name=".activities.MyCameraActivity" />
+        <activity android:name=".activities.ClaimsActivity" />
 
         <service
             android:name=".services.GetAddressIntentService"

@@ -42,6 +42,8 @@
     <string name="claim_question_take_a_video">Take a video of the damages...</string>
     <string name="claim_question_else">Anything else you\'d like us to know?</string>
 
+    <string name="file_a_claim_answer_what_happened_text_title">Your description</string>
+
 
 
 </resources>

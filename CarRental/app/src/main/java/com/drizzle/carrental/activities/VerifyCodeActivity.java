@@ -31,8 +31,7 @@ public class VerifyCodeActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                ((Globals) getApplication()).setLoggedIn(true);
-
+                Globals.isLoggedIn = true;
                 Intent intent = new Intent(VerifyCodeActivity.this, PaymentActivity.class);
                 startActivity(intent);
 

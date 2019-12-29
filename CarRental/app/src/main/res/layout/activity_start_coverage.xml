@@ -47,6 +47,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="9dp"
             android:background="@null"
+            android:padding="10dp"
             android:src="@drawable/back" />
 
     </FrameLayout>

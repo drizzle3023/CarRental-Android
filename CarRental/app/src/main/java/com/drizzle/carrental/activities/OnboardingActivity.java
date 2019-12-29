@@ -40,6 +40,7 @@ public class OnboardingActivity extends Activity {
                 Log.d("CarRental", "Gotit pressed");
                 Intent intent=new Intent(OnboardingActivity.this, HomeActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

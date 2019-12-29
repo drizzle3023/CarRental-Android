@@ -44,6 +44,11 @@
 
     <string name="file_a_claim_answer_what_happened_text_title">Your description</string>
 
+    <string name="validation_wrong_email">Email address is incorrect.</string>
+    <string name="validation_wrong_phonenumber">Phone number is incorrect.</string>
+
+    <string name="default_message_title">Notification</string>
+
 
 
 </resources>

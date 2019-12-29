@@ -30,11 +30,11 @@ public class SplashActivity extends Activity {
         SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         String strApiToken = prefs.getString(Constants.SHARED_PREFERENCE_KEY_API_TOKEN, null);
 
-        //strApiToken = "apitoken";
+        strApiToken = "apitoken";
         if (strApiToken != null) {
 
             //check validation of API token
-            ((Globals) this.getApplication()).setAPIToken(strApiToken);
+            Globals.APIToken = strApiToken;
 
 
             // Todo list
@@ -49,8 +49,8 @@ public class SplashActivity extends Activity {
             profile.setBirthday(new GregorianCalendar(1996, 1, 1));
             profile.setCreditCardNo("4242 4242 4242");
 
-            ((Globals) this.getApplication()).setLoggedIn(true);
-            ((Globals) this.getApplication()).setProfile(profile);
+            Globals.isLoggedIn = true;
+            Globals.profile = profile;
 
             handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -64,7 +64,7 @@ public class SplashActivity extends Activity {
 
         } else {
 
-            ((Globals) this.getApplication()).setLoggedIn(false);
+            Globals.isLoggedIn = false;
 
             handler = new Handler();
             handler.postDelayed(new Runnable() {

@@ -1,6 +1,7 @@
 package com.drizzle.carrental.activities;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +14,10 @@ import com.drizzle.carrental.R;
 import com.drizzle.carrental.fragments.SignupFragment;
 import com.drizzle.carrental.globals.Constants;
 
-public class SignUpLoginActivity extends AppCompatActivity {
+public class SignUpLoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     protected Fragment curFragment;
+    private ImageButton imageButtonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,26 +26,25 @@ public class SignUpLoginActivity extends AppCompatActivity {
 
         if (Constants.isNavigateToSignupOrLogin) {
             showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
-        }
-        else {
+        } else {
             showFragment(R.id.frame_signup_frag_container, LoginFragment.class);
         }
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.signup_login_radiogroup);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
                 if (checkedId == R.id.radio_signup) {
                     showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
-                }
-                else {
+                } else {
                     showFragment(R.id.frame_login_frag_container, LoginFragment.class);
                 }
             }
         });
 
+        imageButtonBack = findViewById(R.id.button_back);
+        imageButtonBack.setOnClickListener(this);
     }
 
     public void showFragment(int layoutId, Class fragClass) {
@@ -86,4 +87,14 @@ public class SignUpLoginActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.button_back:
+                finish();
+                break;
+        }
+
+    }
 }

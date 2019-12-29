@@ -35,7 +35,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
         View view = inflater.inflate(R.layout.fragment_profile_full, container, false);
 
-        profile = ((Globals) getActivity().getApplication()).getProfile();
+        profile = Globals.profile;
 
         textViewName = (TextView) view.findViewById(R.id.textview_name);
         textViewPhoneNumber = (TextView) view.findViewById(R.id.textview_phonenumber);

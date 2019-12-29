@@ -35,6 +35,13 @@
     <string name="text_claim_state_incomplete">Please complete the missing information</string>
     <string name="text_claim_state_approved">Claim Approved</string>
 
+    <string name="claim_question_what_happened">What happened &#128543;?</string>
+    <string name="claim_question_when_happened">When this happened?</string>
+    <string name="claim_question_where_happened">Where this happened?</string>
+    <string name="claim_question_what_part_of_the_car">What part of the car is damaged?</string>
+    <string name="claim_question_take_a_video">Take a video of the damages...</string>
+    <string name="claim_question_else">Anything else you\'d like us to know?</string>
+
 
 
 </resources>

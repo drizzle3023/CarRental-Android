@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/colorOnboardingBackcolor"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Space
+                android:id="@+id/space1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="File a Claim"
+                android:textColor="@color/colorCoverageTitle"
+                android:textSize="17sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="9dp"
+            android:background="@null"
+            android:src="@drawable/back" />
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/file_a_claim_inactived"
+            android:text="save"
+            android:textColor="@color/colorInvalid" />
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EFEFEF"
+        android:paddingLeft="18dip"
+        android:paddingTop="24dip"
+        android:paddingRight="18dip"
+        android:paddingBottom="18dip">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dip"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+
+                <TextView
+                    android:id="@+id/textView6"
+                    style="@style/AppTheme.ClaimQuestionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/claim_question_radius_content"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/claim_question_what_happened" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/claim_answer_radius_content"
+                android:minWidth="245dip"
+                android:orientation="vertical"
+                android:paddingLeft="15dip"
+                android:paddingTop="15dip"
+                android:paddingRight="8dip"
+                android:paddingBottom="8dip">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="19dip"
+                        android:layout_height="19dip"
+                        android:layout_weight="0"
+                        android:src="@drawable/claim_description_mark_active" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sf_pro_display_regular"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Your description"
+                        android:textColor="@color/colorNormalText"
+                        android:textSize="15sp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton3"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_weight="0"
+                        android:scaleType="center"
+                        android:src="@drawable/icon_edit" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView26"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_pro_display_regular"
+                    android:paddingTop="5dp"
+                    android:text="Description"
+                    android:textColor="@color/colorNormalText"
+                    android:textSize="13sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editText8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/claim_description_edittext"
+                        android:ems="10"
+                        android:fontFamily="@font/sf_pro_display_regular"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine"
+                        android:paddingStart="5dip"
+                        android:paddingTop="4dip"
+                        android:paddingEnd="25dip"
+                        android:paddingBottom="4dip"
+                        android:text=""
+                        android:textColor="@color/colorNormalText"
+                        android:textSize="13sp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton5"
+                        android:layout_width="15dip"
+                        android:layout_height="15dip"
+                        android:layout_gravity="top|right"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginRight="7dip"
+                        android:layout_weight="0"
+                        android:background="@drawable/clear_claim_description" />
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="8dip"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_bold"
+                    android:text="Done"
+                    android:textAlignment="textStart"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/textView61"
+                    style="@style/AppTheme.ClaimQuestionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/claim_question_radius_content"
+
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/claim_question_when_happened" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="20dip"
+                android:background="@drawable/claim_answer_radius_content"
+                android:minWidth="245dp"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView52"
+                        android:layout_width="19dip"
+                        android:layout_height="19dip"
+                        android:layout_weight="0"
+                        android:src="@drawable/calendar_icon_active" />
+
+                    <TextView
+                        android:id="@+id/textView72"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sf_pro_display_regular"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Select date"
+                        android:textColor="@color/colorNormalText"
+                        android:textSize="15sp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton32"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/icon_edit" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/textView62"
+                    style="@style/AppTheme.ClaimQuestionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/claim_question_radius_content"
+
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/claim_question_where_happened" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="20dip"
+                android:background="@drawable/claim_answer_radius_content"
+                android:minWidth="245dp"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView54"
+                        android:layout_width="19dip"
+                        android:layout_height="19dip"
+                        android:layout_weight="0"
+                        android:src="@drawable/mapmarker" />
+
+                    <TextView
+                        android:id="@+id/textView74"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sf_pro_display_regular"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Location"
+                        android:textColor="@color/colorNormalText"
+                        android:textSize="15sp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton34"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/icon_edit" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/textView63"
+                    style="@style/AppTheme.ClaimQuestionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/claim_question_radius_content"
+
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/claim_question_what_part_of_the_car" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="20dip"
+                android:background="@drawable/claim_answer_radius_content"
+                android:minWidth="245dp"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView53"
+                        android:layout_width="19dip"
+                        android:layout_height="19dip"
+                        android:layout_weight="0"
+                        android:src="@drawable/claim_select_damaged_part_icon" />
+
+                    <TextView
+                        android:id="@+id/textView73"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sf_pro_display_regular"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Select image"
+                        android:textColor="@color/colorNormalText"
+                        android:textSize="15sp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton33"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/icon_edit" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/textView65"
+                    style="@style/AppTheme.ClaimQuestionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/claim_question_radius_content"
+
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/claim_question_take_a_video" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="20dip"
+                android:background="@drawable/claim_answer_radius_content"
+                android:minWidth="245dp"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView55"
+                        android:layout_width="19dip"
+                        android:layout_height="19dip"
+                        android:layout_weight="0"
+                        android:src="@drawable/icon_camera" />
+
+                    <TextView
+                        android:id="@+id/textView75"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sf_pro_display_regular"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Select image"
+                        android:textColor="@color/colorNormalText"
+                        android:textSize="15sp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton35"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/icon_edit" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/textView66"
+                    style="@style/AppTheme.ClaimQuestionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:background="@drawable/claim_question_radius_content"
+
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/claim_question_else" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="20dip"
+                android:background="@drawable/claim_answer_radius_content"
+                android:minWidth="245dp"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/editText81"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/claim_description_edittext"
+                            android:ems="10"
+                            android:fontFamily="@font/sf_pro_display_regular"
+                            android:gravity="start|top"
+                            android:hint="Insert your description"
+                            android:inputType="textMultiLine"
+                            android:paddingLeft="5dip"
+                            android:paddingTop="4dip"
+                            android:paddingRight="20dip"
+                            android:paddingBottom="4dip"
+                            android:textColor="@color/colorNormalText"
+                            android:textSize="13sp" />
+
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="8dip"
+                    android:background="@null"
+                    android:fontFamily="@font/sf_pro_text_bold"
+                    android:text="Done"
+                    android:textAlignment="textStart"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_add"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginRight="27dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/gradient_button"
+                android:text="Submit Claim"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

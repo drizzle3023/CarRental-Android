@@ -11,4 +11,9 @@ public class Constants {
     public static final String DATE_FORMAT_FOR_CLAIM = "EEEE, MMMM dd, yyyy";
 
 
+    /**
+     * Temporary variables
+     */
+
+    public static boolean isNavigateToSignupOrLogin = true; //true - signup, login - signup
 }

@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.drizzle.carrental.fragments.LoginFragment;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.fragments.SignupFragment;
+import com.drizzle.carrental.globals.Constants;
 
 public class SignUpLoginActivity extends AppCompatActivity {
 
@@ -21,7 +22,12 @@ public class SignUpLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_login);
 
-        showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
+        if (Constants.isNavigateToSignupOrLogin) {
+            showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
+        }
+        else {
+            showFragment(R.id.frame_signup_frag_container, LoginFragment.class);
+        }
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.signup_login_radiogroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()

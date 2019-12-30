@@ -13,7 +13,7 @@ public class Globals {
 
     public static boolean isLoggedIn = false;
 
-    public static String APIToken = "";
+    public static String AccessToken = "";
 
     public static MyProfile profile = new MyProfile();
 

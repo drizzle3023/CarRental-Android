@@ -49,14 +49,16 @@
     <string name="file_a_claim_answer_damaged_part">Select image</string>
     <string name="file_a_claim_answer_take_video">Take video</string>
 
-
-
     <string name="validation_wrong_email">Email address is incorrect.</string>
     <string name="validation_wrong_phonenumber">Phone number is incorrect.</string>
 
     <string name="default_message_title">Notification</string>
     <string name="drop_down_list_symbol_character">▼</string>
 
+    <!-- Error messages of server connection -->
+    <string name="something_went_wrong">Something went wrong!</string>
 
-
+    <!-- Error messages for empty fields -->
+    <string name="required_name">Please input name.</string>
+    <string name="required_phone_number">Please input phone number.</string>
 </resources>

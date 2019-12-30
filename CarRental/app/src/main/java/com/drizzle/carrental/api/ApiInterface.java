@@ -29,4 +29,12 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("api/do-payment")
     Call<ResponseBody> doPayment(@Body JsonObject body);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/get-active-coverage")
+    Call<ResponseBody> getActiveCoverage(@Body JsonObject body);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/get-history-list")
+    Call<ResponseBody> getHistoryList(@Body JsonObject body);
 }

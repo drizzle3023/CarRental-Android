@@ -1,29 +1,50 @@
 package com.drizzle.carrental.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.adapters.CustomAdapterForHistoryListView;
+import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.enumerators.PaymentState;
+import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.History;
 import com.drizzle.carrental.models.Payment;
+import com.drizzle.carrental.serializers.ParseCoverage;
+import com.drizzle.carrental.serializers.ParseHistory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HistoryFragmentFull extends Fragment {
 
     ArrayList<History> dataModels;
+    List<ParseHistory> historyList;
     ListView listView;
     private static CustomAdapterForHistoryListView adapter;
 
@@ -37,6 +58,9 @@ public class HistoryFragmentFull extends Fragment {
         listView=(ListView) view.findViewById(R.id.list_history);
 
         dataModels = new ArrayList<>();
+        historyList = new ArrayList<>();
+
+        getHistoryList();
 
         prepareTestData();
 
@@ -53,6 +77,64 @@ public class HistoryFragmentFull extends Fragment {
         });
 
         return view;
+    }
+
+    private void getHistoryList() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+
+        JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject paramObject = new JSONObject();
+
+            paramObject.put("access_token", Globals.AccessToken);
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+            apiInterface.getHistoryList(gsonObject).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    progressDialog.dismiss();
+
+                    try {
+                        JSONObject object = new JSONObject(response.body().string());
+
+                        if (object.getString("success").equals("true")){
+
+                            JSONObject data = object.getJSONObject("data");
+                            JSONArray jsonHistory = data.getJSONArray("historyList");
+
+                            historyList = new Gson().fromJson(jsonHistory.toString(), new TypeToken<List<ParseHistory>>() {}.getType());
+
+                            Toast.makeText(getContext(), historyList.get(0).getType(), Toast.LENGTH_SHORT).show();
+                        } else{
+                            JSONObject data = object.getJSONObject("data");
+                            Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    progressDialog.dismiss();
+                    t.printStackTrace();
+                    Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

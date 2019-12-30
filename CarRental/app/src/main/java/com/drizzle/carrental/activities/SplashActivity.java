@@ -2,12 +2,11 @@ package com.drizzle.carrental.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.MyProfile;
-import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
 
@@ -25,17 +24,14 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
 
-
         //load saved api token
-        SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-        String strApiToken = prefs.getString(Constants.SHARED_PREFERENCE_KEY_API_TOKEN, null);
+        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
 
-        //strApiToken = "apitoken";
-        if (strApiToken != null) {
+        String strAccessToken = SharedHelper.getKey(this, "access_token");
+        if (strAccessToken != null) {
 
             //check validation of API token
-            Globals.APIToken = strApiToken;
-
+            Globals.AccessToken = strAccessToken;
 
             // Todo list
             // Call API to fetch profile from server
@@ -70,8 +66,8 @@ public class SplashActivity extends Activity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
-                    Intent intent = new Intent(SplashActivity.this, AddClaimActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
+                    //Intent intent = new Intent(SplashActivity.this, AddClaimActivity.class);
                     startActivity(intent);
                     finish();
                 }

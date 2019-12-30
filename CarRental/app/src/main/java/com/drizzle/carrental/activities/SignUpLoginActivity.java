@@ -1,5 +1,6 @@
 package com.drizzle.carrental.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -27,6 +28,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements View.OnCli
         if (Constants.isNavigateToSignupOrLogin) {
             showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
         } else {
+            ((RadioButton)findViewById(R.id.radio_login)).setChecked(true);
             showFragment(R.id.frame_signup_frag_container, LoginFragment.class);
         }
 

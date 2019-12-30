@@ -30,11 +30,11 @@
             android:value="AIzaSyAsVN1AHgbMr2n3SYtNZxFiT7e1bz3tP5s" />
 
         <activity android:name=".activities.SplashActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.OnboardingActivity" />
@@ -45,13 +45,7 @@
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.SubscribeSuccessActivity" />
 
-        <activity android:name=".activities.PaymentActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.PaymentActivity"/>
         <activity android:name=".activities.AddCoverageActivity" />
 
         <activity android:name=".activities.StartCoverageActivity" />

@@ -11,7 +11,6 @@ import lombok.Setter;
 
 public class Globals extends Application {
 
-
     @Getter
     @Setter
     private boolean isLoggedIn = false;
@@ -27,5 +26,5 @@ public class Globals extends Application {
     public static VehicleType  selectedVehicleType = new VehicleType();
     public static ServiceArea selectedServiceArea = new ServiceArea();
 
-
+    public static int paymentId = 0;
 }

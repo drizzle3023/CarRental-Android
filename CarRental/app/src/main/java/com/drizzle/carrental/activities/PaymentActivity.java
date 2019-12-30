@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.drizzle.carrental.R;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.services.YourDropService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -75,6 +77,8 @@ public class PaymentActivity extends FragmentActivity{
             JSONObject paramObject = new JSONObject();
 
             paramObject.put("access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
+            paramObject.put("amount", 49);
+            paramObject.put("currency", "EUR");
 
             JsonParser jsonParser = new JsonParser();
             gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
@@ -92,6 +96,7 @@ public class PaymentActivity extends FragmentActivity{
 
                             JSONObject data = object.getJSONObject("data");
                             JSONObject paymentMethods = data.getJSONObject("paymentMethods");
+                            Globals.paymentId = data.getInt("payment_id");
 
                             Log.i("Payment_methods", paymentMethods.toString());
 
@@ -100,8 +105,7 @@ public class PaymentActivity extends FragmentActivity{
                             PaymentMethod paymentMethod = new PaymentMethod();
                             CardConfiguration cardConfiguration = new CardConfiguration.Builder(Locale.getDefault(), Environment.TEST, Constants.ADYEN_PAYMENT_PUBLIC_KEY).build();
 //                            CardComponent cardComponent = new CardComponent.PROVIDER.get(PaymentActivity.this, paymentMethod, cardConfiguration);
-                            Intent resultintent = new Intent(PaymentActivity.this,SubscribeSuccessActivity.class);
-
+                            Intent resultintent = new Intent(PaymentActivity.this, SubscribeSuccessActivity.class);
                             DropInConfiguration dropInConfiguration = new DropInConfiguration.Builder(
                                     PaymentActivity.this,
                                     resultintent,

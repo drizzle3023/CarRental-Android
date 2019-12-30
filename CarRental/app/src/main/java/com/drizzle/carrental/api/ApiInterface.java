@@ -25,4 +25,8 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("api/get-payment-methods")
     Call<ResponseBody> getPaymentMethods(@Body JsonObject body);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/do-payment")
+    Call<ResponseBody> doPayment(@Body JsonObject body);
 }

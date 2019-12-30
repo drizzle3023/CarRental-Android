@@ -100,13 +100,12 @@ public class PaymentActivity extends FragmentActivity{
 
                             Log.i("Payment_methods", paymentMethods.toString());
 
-                            // Import available payment methods and set them to DropIn.
+
                             PaymentMethodsApiResponse paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize(paymentMethods);
+                            PaymentMethod paymentMethod = new PaymentMethod();
                             CardConfiguration cardConfiguration = new CardConfiguration.Builder(Locale.getDefault(), Environment.TEST, Constants.ADYEN_PAYMENT_PUBLIC_KEY).build();
-
-                            // After payment succeed, call this intent.
+//                            CardComponent cardComponent = new CardComponent.PROVIDER.get(PaymentActivity.this, paymentMethod, cardConfiguration);
                             Intent resultintent = new Intent(PaymentActivity.this, SubscribeSuccessActivity.class);
-
                             DropInConfiguration dropInConfiguration = new DropInConfiguration.Builder(
                                     PaymentActivity.this,
                                     resultintent,

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.HomeActivity;
+import com.drizzle.carrental.globals.Utils;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
@@ -35,16 +36,24 @@ public class LoginFragment extends Fragment {
         loginButton = (Button) view.findViewById(R.id.login_button);
         countryNumber = (TextView) view.findViewById(R.id.text_country_prefix);
 
+        int code = Utils.getCurrentCountryCode(getActivity());
+        String countryCode = "+" + code;
+        countryNumber.setText(countryCode);
+        countryNumber.requestFocus();
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                ((Globals) getActivity().getApplication()).setLoggedIn(true);
+                Globals.isLoggedIn = true;
 
                 Intent intent = new Intent(getContext(), HomeActivity.class);
-
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("EXIT", true);
                 startActivity(intent);
-
+                getActivity().finish();
             }
         });
 

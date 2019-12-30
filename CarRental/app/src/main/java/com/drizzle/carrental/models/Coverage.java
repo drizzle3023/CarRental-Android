@@ -46,6 +46,26 @@ public class Coverage {
 
     }
 
+    public String getDateFromString() {
+
+        String strDate = "";
+
+        DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        strDate = df.format(dateFrom.getTime());
+
+        return strDate;
+    }
+
+    public  String getDateToString() {
+
+        String strDate = "";
+
+        DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        strDate = df.format(dateTo.getTime());
+
+        return strDate;
+    }
+
 
 
 

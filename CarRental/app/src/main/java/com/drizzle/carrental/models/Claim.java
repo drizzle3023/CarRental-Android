@@ -26,9 +26,11 @@ public class Claim {
 
     String addressHappened; //address of happened location
 
-    List<DamagedPart> damagedPart; //damaged part
+    List<DamagedPart> damagedParts; //damaged part
 
     String videoURL; //url of recorded video
+
+    String imageURL; //url of recorded video
 
     String extraDescription; //extra information
 

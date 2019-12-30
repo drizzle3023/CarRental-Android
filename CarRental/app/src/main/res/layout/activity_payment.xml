@@ -49,6 +49,7 @@
             android:layout_marginLeft="9dp"
             android:layout_marginTop="17dp"
             android:background="@null"
+            android:padding="10dp"
             android:src="@drawable/back" />
 
     </FrameLayout>

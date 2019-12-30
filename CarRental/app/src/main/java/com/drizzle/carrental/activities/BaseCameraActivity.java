@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.daasuu.camerarecorder.CameraRecorderBuilder;
 import com.daasuu.camerarecorder.LensFacing;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.cameracomponents.SampleGLView;
+import com.drizzle.carrental.globals.Constants;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,13 +53,7 @@ public class BaseCameraActivity extends AppCompatActivity {
     private AlertDialog filterDialog;
     private boolean toggleClick = false;
 
-    private String fileName;
-
-    protected void setFileName(String strName) {
-
-        fileName = strName;
-    }
-
+    protected Button buttonCancel;
 
     protected void onCreateActivity() {
 
@@ -80,13 +76,32 @@ public class BaseCameraActivity extends AppCompatActivity {
                 }
                 else { //case of "Done"
 
+                    setResult(RESULT_OK);
                     finish();
                 }
             }
         });
 
+        buttonCancel = findViewById(R.id.button_cancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
     }
 
     @Override
@@ -263,7 +278,18 @@ public class BaseCameraActivity extends AppCompatActivity {
     }
 
     public static String getVideoFilePath() {
+
         return getAndroidMoviesFolder().getAbsolutePath() + "/" + new SimpleDateFormat("yyyyMM_dd-HHmmss").format(new Date()) + "cameraRecorder.mp4";
+//        String filePath;
+//        if (Constants.isRecordingVehicleOrMile) {
+//
+//            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.VEHICLE_VIDEO_FILE_NAME;
+//        }
+//        else {
+//
+//            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.MILE_VIDEO_FILE_NAME;
+//        }
+//        return filePath;
     }
 
     public static File getAndroidMoviesFolder() {
@@ -279,7 +305,17 @@ public class BaseCameraActivity extends AppCompatActivity {
     }
 
     public static String getImageFilePath() {
-        return getAndroidImageFolder().getAbsolutePath() + "/" + new SimpleDateFormat("yyyyMM_dd-HHmmss").format(new Date()) + "cameraRecorder.png";
+
+        String filePath;
+        if (Constants.isRecordingVehicleOrMile) {
+
+            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.VEHICLE_IMAGE_FILE_NAME;
+        }
+        else {
+
+            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.MILE_IMAGE_FILE_NAME;
+        }
+        return filePath;
     }
 
     public static File getAndroidImageFolder() {

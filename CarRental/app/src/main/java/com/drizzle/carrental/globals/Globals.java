@@ -1,15 +1,14 @@
 package com.drizzle.carrental.globals;
 
-import android.app.Application;
 
 import com.drizzle.carrental.enumerators.ServiceArea;
+import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.models.VehicleType;
 
-import lombok.Getter;
-import lombok.Setter;
+public class Globals {
 
-public class Globals extends Application {
+    public static boolean isLoggedIn = false;
 
     @Getter
     @Setter
@@ -23,8 +22,16 @@ public class Globals extends Application {
     @Setter
     private MyProfile profile = new MyProfile();
 
+    public static String APIToken = "";
+
+    public static MyProfile profile = new MyProfile();
+
+
     public static VehicleType  selectedVehicleType = new VehicleType();
     public static ServiceArea selectedServiceArea = new ServiceArea();
 
     public static int paymentId = 0;
+
+    public static Coverage coverage = new Coverage(); //current active coverage
+
 }

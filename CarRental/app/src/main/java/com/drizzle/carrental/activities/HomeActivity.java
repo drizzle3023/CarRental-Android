@@ -1,9 +1,12 @@
 package com.drizzle.carrental.activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -21,6 +24,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    static final int ADD_COVERAGE_ACTIVITY_REQUEST = 1;
+
     protected Fragment curFragment;
     protected BottomNavigationView bottomNavigationView;
 
@@ -34,7 +39,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
 
-        if (((Globals) this.getApplication()).isLoggedIn()) {
+        if (Globals.isLoggedIn) {
             showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
         }
         else {
@@ -46,7 +51,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        if (((Globals) this.getApplication()).isLoggedIn()) {
+        if (Globals.isLoggedIn) {
 
             if (menuItem.getItemId() == R.id.navigation_history) {
                 showFragment(R.id.frame_history, HistoryFragmentFull.class);
@@ -118,7 +123,24 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onBackPressed() {
+
         this.finish();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == ADD_COVERAGE_ACTIVITY_REQUEST) {
+
+            if (resultCode == RESULT_OK) {
+
+                updateView();
+            }
+        }
+    }
+
+    public void updateView() {
+
+
+    }
 }

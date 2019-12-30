@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.icu.text.AlphabeticIndex;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +12,12 @@ import android.widget.*;
 import androidx.annotation.Nullable;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Utils;
 
 public class RecordVehicleActivity extends Activity implements View.OnClickListener {
+
+    public static final int MY_CAMERA_ACTIVITY_REQUEST_CODE = 1;
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88888;
 
@@ -51,13 +54,14 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
 
         if (view.getId() == R.id.button_start) {
 
+            Constants.isRecordingVehicleOrMile = true;
             Intent intent = new Intent(RecordVehicleActivity.this, MyCameraActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
         }
         if (view.getId() == R.id.button_back) {
-            finish();
-        }
 
+            backToPrevious();
+        }
     }
 
     private boolean checkPermission() {
@@ -89,5 +93,34 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        backToPrevious();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == MY_CAMERA_ACTIVITY_REQUEST_CODE) {
+
+            if (resultCode == RESULT_OK) {
+
+                finish();
+            }
+            else {
+
+                //remove recorded file
+                //Utils.removeTemporaryFile(BaseCameraActivity.getVideoFilePath());
+            }
+        }
+    }
+
+    private void backToPrevious() {
+
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 }

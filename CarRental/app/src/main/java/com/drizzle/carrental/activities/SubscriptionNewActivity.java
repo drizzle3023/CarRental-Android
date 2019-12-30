@@ -10,6 +10,7 @@ import android.view.View;
 import com.drizzle.carrental.adapters.CustomAdapterSubscriptionCarTypeSelect;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.enumerators.ServiceArea;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.models.SubscriptionModel;
 import com.drizzle.carrental.models.VehicleType;
@@ -150,6 +151,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     public void onClick(View view) {
 
         if (view.getId() == R.id.button_subscribe) {
+            Constants.isNavigateToSignupOrLogin = true;
             Intent intent = new Intent(SubscriptionNewActivity.this, SignUpLoginActivity.class);
             startActivity(intent);
         }

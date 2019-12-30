@@ -1,6 +1,7 @@
 package com.drizzle.carrental.fragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,10 +11,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.VerifyCodeActivity;
+import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Utils;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
@@ -33,28 +37,30 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     private Country selectedCountry = null;
 
     boolean ifAgreeTerm = false;
-    private Button createAccountButton;
-    private CheckBox agreeTermCheckbox;
-    private EditText countryNumber;
-    private EditText phoneNumber;
+    private Button buttonCreateAccount;
+    private CheckBox checkAgreeTerm;
+    private EditText editTextCountryNumber;
+    private EditText editTextPhoneNumber;
+    private EditText editTextEmailAddress;
 
     private void getControlHandlersAndLinkActions(View view) {
 
-        createAccountButton = (Button) view.findViewById(R.id.createaccount_button);
-        agreeTermCheckbox = (CheckBox) view.findViewById(R.id.agree_term_checkbox);
-        countryNumber = (EditText)  view.findViewById(R.id.text_country_prefix);
+        buttonCreateAccount = view.findViewById(R.id.createaccount_button);
+        checkAgreeTerm = view.findViewById(R.id.agree_term_checkbox);
+        editTextCountryNumber = view.findViewById(R.id.text_country_prefix);
+        editTextPhoneNumber = view.findViewById(R.id.edittext_phonenumber);
+        editTextEmailAddress = view.findViewById(R.id.edittext_email_address);
 
+        int code = Utils.getCurrentCountryCode(getActivity());
+        String countryCode = "+" + code;
+        editTextCountryNumber.setText(countryCode);
 
-        createAccountButton.setOnClickListener(this);
-        agreeTermCheckbox.setOnClickListener(this);
-        countryNumber.setOnClickListener(this);
-
+        buttonCreateAccount.setOnClickListener(this);
+        checkAgreeTerm.setOnClickListener(this);
+        editTextCountryNumber.setOnClickListener(this);
+        editTextEmailAddress.setOnClickListener(this);
     }
 
-
-    private void initVariables() {
-
-    }
 
     private void updateView() {
 
@@ -68,10 +74,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
 
         getControlHandlersAndLinkActions(view);
 
-        initVariables();
-
         updateView();
-
 
         return view;
     }
@@ -82,16 +85,48 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        this.countryNumber.setText(this.selectedCountry.getDialCode());
+        this.editTextCountryNumber.setText(this.selectedCountry.getDialCode());
     }
 
     public void updateSignupButtonStyle() {
         if (ifAgreeTerm) {
-            createAccountButton.setBackgroundResource(R.drawable.active_button);
+            buttonCreateAccount.setBackgroundResource(R.drawable.active_button);
+        } else {
+            buttonCreateAccount.setBackgroundResource(R.drawable.inactive_button);
         }
-        else {
-            createAccountButton.setBackgroundResource(R.drawable.inactive_button);
+    }
+
+    private void showAlert(String title, String message, int resourceId) {
+
+
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+        if (resourceId == R.id.edittext_email_address) {
+
+            editTextEmailAddress.requestFocus();
+        } else if (resourceId == R.id.edittext_phonenumber) {
+
+            editTextPhoneNumber.requestFocus();
         }
+    }
+
+    private void submitSignUpRequestAndNavigateToVerifyScreen() {
+
+        String strEmail = editTextEmailAddress.getText().toString();
+        String strPhone = editTextPhoneNumber.getText().toString();
+
+//        if (!Utils.isValidMail(strEmail)) {
+//
+//            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_email), R.id.edittext_email_address);
+//        } else if (!Utils.isValidMobile(strPhone)) {
+//
+//            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_phonenumber), R.id.edittext_phonenumber);
+//        } else {
+
+            Intent intent = new Intent(getActivity(), VerifyCodeActivity.class);
+            getActivity().startActivity(intent);
+//        }
+
     }
 
     @Override
@@ -99,42 +134,43 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
 
         if (view.getId() == R.id.createaccount_button) {
             if (ifAgreeTerm) {
-                Intent intent = new Intent( getActivity(), VerifyCodeActivity.class);
-                getActivity().startActivity(intent);
-            }
-            else {
+
+                submitSignUpRequestAndNavigateToVerifyScreen();
+            } else {
                 return;
             }
 
-        }
-
-        else if (view.getId() == R.id.agree_term_checkbox) {
-            if (agreeTermCheckbox.isChecked()) {
+        } else if (view.getId() == R.id.agree_term_checkbox) {
+            if (checkAgreeTerm.isChecked()) {
                 ifAgreeTerm = true;
-            }
-            else {
+            } else {
                 ifAgreeTerm = false;
             }
             updateSignupButtonStyle();
+        } else if (view.getId() == R.id.text_country_prefix) {
+
+            displayCountryPicker();
         }
 
-        else if (view.getId() == R.id.text_country_prefix) {
-            CountryPicker.Builder builder = new CountryPicker.Builder().with(getActivity()).listener (new OnCountryPickerListener() {
-                @Override
-                public void onSelectCountry(Country country) {
-                    selectedCountry = country;
+    }
 
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    if (imm.isAcceptingText()){
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    }
+    private void displayCountryPicker() {
 
-                    updateCountryViewInfo();
+        CountryPicker.Builder builder = new CountryPicker.Builder().with(getActivity()).listener(new OnCountryPickerListener() {
+            @Override
+            public void onSelectCountry(Country country) {
+                selectedCountry = country;
+
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (imm.isAcceptingText()) {
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 }
-            });
-            CountryPicker picker = builder.build();
-            picker.showDialog(getActivity());
-        }
 
+                updateCountryViewInfo();
+                editTextPhoneNumber.requestFocus();
+            }
+        });
+        CountryPicker picker = builder.build();
+        picker.showDialog(getActivity());
     }
 }

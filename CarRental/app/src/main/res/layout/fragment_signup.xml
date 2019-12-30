@@ -14,19 +14,23 @@
         android:layout_marginTop="35dp"
         android:layout_marginRight="36dp"
         android:layout_marginBottom="15dp"
+        android:nextFocusForward="@+id/edittext_email_address"
         android:fontFamily="@font/sf_pro_display_regular"
         android:hint="Name"
+        android:singleLine="true"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 
     <EditText
-        android:id="@+id/email_signup"
+        android:id="@+id/edittext_email_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="36dp"
         android:layout_marginBottom="15dp"
         android:fontFamily="@font/sf_pro_display_regular"
+        android:nextFocusForward="@+id/edittext_phonenumber"
+        android:singleLine="true"
         android:hint="Email"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
@@ -58,19 +62,24 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="8dp"
-            android:editable="false"
             android:fontFamily="@font/sf_pro_display_semibold"
             android:gravity="center"
             android:text="+000"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
+            android:singleLine="true"
+            android:nextFocusForward="@+id/edittext_phonenumber"
             android:textColor="@color/colorNormalBlue"
             android:textSize="17sp" />
 
         <EditText
-            android:id="@+id/editText6"
+            android:id="@+id/edittext_phonenumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:singleLine="true"
+            android:nextFocusForward="@id/agree_term_checkbox"
             android:inputType="phone" />
 
     </LinearLayout>

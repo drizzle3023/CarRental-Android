@@ -34,6 +34,7 @@ public class YourDropService extends DropInService {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         JsonObject gsonObject = new JsonObject();
+
         try {
             JSONObject paramObject = new JSONObject();
 

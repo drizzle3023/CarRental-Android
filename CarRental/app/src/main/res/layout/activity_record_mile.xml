@@ -52,70 +52,75 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="42dp"
-            android:paddingLeft="32dp"
-            android:paddingRight="41dp"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/sf_pro_display_semibold"
-            android:textSize="17sp"
-            android:textFontWeight="600"
-            android:text="Take a picture of the rental cars current kilometers on the dashboard." />
-
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="41dp"
-            android:textColor="@color/colorNormalText"
-            android:textAlignment="center"
-            android:padding="25dp"
-
-            android:text="This will allow for faster responses in the future if you submit a claim. " />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:src="@drawable/illustration_rec_miles"/>
-
-
-
-    </LinearLayout>
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:paddingLeft="32dp"
+        android:paddingRight="41dp"
+        android:text="Take a picture of the rental cars current kilometers on the dashboard."
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textFontWeight="600"
+        android:textSize="17sp" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="41dp"
+        android:text="This will allow for faster responses in the future if you submit a claim. "
+        android:textAlignment="center"
+
+        android:textColor="@color/colorNormalText" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/illustration_rec_miles" />
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAlignment="center"
-        android:text="The recording must included: \nAll sides of the car and the license plate." />
+        android:text="The recording must included: \nAll sides of the car and the license plate."
+        android:textAlignment="center" />
 
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="3" />
 
     <Button
         android:id="@+id/button_start"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginLeft="27dp"
-        android:layout_marginTop="60dp"
         android:layout_marginRight="27dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/gradient_button"

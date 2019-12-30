@@ -5,6 +5,7 @@ import android.telephony.TelephonyManager;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 public class Utils {
@@ -28,4 +29,21 @@ public class Utils {
     }
 
 
+    public static boolean removeTemporaryFile(String filePath) {
+
+        File fDelete = new File(filePath);
+        if (fDelete.exists()) {
+            if (fDelete.delete()) {
+
+                return true;
+            } else {
+
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+
+    }
 }

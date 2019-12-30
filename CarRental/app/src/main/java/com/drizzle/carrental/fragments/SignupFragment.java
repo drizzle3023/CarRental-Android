@@ -115,17 +115,17 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         String strEmail = editTextEmailAddress.getText().toString();
         String strPhone = editTextPhoneNumber.getText().toString();
 
-        if (!Utils.isValidMail(strEmail)) {
-
-            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_email), R.id.edittext_email_address);
-        } else if (!Utils.isValidMobile(strPhone)) {
-
-            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_phonenumber), R.id.edittext_phonenumber);
-        } else {
+//        if (!Utils.isValidMail(strEmail)) {
+//
+//            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_email), R.id.edittext_email_address);
+//        } else if (!Utils.isValidMobile(strPhone)) {
+//
+//            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_phonenumber), R.id.edittext_phonenumber);
+//        } else {
 
             Intent intent = new Intent(getActivity(), VerifyCodeActivity.class);
             getActivity().startActivity(intent);
-        }
+//        }
 
     }
 

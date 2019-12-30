@@ -30,7 +30,7 @@ public class SplashActivity extends Activity {
         SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         String strApiToken = prefs.getString(Constants.SHARED_PREFERENCE_KEY_API_TOKEN, null);
 
-        strApiToken = "apitoken";
+        //strApiToken = "apitoken";
         if (strApiToken != null) {
 
             //check validation of API token
@@ -70,7 +70,8 @@ public class SplashActivity extends Activity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
+                    //Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, AddClaimActivity.class);
                     startActivity(intent);
                     finish();
                 }

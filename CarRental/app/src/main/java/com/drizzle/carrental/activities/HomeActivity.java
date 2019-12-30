@@ -1,6 +1,7 @@
 package com.drizzle.carrental.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -22,6 +23,8 @@ import com.drizzle.carrental.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    static final int ADD_COVERAGE_ACTIVITY_REQUEST = 1;
 
     protected Fragment curFragment;
     protected BottomNavigationView bottomNavigationView;
@@ -124,4 +127,20 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         this.finish();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == ADD_COVERAGE_ACTIVITY_REQUEST) {
+
+            if (resultCode == RESULT_OK) {
+
+                updateView();
+            }
+        }
+    }
+
+    public void updateView() {
+
+
+    }
 }

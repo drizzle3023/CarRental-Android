@@ -29,6 +29,7 @@
     <string name="app_record">Rec</string>
     <string name="app_record_stop">Stop</string>
     <string name="app_record_done">Done</string>
+    <string name="app_record_cancel">Cancel</string>
 
     <string name="text_claim_state_not_approved">Revenue claim not approved</string>
     <string name="text_claim_state_expert_undergoing">Experts analysis is undergoing…</string>
@@ -38,16 +39,23 @@
     <string name="claim_question_what_happened">What happened &#128543;?</string>
     <string name="claim_question_when_happened">When this happened?</string>
     <string name="claim_question_where_happened">Where this happened?</string>
-    <string name="claim_question_what_part_of_the_car">What part of the car is damaged?</string>
+    <string name="claim_question_damaged_part">What part of the car is damaged?</string>
     <string name="claim_question_take_a_video">Take a video of the damages...</string>
     <string name="claim_question_else">Anything else you\'d like us to know?</string>
 
     <string name="file_a_claim_answer_what_happened_text_title">Your description</string>
+    <string name="file_a_claim_answer_when_happened_text_title">Select date</string>
+    <string name="file_a_claim_answer_where_happened_text_title">Select location</string>
+    <string name="file_a_claim_answer_damaged_part">Select image</string>
+    <string name="file_a_claim_answer_take_video">Take video</string>
+
+
 
     <string name="validation_wrong_email">Email address is incorrect.</string>
     <string name="validation_wrong_phonenumber">Phone number is incorrect.</string>
 
     <string name="default_message_title">Notification</string>
+    <string name="drop_down_list_symbol_character">▼</string>
 
 
 

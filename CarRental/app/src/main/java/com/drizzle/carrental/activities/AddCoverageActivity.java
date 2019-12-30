@@ -11,13 +11,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
-import com.squareup.picasso.Picasso;
 
 import java.util.GregorianCalendar;
 
 public class AddCoverageActivity extends Activity implements View.OnClickListener {
+
+
+    static final int START_COVERAGE_ACTIVITY_REQUEST = 1;
+    static final int RECORD_VEHICLE_ACTIVITY_REQUEST = 2;
+    static final int RECORD_MILE_ACTIVITY_REQUEST = 3;
 
     /**
      * UI Control Handlers
@@ -211,7 +216,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
             case R.id.caption_start_coverage:
             case R.id.button_start_coverage:
 
-                navigateToAddCoveragePage();
+                navigateToStartCoveragePage();
                 break;
 
             case R.id.caption_record_car:
@@ -237,10 +242,10 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
     /**
      * navigate to add new coverage activity
      */
-    private void navigateToAddCoveragePage() {
+    private void navigateToStartCoveragePage() {
 
         Intent intent = new Intent(AddCoverageActivity.this, StartCoverageActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, START_COVERAGE_ACTIVITY_REQUEST);
     }
 
     /**
@@ -249,7 +254,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
     private void  navigateToRecordVehicleActivity() {
 
         Intent intent = new Intent(AddCoverageActivity.this, RecordVehicleActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, RECORD_VEHICLE_ACTIVITY_REQUEST);
     }
 
     /**
@@ -258,11 +263,30 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
     private void  navigateToRecordMileActivity() {
 
         Intent intent = new Intent(AddCoverageActivity.this, RecordMileActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, RECORD_MILE_ACTIVITY_REQUEST);
     }
 
     private void completeAddCoverage() {
 
         finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data) {
+
+        if (requestCode == START_COVERAGE_ACTIVITY_REQUEST) {
+
+            if (resultCode == RESULT_OK) {
+                coverage = Globals.coverage;
+                updateView();
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 }

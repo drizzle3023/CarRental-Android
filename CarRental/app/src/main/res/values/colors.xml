@@ -7,7 +7,7 @@
     <color name="colorSplashText">#FFFFFF</color>
     <color name="colorOnboardingBackcolor">#97E9FF</color>
     <color name="colorOnboardingTextColor">#323232</color>
-    <color name="colorTransparent">#dadada</color>
+    <color name="colorTransparent">#cccccc</color>
     <color name="colorMainBack">#EFEFEF</color>
     <color name="colorNavigationBar">#F5FFFFFF</color>
     <color name="colorDivider">#33000000</color>

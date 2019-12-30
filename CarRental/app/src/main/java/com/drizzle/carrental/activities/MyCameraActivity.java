@@ -37,5 +37,6 @@ public class MyCameraActivity extends BaseCameraActivity {
         cameraWidth = 1280;
         cameraHeight = 720;
     }
+
 }
 

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.*;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.services.GetAddressIntentService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -27,8 +29,10 @@ import android.location.Location;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class StartCoverageActivity extends AppCompatActivity implements View.OnClickListener {
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
+public class StartCoverageActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
      * UI Control Handlers
@@ -45,7 +49,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private TextView textViewStartDate;
     private TextView textViewEndDate;
 
-    private Button doneButton;
+    private Button buttonDone;
 
     /**
      * Vars for location address
@@ -55,7 +59,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private LocationAddressResultReceiver addressResultReceiver;
     private Location currentLocation;
     private LocationCallback locationCallback;
-
 
     /**
      * Get UI Control Handlers and link events
@@ -69,19 +72,20 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         layoutStartDate = (FrameLayout) findViewById(R.id.layout_start_date);
         layoutEndDate = (FrameLayout) findViewById(R.id.layout_dropoff_date);
 
-        doneButton = (Button) findViewById(R.id.button_done);
+        buttonDone = (Button) findViewById(R.id.button_done);
 
         buttonBack.setOnClickListener(this);
         layoutPickUpLocation.setOnClickListener(this);
         layoutRentalCompany.setOnClickListener(this);
         layoutStartDate.setOnClickListener(this);
         layoutEndDate.setOnClickListener(this);
+        buttonDone.setOnClickListener(this);
+
 
         textViewPickUpLocation = (TextView) findViewById(R.id.textview_pickup_location);
         textViewCompany = (TextView) findViewById(R.id.textview_rental_company);
         textViewStartDate = (TextView) findViewById(R.id.textview_start_date);
         textViewEndDate = (TextView) findViewById(R.id.textview_end_date);
-
 
     }
 
@@ -95,9 +99,14 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 currentLocation = locationResult.getLocations().get(0);
+
+                Globals.coverage.setLocation(currentLocation);
+
                 getAddress();
                 fusedLocationClient.removeLocationUpdates(locationCallback);
-            };
+            }
+
+            ;
         };
         startLocationUpdates();
     }
@@ -113,26 +122,72 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    private void saveCoverageToDb() {
 
+
+    }
+
+    private void navigateToRecordVehicleActivity() {
+
+        Intent intent = new Intent(StartCoverageActivity.this, RecordVehicleActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == R.id.button_back) {
+        switch (view.getId()) {
 
-            finish();
+            case R.id.button_back:
+
+                break;
+
+            case R.id.button_done:
+
+                saveCoverageToDb();
+                backToPreviousActivity();
+
+                break;
+
+            case R.id.layout_pickup_location:
+                getCurrentAddress();
+                break;
+
+            case R.id.layout_start_date:
+                showDatePicker(R.id.layout_start_date);
+                break;
+
+            case R.id.layout_dropoff_date:
+                showDatePicker(R.id.layout_dropoff_date);
+                break;
+
         }
-        if (view.getId() == R.id.button_done) {
+    }
 
-            Intent intent = new Intent(StartCoverageActivity.this, RecordVehicleActivity.class);
-            startActivity(intent);
+    private void showDatePicker(int resourceId) {
 
-        }
-        if (view.getId() == R.id.layout_pickup_location) {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
 
-            getCurrentAddress();
-        }
+        DatePickerDialog pickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
+                if (resourceId == R.id.layout_start_date) {
+
+                    Globals.coverage.setDateFrom(new GregorianCalendar(year, month, dayOfMonth));
+                    textViewStartDate.setText(Globals.coverage.getDateFromString());
+                } else if (resourceId == R.id.layout_dropoff_date) {
+
+                    Globals.coverage.setDateTo(new GregorianCalendar(year, month, dayOfMonth));
+                    textViewEndDate.setText(Globals.coverage.getDateToString());
+                }
+            }
+        }, year, month, day);
+
+        pickerDialog.show();
     }
 
     @SuppressWarnings("MissingPermission")
@@ -214,6 +269,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
             String currentAdd = resultData.getString("address_result");
 
+            Globals.coverage.setLocationAddress(currentAdd);
+
             showResults(currentAdd);
         }
     }
@@ -236,6 +293,18 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
         super.onPause();
 
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        backToPreviousActivity();
+    }
+
+    private void backToPreviousActivity() {
+
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 
 }

@@ -1,29 +1,38 @@
 package com.drizzle.carrental.activities;
 
-import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.enumerators.ClaimState;
 import com.drizzle.carrental.enumerators.DamagedPart;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.models.Claim;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class AddClaimActivity extends Activity implements View.OnClickListener {
+public class AddClaimActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
 
     public enum ClaimCurrentStep {
@@ -31,11 +40,10 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         NEW("NEW ", 0),
         WHAT_HAPPENED_EDITING("WHAT_HAPPENED_EDITING", 1),
         ANSWERED_WHATHAPPENED("ANSWERED_WHATHAPPENED", 2),
-        ANSWERED_WHENHAPPENED_EDITING("ANSWERED_WHENHAPPENED_EDITING", 3),
         ANSWERED_WHENHAPPENED("ANSWERED_WHENHAPPENED", 4),
         ANSWERED_WHEREHAPPENED("ANSWERED_WHEREHAPPENED", 5),
         ANSWERED_WHATPARTDAMAGED("ANSWERED_WHATPARTDAMAGED ", 6),
-        VIDEO_CAPTURED("VIDEO_CAPTURED ", 7),
+        ANSWERED_TAKE_VIDEO("VIDEO_CAPTURED ", 7),
         ANSWERED_ELSE("ANSWERED_ELSE ", 8);
 
         private String stringValue;
@@ -44,6 +52,11 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         private ClaimCurrentStep(String toString, int value) {
             stringValue = toString;
             intValue = value;
+        }
+
+        public int getIntValue() {
+
+            return intValue;
         }
 
         @Override
@@ -65,7 +78,7 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
 
     private ImageView imageViewAnswerWhatHappendIcon;
     private TextView textViewAnswerWhatHappenedTitle;
-    private ImageButton imageButtonEditAnswerWhatHappened;
+    private Button buttonEditAnswerWhatHappened;
     private TextView textViewAnswerWhatHappenedDescription;
 
     private EditText editTextAnswerWhatHappenedDescription;
@@ -75,32 +88,35 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
     private LinearLayout layoutQuestionWhenHappened;
     private LinearLayout layoutAnswerWhenHappened;
     private TextView textViewQuestionWhenHappened;
-    private ImageView imageViewAnswerWhenHappendIcon;
+    private ImageView imageViewAnswerWhenHappenedIcon;
     private TextView textViewAnswerWhenHappened;
-    private ImageButton imageButtonEditAnswerWhenHappened;
+    private Button buttonEditAnswerWhenHappened;
 
     private LinearLayout layoutQuestionWhereHappened;
-    private LinearLayout layoutAnwerWhereHappened;
-    private ImageView imageViewAnswerWhereHappendIcon;
+    private LinearLayout layoutAnswerWhereHappened;
+    private ImageView imageViewAnswerWhereHappenedIcon;
     private TextView textViewQuestionWhereHappened;
     private TextView textViewAnswerWhereHappened;
-    private ImageButton imageButtonEditAnswerWhereHappened;
-    private ImageView imageViewAnswerWhereHappened;
+    private Button buttonEditAnswerWhereHappened;
+    private SupportMapFragment mapViewAnswerWhereHappened;
 
     private LinearLayout layoutQuestionDamagedPart;
     private LinearLayout layoutAnwerDamagedPart;
     private ImageView imageViewAnswerDamagedPartIcon;
-    private TextView textviewQuestionDamagedPart;
+    private TextView textViewQuestionDamagedPart;
     private TextView textViewAnswerDamagedPart;
-    private ImageButton imageButtonEditDamagedPart;
-    private ImageView imageViewAnswerDamagedPart;
+    private Button buttonEditDamagedPart;
+    private FrameLayout frameLayoutDamagedZoneImage;
+    private ImageView imageViewDamagedZoneImage;
+    private TextView textViewDamagedZoneCount;
+
 
     private LinearLayout layoutQuestionTakeVideo;
     private LinearLayout layoutAnwerTakeVideo;
     private ImageView imageViewAnswerTakeVideoIcon;
     private TextView textViewQuestionTakeVideo;
     private TextView textViewAnswerTakeVideo;
-    private ImageButton imageButtonEditTakeVideo;
+    private Button buttonEditTakeVideo;
     private ImageView imageViewAnswerTakeVideo;
 
     private LinearLayout layoutQuestionElse;
@@ -109,7 +125,7 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
     private ImageView imageViewAnswerElseIcon;
     private TextView textViewQuestionElse;
     private TextView textViewAnswerElse;
-    private ImageButton imageButtonEditElse;
+    private Button buttonEditElse;
     private EditText editTextAnswerElse;
     private Button buttonDoneElse;
 
@@ -133,7 +149,7 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         layoutAnswerWhatHappened = findViewById(R.id.layout_answer_what_happened);
         imageViewAnswerWhatHappendIcon = findViewById(R.id.imageview_answer_what_happened_icon);
         textViewAnswerWhatHappenedTitle = findViewById(R.id.textview_answer_what_happend_title);
-        imageButtonEditAnswerWhatHappened = findViewById(R.id.imagebutton_edit_answer_what_happend);
+        buttonEditAnswerWhatHappened = findViewById(R.id.imagebutton_edit_answer_what_happend);
         textViewAnswerWhatHappenedDescription = findViewById(R.id.textview_answer_what_happend_saved_description);
         layoutAnswerWhatHappenedSaved = findViewById(R.id.layout_answer_what_happened_saved);
 
@@ -143,32 +159,35 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
 
         layoutQuestionWhenHappened = findViewById(R.id.layout_question_when_happened);
         layoutAnswerWhenHappened = findViewById(R.id.layout_answer_when_happened);
-        imageViewAnswerWhenHappendIcon = findViewById(R.id.imageview_answer_when_happened_icon);
+        imageViewAnswerWhenHappenedIcon = findViewById(R.id.imageview_answer_when_happened_icon);
         textViewAnswerWhenHappened = findViewById(R.id.textview_answer_when_happend);
-        imageButtonEditAnswerWhenHappened = findViewById(R.id.imagebutton_edit_when_happend);
+        buttonEditAnswerWhenHappened = findViewById(R.id.imagebutton_edit_when_happend);
         textViewQuestionWhenHappened = findViewById(R.id.textview_question_when_happened);
 
         layoutQuestionWhereHappened = findViewById(R.id.layout_question_where_happened);
-        layoutAnwerWhereHappened = findViewById(R.id.layout_answer_where_happened);
-        imageViewAnswerWhereHappendIcon = findViewById(R.id.imageview_answer_where_happened_icon);
+        layoutAnswerWhereHappened = findViewById(R.id.layout_answer_where_happened);
+        imageViewAnswerWhereHappenedIcon = findViewById(R.id.imageview_answer_where_happened_icon);
         textViewAnswerWhereHappened = findViewById(R.id.textview_answer_where_happened);
-        imageButtonEditAnswerWhereHappened = findViewById(R.id.imagebutton_edit_answer_where_happened);
-        imageViewAnswerWhereHappened = findViewById(R.id.mapview_answer_where_happened);
+        buttonEditAnswerWhereHappened = findViewById(R.id.imagebutton_edit_answer_where_happened);
         textViewQuestionWhereHappened = findViewById(R.id.textview_question_where_happened);
+        mapViewAnswerWhereHappened = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapview_answer_where_happened);
+        mapViewAnswerWhereHappened.getMapAsync(this);
 
         layoutQuestionDamagedPart = findViewById(R.id.layout_question_damaged_part);
         layoutAnwerDamagedPart = findViewById(R.id.layout_answer_damaged_part);
         imageViewAnswerDamagedPartIcon = findViewById(R.id.imageview_answer_damaged_part_icon);
         textViewAnswerDamagedPart = findViewById(R.id.textview_answer_damaged_part);
-        imageButtonEditDamagedPart = findViewById(R.id.imagebutton_edit_answer_damaged_part);
-        imageViewAnswerDamagedPart = findViewById(R.id.imageview_answer_damaged_part);
-        textviewQuestionDamagedPart = findViewById(R.id.textview_question_damaged_parts);
+        buttonEditDamagedPart = findViewById(R.id.imagebutton_edit_answer_damaged_part);
+        textViewQuestionDamagedPart = findViewById(R.id.textview_question_damaged_parts);
+        frameLayoutDamagedZoneImage = findViewById(R.id.framelayout_damaged_part_image);
+        imageViewDamagedZoneImage = findViewById(R.id.imageview_answer_damaged_part);
+        textViewDamagedZoneCount = findViewById(R.id.textview_damaged_part_count);
 
         layoutQuestionTakeVideo = findViewById(R.id.layout_question_take_video);
         layoutAnwerTakeVideo = findViewById(R.id.layout_answer_take_video);
         imageViewAnswerTakeVideoIcon = findViewById(R.id.imageview_answer_take_video_icon);
         textViewAnswerTakeVideo = findViewById(R.id.textview_answer_take_video);
-        imageButtonEditTakeVideo = findViewById(R.id.imagebutton_edit_answer_take_video);
+        buttonEditTakeVideo = findViewById(R.id.imagebutton_edit_answer_take_video);
         imageViewAnswerTakeVideo = findViewById(R.id.imageview_answer_take_video);
         textViewQuestionTakeVideo = findViewById(R.id.textview_question_take_video);
 
@@ -177,7 +196,7 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         layoutAnwerElseSaved = findViewById(R.id.layout_answer_else_saved);
         imageViewAnswerElseIcon = findViewById(R.id.imageview_answer_else_icon);
         textViewAnswerElse = findViewById(R.id.textview_answer_else);
-        imageButtonEditElse = findViewById(R.id.imagebutton_edit_answer_else);
+        buttonEditElse = findViewById(R.id.imagebutton_edit_answer_else);
         editTextAnswerElse = findViewById(R.id.edittext_answer_else);
         buttonDoneElse = findViewById(R.id.button_done_answer_else);
         buttonSubmitClaim = findViewById(R.id.button_submit);
@@ -187,27 +206,25 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         buttonSave.setOnClickListener(this);
 
         textViewAnswerWhatHappenedTitle.setOnClickListener(this);
-        imageButtonEditAnswerWhatHappened.setOnClickListener(this);
+        buttonEditAnswerWhatHappened.setOnClickListener(this);
         imageButtonClearTextAnswerWhatHappenedDescription.setOnClickListener(this);
         buttonDoneTextAnswerWhatHappenedDescription.setOnClickListener(this);
 
         textViewAnswerWhenHappened.setOnClickListener(this);
-        imageButtonEditAnswerWhenHappened.setOnClickListener(this);
+        buttonEditAnswerWhenHappened.setOnClickListener(this);
 
         textViewAnswerWhereHappened.setOnClickListener(this);
-        imageButtonEditAnswerWhereHappened.setOnClickListener(this);
-        imageViewAnswerWhereHappened.setOnClickListener(this);
+        buttonEditAnswerWhereHappened.setOnClickListener(this);
 
         textViewAnswerDamagedPart.setOnClickListener(this);
-        imageButtonEditDamagedPart.setOnClickListener(this);
-        imageViewAnswerDamagedPart.setOnClickListener(this);
+        buttonEditDamagedPart.setOnClickListener(this);
 
         textViewAnswerTakeVideo.setOnClickListener(this);
-        imageButtonEditTakeVideo.setOnClickListener(this);
+        buttonEditTakeVideo.setOnClickListener(this);
         imageViewAnswerTakeVideo.setOnClickListener(this);
 
         textViewAnswerElse.setOnClickListener(this);
-        imageButtonEditElse.setOnClickListener(this);
+        buttonEditElse.setOnClickListener(this);
         buttonDoneElse.setOnClickListener(this);
 
     }
@@ -234,14 +251,14 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         List<DamagedPart> damagedParts = new ArrayList<>();
         damagedParts.add(DamagedPart.LEFT_BACK);
         damagedParts.add(DamagedPart.LEFT_FENDER_PANEL);
-        claim.setDamagedPart(damagedParts);
+        claim.setDamagedParts(damagedParts);
 
         claim.setExtraDescription("Extra description");
         claim.setClaimState(ClaimState.INCOMPLETE);
-
+        claim.setImageURL("https://png.pngtree.com/element_our/20190523/ourlarge/pngtree-car-driving-box-type-long-motor-vehicle-line-image_1088711.jpg");
         setClaim(claim);
 
-        claimCurrentStep = ClaimCurrentStep.NEW;
+        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
     }
 
     /**
@@ -267,6 +284,10 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         updateSaveButton();
         updateAnswerWhatHappenedLayout();
         updateWhenHappenedLayout();
+        updateWhereHappenedLayout();
+        updateDamagedPartLayout();
+        updateTakeVideoLayout();
+        updateElseLayout();
     }
 
     private void updateSaveButton() {
@@ -290,7 +311,7 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
             layoutAnswerWhatHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhatHappenedSaved.setVisibility(View.VISIBLE);
             textViewAnswerWhatHappenedDescription.setVisibility(View.GONE);
-            imageButtonEditAnswerWhatHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhatHappened.setVisibility(View.VISIBLE);
             editTextAnswerWhatHappenedDescription.setVisibility(View.GONE);
             imageButtonClearTextAnswerWhatHappenedDescription.setVisibility(View.GONE);
             buttonDoneTextAnswerWhatHappenedDescription.setVisibility(View.GONE);
@@ -299,7 +320,8 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
             layoutAnswerWhatHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_new, null));
             imageViewAnswerWhatHappendIcon.setImageResource(R.drawable.file_a_claim_answer_what_happened_icon_enabled);
             textViewAnswerWhatHappenedTitle.setText(getResources().getText(R.string.file_a_claim_answer_what_happened_text_title));
-            imageButtonEditAnswerWhatHappened.setImageResource(R.drawable.file_a_claim_answer_edit);
+            buttonEditAnswerWhatHappened.setText(getResources().getText(R.string.drop_down_list_symbol_character));
+            buttonEditAnswerWhatHappened.setBackgroundResource(0);
             textViewAnswerWhatHappenedTitle.setTextColor(Color.WHITE);
 
         } else if (claimCurrentStep == ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
@@ -308,7 +330,7 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
             layoutAnswerWhatHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhatHappenedSaved.setVisibility(View.VISIBLE);
             textViewAnswerWhatHappenedDescription.setVisibility(View.GONE);
-            imageButtonEditAnswerWhatHappened.setVisibility(View.GONE);
+            buttonEditAnswerWhatHappened.setVisibility(View.GONE);
             editTextAnswerWhatHappenedDescription.setVisibility(View.VISIBLE);
             imageButtonClearTextAnswerWhatHappenedDescription.setVisibility(View.VISIBLE);
             buttonDoneTextAnswerWhatHappenedDescription.setVisibility(View.VISIBLE);
@@ -316,6 +338,8 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
             layoutQuestionWhatHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
             layoutAnswerWhatHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
             imageViewAnswerWhatHappendIcon.setImageResource(R.drawable.file_a_claim_answer_what_happened_icon_editing);
+            buttonEditAnswerWhatHappened.setBackgroundResource(R.drawable.icon_edit);
+            buttonEditAnswerWhatHappened.setText("");
 
         } else {
 
@@ -323,7 +347,7 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
             layoutAnswerWhatHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhatHappenedSaved.setVisibility(View.VISIBLE);
             textViewAnswerWhatHappenedDescription.setVisibility(View.VISIBLE);
-            imageButtonEditAnswerWhatHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhatHappened.setVisibility(View.VISIBLE);
             editTextAnswerWhatHappenedDescription.setVisibility(View.GONE);
             imageButtonClearTextAnswerWhatHappenedDescription.setVisibility(View.GONE);
             buttonDoneTextAnswerWhatHappenedDescription.setVisibility(View.GONE);
@@ -331,7 +355,8 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
             layoutQuestionWhatHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_disabled, null));
             layoutAnswerWhatHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
             imageViewAnswerWhatHappendIcon.setImageResource(R.drawable.file_a_claim_answer_what_happened_icon_saved);
-            imageButtonEditAnswerWhatHappened.setImageResource(R.drawable.icon_edit);
+            buttonEditAnswerWhatHappened.setBackgroundResource(R.drawable.icon_edit);
+            buttonEditAnswerWhatHappened.setText("");
             textViewAnswerWhatHappenedTitle.setText(claim.getWhatHappened());
             textViewAnswerWhatHappenedDescription.setText(claim.getWhatHappened());
         }
@@ -343,45 +368,285 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
 
             layoutQuestionWhenHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhenHappened.setVisibility(View.VISIBLE);
-            imageButtonEditAnswerWhenHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhenHappened.setVisibility(View.VISIBLE);
 
-            layoutAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_new, null));
-            imageViewAnswerWhenHappendIcon.setImageResource(R.drawable.file_a_claim_calendar_icon_editing);
-            textViewAnswerWhenHappened.setText(R.string.claim_question_when_happened);
-            imageButtonEditAnswerWhenHappened.setImageResource(R.drawable.file_a_claim_answer_edit);
+            layoutQuestionWhenHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
             textViewQuestionWhenHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
 
-        } else if (claimCurrentStep == ClaimCurrentStep.ANSWERED_WHENHAPPENED_EDITING) {
+            layoutAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_new, null));
+            imageViewAnswerWhenHappenedIcon.setImageResource(R.drawable.file_a_claim_calendar_icon_editing);
+            textViewAnswerWhenHappened.setText(getResources().getString(R.string.file_a_claim_answer_when_happened_text_title));
+            textViewAnswerWhenHappened.setTextColor(Color.WHITE);
+            buttonEditAnswerWhenHappened.setText(getResources().getString(R.string.drop_down_list_symbol_character));
+            buttonEditAnswerWhenHappened.setBackgroundResource(0);
+
+        } else if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_WHENHAPPENED.getIntValue()) {
 
             layoutQuestionWhenHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhenHappened.setVisibility(View.VISIBLE);
-            imageButtonEditAnswerWhenHappened.setVisibility(View.GONE);
+            buttonEditAnswerWhenHappened.setVisibility(View.VISIBLE);
+
+            layoutQuestionWhenHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
+            textViewQuestionWhenHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
 
             layoutAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
-            imageViewAnswerWhenHappendIcon.setImageResource(R.drawable.file_a_claim_calendar_icon_saved);
+            imageViewAnswerWhenHappenedIcon.setImageResource(R.drawable.file_a_claim_calendar_icon_saved);
             textViewAnswerWhenHappened.setText(claim.getDateString());
-            textViewQuestionWhenHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            textViewAnswerWhenHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+
+            buttonEditAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.icon_edit));
+            buttonEditAnswerWhenHappened.setText("");
+
         } else {
 
             layoutQuestionWhenHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhenHappened.setVisibility(View.VISIBLE);
-            imageButtonEditAnswerWhenHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhenHappened.setVisibility(View.VISIBLE);
 
             layoutQuestionWhenHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_disabled, null));
-            layoutAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
-            imageViewAnswerWhenHappendIcon.setImageResource(R.drawable.file_a_claim_calendar_icon_editing);
-            textViewAnswerWhenHappened.setText(R.string.claim_question_when_happened);
-            imageButtonEditAnswerWhenHappened.setImageResource(R.drawable.file_a_claim_answer_edit);
             textViewQuestionWhenHappened.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
+            layoutAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_disabled, null));
+            imageViewAnswerWhenHappenedIcon.setImageResource(R.drawable.file_a_claim_calendar_icon_editing);
+            textViewAnswerWhenHappened.setText(getResources().getString(R.string.file_a_claim_answer_when_happened_text_title));
             textViewAnswerWhenHappened.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
+            buttonEditAnswerWhenHappened.setText(getResources().getString(R.string.drop_down_list_symbol_character));
+            buttonEditAnswerWhenHappened.setBackgroundResource(0);
+            buttonEditAnswerWhenHappened.setText("");
         }
     }
 
     private void updateWhereHappenedLayout() {
 
+        if (claimCurrentStep == ClaimCurrentStep.ANSWERED_WHENHAPPENED) {
+
+            layoutQuestionWhereHappened.setVisibility(View.VISIBLE);
+            layoutAnswerWhereHappened.setVisibility(View.VISIBLE);
+            imageViewAnswerWhereHappenedIcon.setVisibility(View.VISIBLE);
+            textViewAnswerWhereHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhereHappened.setVisibility(View.VISIBLE);
+            textViewQuestionWhereHappened.setVisibility(View.VISIBLE);
+            if (mapViewAnswerWhereHappened.getView() != null) {
+                mapViewAnswerWhereHappened.getView().setVisibility(View.GONE);
+            }
+
+
+            layoutQuestionWhereHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
+            textViewQuestionWhereHappened.setText(getResources().getString(R.string.claim_question_where_happened));
+            textViewQuestionWhereHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+
+            layoutAnswerWhereHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_new, null));
+            imageViewAnswerWhereHappenedIcon.setImageResource(R.drawable.file_a_claim_icon_location_ready);
+            textViewAnswerWhereHappened.setText(getResources().getString(R.string.file_a_claim_answer_where_happened_text_title));
+            textViewAnswerWhereHappened.setTextColor(Color.WHITE);
+            buttonEditAnswerWhereHappened.setText("");
+            buttonEditAnswerWhereHappened.setBackgroundResource(0);
+
+        } else if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_WHEREHAPPENED.getIntValue()) {
+
+            layoutQuestionWhereHappened.setVisibility(View.VISIBLE);
+            layoutAnswerWhereHappened.setVisibility(View.VISIBLE);
+            imageViewAnswerWhereHappenedIcon.setVisibility(View.VISIBLE);
+            textViewAnswerWhereHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhereHappened.setVisibility(View.VISIBLE);
+            textViewQuestionWhereHappened.setVisibility(View.VISIBLE);
+            if (mapViewAnswerWhereHappened.getView() != null) {
+                mapViewAnswerWhereHappened.getView().setVisibility(View.VISIBLE);
+            }
+
+
+            layoutQuestionWhereHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
+            textViewQuestionWhereHappened.setText(getResources().getString(R.string.claim_question_where_happened));
+            textViewQuestionWhereHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+
+            layoutAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
+            imageViewAnswerWhereHappenedIcon.setImageResource(R.drawable.file_a_claim_icon_location_saved);
+            textViewAnswerWhereHappened.setText(claim.getAddressHappened());
+            textViewAnswerWhereHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            buttonEditAnswerWhereHappened.setBackgroundResource(R.drawable.icon_edit);
+            buttonEditAnswerWhereHappened.setText("");
+
+        } else {
+
+            layoutQuestionWhereHappened.setVisibility(View.VISIBLE);
+            layoutAnswerWhereHappened.setVisibility(View.VISIBLE);
+            imageViewAnswerWhereHappenedIcon.setVisibility(View.VISIBLE);
+            textViewAnswerWhereHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhereHappened.setVisibility(View.VISIBLE);
+            textViewQuestionWhereHappened.setVisibility(View.VISIBLE);
+            if (mapViewAnswerWhereHappened.getView() != null) {
+                mapViewAnswerWhereHappened.getView().setVisibility(View.GONE);
+            }
+
+
+            layoutQuestionWhereHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_disabled, null));
+            textViewQuestionWhereHappened.setText(getResources().getString(R.string.claim_question_where_happened));
+            textViewQuestionWhereHappened.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
+            layoutAnswerWhereHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_disabled, null));
+            imageViewAnswerWhereHappenedIcon.setImageResource(R.drawable.file_a_claim_icon_location_ready);
+            textViewAnswerWhereHappened.setText(getResources().getString(R.string.file_a_claim_answer_where_happened_text_title));
+            textViewAnswerWhereHappened.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            buttonEditAnswerWhereHappened.setText("");
+            buttonEditAnswerWhereHappened.setBackgroundResource(0);
+        }
+    }
+
+    private void updateDamagedPartLayout() {
+
+        if (claimCurrentStep == ClaimCurrentStep.ANSWERED_WHEREHAPPENED) {
+
+            layoutQuestionDamagedPart.setVisibility(View.VISIBLE);
+            layoutAnwerDamagedPart.setVisibility(View.VISIBLE);
+            imageViewAnswerDamagedPartIcon.setVisibility(View.VISIBLE);
+            textViewQuestionDamagedPart.setVisibility(View.VISIBLE);
+            textViewAnswerDamagedPart.setVisibility(View.VISIBLE);
+            buttonEditDamagedPart.setVisibility(View.VISIBLE);
+            frameLayoutDamagedZoneImage.setVisibility(View.GONE);
+
+            layoutQuestionDamagedPart.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
+            layoutAnwerDamagedPart.setBackgroundResource(R.drawable.claim_answer_new);
+            imageViewAnswerDamagedPartIcon.setImageResource(R.drawable.claim_select_damaged_part_icon);
+            textViewQuestionDamagedPart.setText(getResources().getString(R.string.claim_question_damaged_part));
+            textViewQuestionDamagedPart.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            textViewAnswerDamagedPart.setText(getResources().getString(R.string.file_a_claim_answer_damaged_part));
+            textViewAnswerDamagedPart.setTextColor(Color.WHITE);
+            buttonEditDamagedPart.setBackgroundResource(0);
+            buttonEditDamagedPart.setText("");
+
+        } else if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED.getIntValue()) {
+
+            layoutQuestionDamagedPart.setVisibility(View.VISIBLE);
+            layoutAnwerDamagedPart.setVisibility(View.VISIBLE);
+            imageViewAnswerDamagedPartIcon.setVisibility(View.GONE);
+            textViewQuestionDamagedPart.setVisibility(View.VISIBLE);
+            textViewAnswerDamagedPart.setVisibility(View.VISIBLE);
+            buttonEditDamagedPart.setVisibility(View.VISIBLE);
+            frameLayoutDamagedZoneImage.setVisibility(View.VISIBLE);
+
+            layoutQuestionDamagedPart.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
+            layoutAnwerDamagedPart.setBackgroundResource(R.drawable.claim_answer_damaged_zone_saved);
+            textViewQuestionDamagedPart.setText(getResources().getString(R.string.claim_question_damaged_part));
+            textViewAnswerDamagedPart.setText(claim.getDateString());
+            textViewAnswerDamagedPart.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewAnswerDamagedPart.setTypeface(null, Typeface.ITALIC);
+            buttonEditDamagedPart.setText("");
+            buttonEditDamagedPart.setBackgroundResource(R.drawable.icon_edit);
+
+            int damagedZoneCount = 0;
+            if (claim.getDamagedParts() != null) {
+                damagedZoneCount = claim.getDamagedParts().size();
+            }
+
+            if (damagedZoneCount > 1) {
+                String strCount = "+" + (damagedZoneCount - 1);
+                textViewDamagedZoneCount.setText(strCount);
+            } else {
+                textViewDamagedZoneCount.setVisibility(View.GONE);
+            }
+
+            if (damagedZoneCount > 0) {
+
+                String strZoneName = claim.getDamagedParts().get(0).toString() + "_selected";
+
+                int resID = getResources().getIdentifier(strZoneName, "drawable", getPackageName());
+                imageViewDamagedZoneImage.setImageResource(resID);
+            }
+
+
+        } else {
+
+            layoutQuestionDamagedPart.setVisibility(View.VISIBLE);
+            layoutAnwerDamagedPart.setVisibility(View.VISIBLE);
+            imageViewAnswerDamagedPartIcon.setVisibility(View.VISIBLE);
+            textViewQuestionDamagedPart.setVisibility(View.VISIBLE);
+            textViewAnswerDamagedPart.setVisibility(View.VISIBLE);
+            buttonEditDamagedPart.setVisibility(View.VISIBLE);
+            frameLayoutDamagedZoneImage.setVisibility(View.GONE);
+
+            layoutQuestionDamagedPart.setBackgroundResource(R.drawable.file_a_claim_question_disabled);
+            layoutAnwerDamagedPart.setBackgroundResource(R.drawable.claim_answer_disabled);
+            imageViewAnswerDamagedPartIcon.setImageResource(R.drawable.claim_select_damaged_part_icon);
+            textViewQuestionDamagedPart.setText(getResources().getString(R.string.claim_question_damaged_part));
+            textViewAnswerDamagedPart.setText(getResources().getString(R.string.file_a_claim_answer_damaged_part));
+            buttonEditDamagedPart.setText("");
+            buttonEditDamagedPart.setBackgroundResource(0);
+
+        }
+    }
+
+    private void updateTakeVideoLayout() {
+
+        if (claimCurrentStep == ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED) {
+
+            layoutQuestionTakeVideo.setVisibility(View.VISIBLE);
+            layoutAnwerTakeVideo.setVisibility(View.VISIBLE);
+            imageViewAnswerTakeVideoIcon.setVisibility(View.VISIBLE);
+            textViewQuestionTakeVideo.setVisibility(View.VISIBLE);
+            textViewAnswerTakeVideo.setVisibility(View.VISIBLE);
+            buttonEditTakeVideo.setVisibility(View.VISIBLE);
+            imageViewAnswerTakeVideo.setVisibility(View.GONE);
+
+            layoutQuestionTakeVideo.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
+            layoutAnwerTakeVideo.setBackgroundResource(R.drawable.claim_answer_new);
+            imageViewAnswerTakeVideoIcon.setBackgroundResource(R.drawable.file_a_claim_take_video_icon_ready);
+            textViewQuestionTakeVideo.setText(getResources().getString(R.string.claim_question_take_a_video));
+            textViewQuestionTakeVideo.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            textViewAnswerTakeVideo.setText(getResources().getString(R.string.file_a_claim_answer_take_video));
+            textViewAnswerTakeVideo.setTextColor(Color.WHITE);
+            buttonEditTakeVideo.setText("");
+
+        } else if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_TAKE_VIDEO.getIntValue()) {
+
+            layoutQuestionTakeVideo.setVisibility(View.VISIBLE);
+            layoutAnwerTakeVideo.setVisibility(View.VISIBLE);
+            imageViewAnswerTakeVideoIcon.setVisibility(View.GONE);
+            textViewQuestionTakeVideo.setVisibility(View.VISIBLE);
+            textViewAnswerTakeVideo.setVisibility(View.VISIBLE);
+            buttonEditTakeVideo.setVisibility(View.VISIBLE);
+            imageViewAnswerTakeVideo.setVisibility(View.VISIBLE);
+
+            layoutQuestionTakeVideo.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
+            layoutAnwerTakeVideo.setBackgroundResource(R.drawable.claim_answer_new);
+            imageViewAnswerTakeVideoIcon.setBackgroundResource(R.drawable.file_a_claim_take_video_icon_ready);
+            textViewQuestionTakeVideo.setText(getResources().getString(R.string.claim_question_take_a_video));
+            textViewQuestionTakeVideo.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            textViewAnswerTakeVideo.setText(claim.getDateString());
+            textViewAnswerTakeVideo.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewAnswerTakeVideo.setTypeface(null, Typeface.ITALIC);
+            buttonEditTakeVideo.setText("");
+            buttonEditTakeVideo.setBackgroundResource(R.drawable.icon_edit);
+            Picasso.get().load(claim.getImageURL()).placeholder(null).into(imageViewAnswerTakeVideo);
+
+        } else {
+
+
+            layoutQuestionTakeVideo.setVisibility(View.VISIBLE);
+            layoutAnwerTakeVideo.setVisibility(View.VISIBLE);
+            imageViewAnswerTakeVideoIcon.setVisibility(View.VISIBLE);
+            textViewQuestionTakeVideo.setVisibility(View.VISIBLE);
+            textViewAnswerTakeVideo.setVisibility(View.VISIBLE);
+            buttonEditTakeVideo.setVisibility(View.GONE);
+            imageViewAnswerTakeVideo.setVisibility(View.GONE);
+
+            layoutQuestionTakeVideo.setBackgroundResource(R.drawable.file_a_claim_question_disabled);
+            layoutAnwerTakeVideo.setBackgroundResource(R.drawable.claim_answer_disabled);
+            imageViewAnswerTakeVideoIcon.setBackgroundResource(R.drawable.file_a_claim_take_video_icon_ready);
+            textViewQuestionTakeVideo.setText(getResources().getString(R.string.claim_question_take_a_video));
+            textViewQuestionTakeVideo.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewAnswerTakeVideo.setText(getResources().getString(R.string.file_a_claim_answer_take_video));
+            textViewAnswerTakeVideo.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewAnswerTakeVideo.setTypeface(null, Typeface.ITALIC);
+
+        }
 
     }
 
+    private void updateElseLayout() {
+
+
+    }
 
     /**
      * OnClick Handlers
@@ -401,5 +666,16 @@ public class AddClaimActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+
+        if (claim.getWhatHappened() != null) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude())).title("Marker"));
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude()), Constants.DEFAULT_MAP_ZOOM_LEVEL));
+
+        }
+    }
 
 }

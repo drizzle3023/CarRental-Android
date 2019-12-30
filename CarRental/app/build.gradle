@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.github.MasayukiSuda:CameraRecorder-android:v0.1.5'
     implementation 'com.android.support:support-annotations:28.0.0'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.3.1'
-
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     compileOnly 'org.projectlombok:lombok:1.18.10'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
@@ -46,8 +46,8 @@ dependencies {
     implementation "com.adyen.checkout:card-ui:3.6.1"
 
     // Retrofit for http communication
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
 
 }

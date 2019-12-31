@@ -63,7 +63,7 @@ public class VerifyCodeActivity extends Activity {
                     JsonParser jsonParser = new JsonParser();
                     gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
 
-                    Call<ResponseBody> callSync = apiInterface.signIn(gsonObject);
+                    Call<ResponseBody> callSync = apiInterface.signVerify(gsonObject);
                     Response<ResponseBody> response = callSync.execute();
 
                     progressDialog.dismiss();

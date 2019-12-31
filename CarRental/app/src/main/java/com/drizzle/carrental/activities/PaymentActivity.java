@@ -77,8 +77,7 @@ public class PaymentActivity extends FragmentActivity{
             JSONObject paramObject = new JSONObject();
 
             paramObject.put("access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
-            paramObject.put("amount", 49);
-            paramObject.put("currency", "EUR");
+            paramObject.put("car_type_id", 1);
 
             JsonParser jsonParser = new JsonParser();
             gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());

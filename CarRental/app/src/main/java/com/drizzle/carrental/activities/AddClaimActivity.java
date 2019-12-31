@@ -194,9 +194,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         layoutQuestionElse = findViewById(R.id.layout_question_else);
         layoutAnwerElse = findViewById(R.id.layout_answer_else);
         layoutAnwerElseSaved = findViewById(R.id.layout_answer_else_saved);
-        imageViewAnswerElseIcon = findViewById(R.id.imageview_answer_else_icon);
-        textViewAnswerElse = findViewById(R.id.textview_answer_else);
-        buttonEditElse = findViewById(R.id.imagebutton_edit_answer_else);
+
         editTextAnswerElse = findViewById(R.id.edittext_answer_else);
         buttonDoneElse = findViewById(R.id.button_done_answer_else);
         buttonSubmitClaim = findViewById(R.id.button_submit);

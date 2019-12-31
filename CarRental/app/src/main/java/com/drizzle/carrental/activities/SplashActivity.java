@@ -25,10 +25,12 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
 
         //load saved api token
-        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
+//        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
+//        SharedHelper.putKey(this, "access_token", null);
 
         String strAccessToken = SharedHelper.getKey(this, "access_token");
-        if (strAccessToken != null) {
+
+        if (!strAccessToken.isEmpty()) {
 
             //check validation of API token
             Globals.AccessToken = strAccessToken;

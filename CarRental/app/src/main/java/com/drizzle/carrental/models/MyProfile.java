@@ -1,26 +1,38 @@
 package com.drizzle.carrental.models;
 
+import com.google.gson.annotations.SerializedName;
+
+import org.intellij.lang.annotations.JdkConstants;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.GregorianCalendar;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MyProfile {
 
-    private String firstName;
 
-    private String lastName;
+    @SerializedName("name")
+    private String name;
 
-    private GregorianCalendar birthday;
+    @SerializedName("email")
+    private String email;
 
-    private String emailAddress;
+    @SerializedName("mobile")
+    private String mobile;
 
-    private String phoneNumber;
-
+    @SerializedName("address")
     private String address;
 
+    @SerializedName("card_no")
     private String creditCardNo;
 
 }

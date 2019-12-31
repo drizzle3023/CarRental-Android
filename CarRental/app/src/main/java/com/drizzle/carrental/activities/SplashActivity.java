@@ -1,19 +1,38 @@
 package com.drizzle.carrental.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.GregorianCalendar;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class SplashActivity extends Activity {
+import java.io.IOException;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class SplashActivity extends Activity implements Callback<ResponseBody> {
+
+    ProgressDialog progressDialog;
 
     Handler handler;
 
@@ -24,41 +43,15 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
 
+        progressDialog = new ProgressDialog(this);
+
         //load saved api token
 //        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
-//        SharedHelper.putKey(this, "access_token", null);
-
         String strAccessToken = SharedHelper.getKey(this, "access_token");
-        strAccessToken = "";
+
         if (!strAccessToken.isEmpty()) {
 
-            //check validation of API token
-            Globals.AccessToken = strAccessToken;
-
-            // Todo list
-            // Call API to fetch profile from server
-            MyProfile profile = new MyProfile();
-
-            profile.setFirstName("Tiny");
-            profile.setLastName("Blonde");
-            profile.setEmailAddress("drizzle3023@hotmail.com");
-            profile.setAddress("Beijing, China");
-            profile.setPhoneNumber("+8613522171058");
-            profile.setBirthday(new GregorianCalendar(1996, 1, 1));
-            profile.setCreditCardNo("4242 4242 4242");
-
-            Globals.isLoggedIn = true;
-            Globals.profile = profile;
-
-            handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, 3000);
+            fetchProfileFromServer();
 
         } else {
 
@@ -68,19 +61,142 @@ public class SplashActivity extends Activity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
-                    Intent intent = new Intent(SplashActivity.this, AddClaimActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    navigateToOnboardingActivity();
                 }
             }, 3000);
 
         }
 
-
     }
 
+    /**
+     * fetch user profile from saved access_token
+     */
+    private void fetchProfileFromServer() {
+
+        //prepare restrofit2 request parameters
+        JsonObject gSonObject = new JsonObject();
+
+        //set parameters using org.JSONObject
+        JSONObject paramObject = new JSONObject();
+        try {
+
+            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+
+        JsonParser jsonParser = new JsonParser();
+        gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+
+        //display waiting dialog
+        showWaitingScreen();
+        //send request
+        apiInterface.getUserProfile(gSonObject).enqueue(this);
+    }
+
+    private void showWaitingScreen() {
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
+    //callback of success api request
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+        hideWaitingScreen();
+
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
+        if (object == null) {
+
+            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+
+                JSONObject data = object.getJSONObject("data");
+                MyProfile myProfile = new Gson().fromJson(data.toString(), new TypeToken<MyProfile>() {
+                }.getType());
+
+                Globals.profile = myProfile;
+
+                navigateToHomeActivity();
+
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                navigateToOnboardingActivity();
+            } else {
+
+                navigateToOnboardingActivity();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    //callback of failed api request
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+        hideWaitingScreen();
+    }
+
+    private void navigateToHomeActivity() {
+
+        Globals.isLoggedIn = true;
+
+        Intent newIntent = new Intent(SplashActivity.this, HomeActivity.class);
+        startActivity(newIntent);
+        finish();
+    }
+
+    private void navigateToOnboardingActivity() {
+
+        Intent newIntent = new Intent(SplashActivity.this, OnboardingActivity.class);
+        startActivity(newIntent);
+        finish();
+    }
 
 }

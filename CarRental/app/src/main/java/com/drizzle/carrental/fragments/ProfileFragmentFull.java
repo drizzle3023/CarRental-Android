@@ -56,8 +56,8 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         linkAbout.setOnClickListener(this);
         linkLogout.setOnClickListener(this);
 
-        textViewName.setText(profile.getFirstName() + profile.getLastName());
-        textViewPhoneNumber.setText(profile.getPhoneNumber());
+        textViewName.setText(profile.getName());
+        textViewPhoneNumber.setText(profile.getMobile());
 
         try {
             int cardNoLength = profile.getCreditCardNo().length();

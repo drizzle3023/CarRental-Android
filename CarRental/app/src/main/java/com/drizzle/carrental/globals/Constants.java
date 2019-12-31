@@ -33,4 +33,6 @@ public class Constants {
 
     public static boolean isRecordingVehicleOrMile = true; //true - recording vehicle, false - recording mile
 
+
+    public static String MESSAGE_NO_RESPONSE = "No response from server.";
 }

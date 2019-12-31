@@ -37,4 +37,8 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("api/get-history-list")
     Call<ResponseBody> getHistoryList(@Body JsonObject body);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/get-user-profile")
+    Call<ResponseBody> getUserProfile(@Body JsonObject body);
 }

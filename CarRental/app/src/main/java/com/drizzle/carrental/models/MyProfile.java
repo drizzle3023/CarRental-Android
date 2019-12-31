@@ -6,6 +6,7 @@ import org.intellij.lang.annotations.JdkConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.GregorianCalendar;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyProfile {
+public class MyProfile implements Serializable {
 
 
     @SerializedName("name")

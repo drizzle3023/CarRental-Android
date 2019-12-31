@@ -153,8 +153,8 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
 
                 JSONObject data = object.getJSONObject("data");
-                MyProfile myProfile = new Gson().fromJson(data.toString(), new TypeToken<MyProfile>() {
-                }.getType());
+                JSONObject profileData = data.getJSONObject("profile");
+                MyProfile myProfile = new Gson().fromJson(profileData.toString(), new TypeToken<MyProfile>() {}.getType());
 
                 Globals.profile = myProfile;
 

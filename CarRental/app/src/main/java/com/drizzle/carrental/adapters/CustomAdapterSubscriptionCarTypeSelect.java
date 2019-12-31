@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.models.VehicleType;
 import com.squareup.picasso.Picasso;
 
@@ -56,7 +57,7 @@ public class CustomAdapterSubscriptionCarTypeSelect extends BaseAdapter {
             ImageView icon = (ImageView) view.findViewById(R.id.imageView);
             TextView names = (TextView) view.findViewById(R.id.textView);
 
-            Picasso.get().load(vehicleTypes.get(i).getIconURL()).placeholder(R.drawable.icon_company).into(icon);
+            Picasso.get().load(Constants.SERVER_HTTP_URL + "/run/media" + vehicleTypes.get(i).getIconURL()).placeholder(R.drawable.icon_company).into(icon);
             names.setText(vehicleTypes.get(i).getName());
         }
         catch (Exception e) {

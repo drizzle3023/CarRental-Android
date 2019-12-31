@@ -1,6 +1,7 @@
 package com.drizzle.carrental.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,17 +10,38 @@ import android.view.View;
 
 import com.drizzle.carrental.adapters.CustomAdapterSubscriptionCarTypeSelect;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ServiceArea;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.models.SubscriptionModel;
 import com.drizzle.carrental.models.VehicleType;
+import com.drizzle.carrental.serializers.ParseHistory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
-public class SubscriptionNewActivity extends Activity implements AdapterView.OnItemSelectedListener, View.OnClickListener, RadioButton.OnCheckedChangeListener {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+public class SubscriptionNewActivity extends Activity implements AdapterView.OnItemSelectedListener, View.OnClickListener, RadioButton.OnCheckedChangeListener, Callback<ResponseBody> {
+
+    ProgressDialog progressDialog;
 
     //variables to fetch data from database
     ArrayList<VehicleType> vehicleTypes;
@@ -41,13 +63,11 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription_new);
 
+        progressDialog = new ProgressDialog(this);
+
         getControlHandlersAndLinkActions();
 
-
         initVariables();
-
-        updateView();
-
 
     }
 
@@ -80,7 +100,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
         DecimalFormat df = new DecimalFormat("0.00");
 
-        textViewPrice.setText(df.format(subscriptionInfo.getPricePerYear()) + "€ / per year");
+        textViewPrice.setText(df.format(Globals.selectedVehicleType.getPricePerYear()) + "€ / per year");
 
     }
 
@@ -88,23 +108,14 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
         vehicleTypes = new ArrayList<>();
         serviceAreas = new ArrayList<>();
-        subscriptionInfo = new SubscriptionModel();
-
-        subscriptionInfo.setPricePerYear(49.99);
 
         /**
          * Fetch data  from server
          */
         // - fetch vehicle types
         //should be replaced with API
-        for (int i = 0; i < 3; i ++) {
-            VehicleType item = new VehicleType();
-            item.setIconURL("https://image.flaticon.com/icons/png/512/55/55283.png");
-            item.setName("Vehicle " + i + 1);
-            item.setId(i + 1);
 
-            vehicleTypes.add(item);
-        }
+        fetchCarTypeListFromServer();
 
         // - fetch service area
         //should be replaced with API
@@ -112,7 +123,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         item1.setId(1);
         item1.setAreaName("United States");
         ServiceArea item2 = new ServiceArea();
-        item2.setId(1);
+        item2.setId(2);
         item2.setAreaName("Europe");
 
         serviceAreas.add(item1);
@@ -122,22 +133,17 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         /**
          * Init local variables
          */
-        if (vehicleTypes.isEmpty()) {
-            Globals.selectedVehicleType = vehicleTypes.get(0);
-        }
-        Globals.selectedVehicleType = null;
+
 
         if (!serviceAreas.isEmpty()) {
             Globals.selectedServiceArea = serviceAreas.get(0);
         }
-        Globals.selectedServiceArea = null;
     }
 
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
         //Toast.makeText(getApplicationContext(), countryNames[position], Toast.LENGTH_LONG).show();
-
 
 
     }
@@ -166,14 +172,120 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton.getId() == R.id.checkbox_us) {
 
-            Globals.selectedVehicleType = vehicleTypes.get(1);
+            Globals.selectedServiceArea = serviceAreas.get(1);
+
+        } else if (compoundButton.getId() == R.id.checkbox_europe) {
+
+            Globals.selectedServiceArea= serviceAreas.get(0);
 
         }
-        else if (compoundButton.getId() == R.id.checkbox_europe) {
+    }
 
-            Globals.selectedVehicleType = vehicleTypes.get(0);
+    private void fetchCarTypeListFromServer() {
 
+        //prepare restrofit2 request parameters
+        JsonObject gSonObject = new JsonObject();
+
+        //set parameters using org.JSONObject
+        JSONObject paramObject = new JSONObject();
+        try {
+
+            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+        } catch (JSONException e) {
+
+            e.printStackTrace();
         }
 
+        JsonParser jsonParser = new JsonParser();
+        gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        //display waiting dialog
+        showWaitingScreen();
+        //send request
+        apiInterface.getCarTypeList(gSonObject).enqueue(this);
+    }
+
+    private void showWaitingScreen() {
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+        hideWaitingScreen();
+
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (object == null) {
+
+            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+                JSONObject data = object.getJSONObject("data");
+                JSONArray listObject = data.getJSONArray("carTypeList");
+                vehicleTypes = new Gson().fromJson(listObject.toString(), new TypeToken<List<VehicleType>>() {}.getType());
+
+                if (!vehicleTypes.isEmpty()) {
+                    try {
+                        Globals.selectedVehicleType = vehicleTypes.get(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                updateView();
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+            } else {
+
+                Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+        hideWaitingScreen();
     }
 }

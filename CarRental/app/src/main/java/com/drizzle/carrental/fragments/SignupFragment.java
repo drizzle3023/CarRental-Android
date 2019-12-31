@@ -133,7 +133,9 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     private void submitSignUpRequestAndNavigateToVerifyScreen() {
 
         String strEmail = editTextEmailAddress.getText().toString();
-        String strPhone = editTextCountryNumber.getText().toString() + editTextPhoneNumber.getText().toString();
+        int code = Utils.getCurrentCountryCode(getActivity());
+        String countryCode = "+" + code;
+        String strPhone = countryCode + editTextPhoneNumber.getText().toString();
         String strName = editTextSignUp.getText().toString();
 
         if (!Utils.isValidMail(strEmail)) {
@@ -161,6 +163,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                 paramObject.put("name", strName);
                 paramObject.put("email", strEmail);
                 paramObject.put("mobile", strPhone);
+                paramObject.put("car_type_id", 1);
+                paramObject.put("world_zone", "EUROPE");
 
                 JsonParser jsonParser = new JsonParser();
                 gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());

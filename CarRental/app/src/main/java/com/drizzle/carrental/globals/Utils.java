@@ -2,6 +2,7 @@ package com.drizzle.carrental.globals;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
@@ -28,6 +29,10 @@ public class Utils {
         return PhoneNumberUtil.getInstance().getCountryCodeForRegion(countryIso);
     }
 
+    public static void showToast(Context context, String message) {
+
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 
     public static boolean removeTemporaryFile(String filePath) {
 

@@ -29,7 +29,7 @@ public class SplashActivity extends Activity {
 //        SharedHelper.putKey(this, "access_token", null);
 
         String strAccessToken = SharedHelper.getKey(this, "access_token");
-
+        strAccessToken = "";
         if (!strAccessToken.isEmpty()) {
 
             //check validation of API token
@@ -68,8 +68,8 @@ public class SplashActivity extends Activity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
-                    //Intent intent = new Intent(SplashActivity.this, AddClaimActivity.class);
+                    //Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, AddClaimActivity.class);
                     startActivity(intent);
                     finish();
                 }

@@ -44,7 +44,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         ANSWERED_WHEREHAPPENED("ANSWERED_WHEREHAPPENED", 5),
         ANSWERED_WHATPARTDAMAGED("ANSWERED_WHATPARTDAMAGED ", 6),
         ANSWERED_TAKE_VIDEO("VIDEO_CAPTURED ", 7),
-        ANSWERED_ELSE("ANSWERED_ELSE ", 8);
+        ELSE_ANSWER_EDITING("ELSE_ANSWER_EDITING", 8),
+        ANSWERED_ELSE("ANSWERED_ELSE ", 9);
 
         private String stringValue;
         private int intValue;
@@ -101,7 +102,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
     private SupportMapFragment mapViewAnswerWhereHappened;
 
     private LinearLayout layoutQuestionDamagedPart;
-    private LinearLayout layoutAnwerDamagedPart;
+    private LinearLayout layoutAnswerDamagedPart;
     private ImageView imageViewAnswerDamagedPartIcon;
     private TextView textViewQuestionDamagedPart;
     private TextView textViewAnswerDamagedPart;
@@ -112,7 +113,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
 
     private LinearLayout layoutQuestionTakeVideo;
-    private LinearLayout layoutAnwerTakeVideo;
+    private LinearLayout layoutAnswerTakeVideo;
     private ImageView imageViewAnswerTakeVideoIcon;
     private TextView textViewQuestionTakeVideo;
     private TextView textViewAnswerTakeVideo;
@@ -121,11 +122,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private LinearLayout layoutQuestionElse;
     private LinearLayout layoutAnwerElse;
-    private LinearLayout layoutAnwerElseSaved;
-    private ImageView imageViewAnswerElseIcon;
     private TextView textViewQuestionElse;
-    private TextView textViewAnswerElse;
-    private Button buttonEditElse;
     private EditText editTextAnswerElse;
     private Button buttonDoneElse;
 
@@ -174,7 +171,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         mapViewAnswerWhereHappened.getMapAsync(this);
 
         layoutQuestionDamagedPart = findViewById(R.id.layout_question_damaged_part);
-        layoutAnwerDamagedPart = findViewById(R.id.layout_answer_damaged_part);
+        layoutAnswerDamagedPart = findViewById(R.id.layout_answer_damaged_part);
         imageViewAnswerDamagedPartIcon = findViewById(R.id.imageview_answer_damaged_part_icon);
         textViewAnswerDamagedPart = findViewById(R.id.textview_answer_damaged_part);
         buttonEditDamagedPart = findViewById(R.id.imagebutton_edit_answer_damaged_part);
@@ -184,7 +181,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         textViewDamagedZoneCount = findViewById(R.id.textview_damaged_part_count);
 
         layoutQuestionTakeVideo = findViewById(R.id.layout_question_take_video);
-        layoutAnwerTakeVideo = findViewById(R.id.layout_answer_take_video);
+        layoutAnswerTakeVideo = findViewById(R.id.layout_answer_take_video);
         imageViewAnswerTakeVideoIcon = findViewById(R.id.imageview_answer_take_video_icon);
         textViewAnswerTakeVideo = findViewById(R.id.textview_answer_take_video);
         buttonEditTakeVideo = findViewById(R.id.imagebutton_edit_answer_take_video);
@@ -193,12 +190,12 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
         layoutQuestionElse = findViewById(R.id.layout_question_else);
         layoutAnwerElse = findViewById(R.id.layout_answer_else);
-        layoutAnwerElseSaved = findViewById(R.id.layout_answer_else_saved);
 
         editTextAnswerElse = findViewById(R.id.edittext_answer_else);
         buttonDoneElse = findViewById(R.id.button_done_answer_else);
-        buttonSubmitClaim = findViewById(R.id.button_submit);
         textViewQuestionElse = findViewById(R.id.textview_question_else);
+
+        buttonSubmitClaim = findViewById(R.id.button_submit);
 
         buttonBack.setOnClickListener(this);
         buttonSave.setOnClickListener(this);
@@ -221,9 +218,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         buttonEditTakeVideo.setOnClickListener(this);
         imageViewAnswerTakeVideo.setOnClickListener(this);
 
-        textViewAnswerElse.setOnClickListener(this);
-        buttonEditElse.setOnClickListener(this);
         buttonDoneElse.setOnClickListener(this);
+        buttonSubmitClaim.setOnClickListener(this);
 
     }
 
@@ -256,7 +252,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         claim.setImageURL("https://png.pngtree.com/element_our/20190523/ourlarge/pngtree-car-driving-box-type-long-motor-vehicle-line-image_1088711.jpg");
         setClaim(claim);
 
-        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
+        claimCurrentStep = ClaimCurrentStep.ANSWERED_ELSE;
     }
 
     /**
@@ -496,7 +492,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         if (claimCurrentStep == ClaimCurrentStep.ANSWERED_WHEREHAPPENED) {
 
             layoutQuestionDamagedPart.setVisibility(View.VISIBLE);
-            layoutAnwerDamagedPart.setVisibility(View.VISIBLE);
+            layoutAnswerDamagedPart.setVisibility(View.VISIBLE);
             imageViewAnswerDamagedPartIcon.setVisibility(View.VISIBLE);
             textViewQuestionDamagedPart.setVisibility(View.VISIBLE);
             textViewAnswerDamagedPart.setVisibility(View.VISIBLE);
@@ -504,7 +500,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             frameLayoutDamagedZoneImage.setVisibility(View.GONE);
 
             layoutQuestionDamagedPart.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
-            layoutAnwerDamagedPart.setBackgroundResource(R.drawable.claim_answer_new);
+            layoutAnswerDamagedPart.setBackgroundResource(R.drawable.claim_answer_new);
             imageViewAnswerDamagedPartIcon.setImageResource(R.drawable.claim_select_damaged_part_icon);
             textViewQuestionDamagedPart.setText(getResources().getString(R.string.claim_question_damaged_part));
             textViewQuestionDamagedPart.setTextColor(getResources().getColor(R.color.colorNormalText, null));
@@ -516,7 +512,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         } else if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED.getIntValue()) {
 
             layoutQuestionDamagedPart.setVisibility(View.VISIBLE);
-            layoutAnwerDamagedPart.setVisibility(View.VISIBLE);
+            layoutAnswerDamagedPart.setVisibility(View.VISIBLE);
             imageViewAnswerDamagedPartIcon.setVisibility(View.GONE);
             textViewQuestionDamagedPart.setVisibility(View.VISIBLE);
             textViewAnswerDamagedPart.setVisibility(View.VISIBLE);
@@ -524,7 +520,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             frameLayoutDamagedZoneImage.setVisibility(View.VISIBLE);
 
             layoutQuestionDamagedPart.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
-            layoutAnwerDamagedPart.setBackgroundResource(R.drawable.claim_answer_damaged_zone_saved);
+            layoutAnswerDamagedPart.setBackgroundResource(R.drawable.claim_answer_damaged_zone_saved);
             textViewQuestionDamagedPart.setText(getResources().getString(R.string.claim_question_damaged_part));
             textViewAnswerDamagedPart.setText(claim.getDateString());
             textViewAnswerDamagedPart.setTextColor(getResources().getColor(R.color.colorInvalid, null));
@@ -556,7 +552,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         } else {
 
             layoutQuestionDamagedPart.setVisibility(View.VISIBLE);
-            layoutAnwerDamagedPart.setVisibility(View.VISIBLE);
+            layoutAnswerDamagedPart.setVisibility(View.VISIBLE);
             imageViewAnswerDamagedPartIcon.setVisibility(View.VISIBLE);
             textViewQuestionDamagedPart.setVisibility(View.VISIBLE);
             textViewAnswerDamagedPart.setVisibility(View.VISIBLE);
@@ -564,7 +560,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             frameLayoutDamagedZoneImage.setVisibility(View.GONE);
 
             layoutQuestionDamagedPart.setBackgroundResource(R.drawable.file_a_claim_question_disabled);
-            layoutAnwerDamagedPart.setBackgroundResource(R.drawable.claim_answer_disabled);
+            layoutAnswerDamagedPart.setBackgroundResource(R.drawable.claim_answer_disabled);
             imageViewAnswerDamagedPartIcon.setImageResource(R.drawable.claim_select_damaged_part_icon);
             textViewQuestionDamagedPart.setText(getResources().getString(R.string.claim_question_damaged_part));
             textViewAnswerDamagedPart.setText(getResources().getString(R.string.file_a_claim_answer_damaged_part));
@@ -579,7 +575,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         if (claimCurrentStep == ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED) {
 
             layoutQuestionTakeVideo.setVisibility(View.VISIBLE);
-            layoutAnwerTakeVideo.setVisibility(View.VISIBLE);
+            layoutAnswerTakeVideo.setVisibility(View.VISIBLE);
             imageViewAnswerTakeVideoIcon.setVisibility(View.VISIBLE);
             textViewQuestionTakeVideo.setVisibility(View.VISIBLE);
             textViewAnswerTakeVideo.setVisibility(View.VISIBLE);
@@ -587,7 +583,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             imageViewAnswerTakeVideo.setVisibility(View.GONE);
 
             layoutQuestionTakeVideo.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
-            layoutAnwerTakeVideo.setBackgroundResource(R.drawable.claim_answer_new);
+            layoutAnswerTakeVideo.setBackgroundResource(R.drawable.claim_answer_new);
             imageViewAnswerTakeVideoIcon.setBackgroundResource(R.drawable.file_a_claim_take_video_icon_ready);
             textViewQuestionTakeVideo.setText(getResources().getString(R.string.claim_question_take_a_video));
             textViewQuestionTakeVideo.setTextColor(getResources().getColor(R.color.colorNormalText, null));
@@ -598,7 +594,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         } else if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_TAKE_VIDEO.getIntValue()) {
 
             layoutQuestionTakeVideo.setVisibility(View.VISIBLE);
-            layoutAnwerTakeVideo.setVisibility(View.VISIBLE);
+            layoutAnswerTakeVideo.setVisibility(View.VISIBLE);
             imageViewAnswerTakeVideoIcon.setVisibility(View.GONE);
             textViewQuestionTakeVideo.setVisibility(View.VISIBLE);
             textViewAnswerTakeVideo.setVisibility(View.VISIBLE);
@@ -606,7 +602,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             imageViewAnswerTakeVideo.setVisibility(View.VISIBLE);
 
             layoutQuestionTakeVideo.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
-            layoutAnwerTakeVideo.setBackgroundResource(R.drawable.claim_answer_new);
+            layoutAnswerTakeVideo.setBackgroundResource(R.drawable.claim_answer_saved);
             imageViewAnswerTakeVideoIcon.setBackgroundResource(R.drawable.file_a_claim_take_video_icon_ready);
             textViewQuestionTakeVideo.setText(getResources().getString(R.string.claim_question_take_a_video));
             textViewQuestionTakeVideo.setTextColor(getResources().getColor(R.color.colorNormalText, null));
@@ -621,7 +617,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
 
             layoutQuestionTakeVideo.setVisibility(View.VISIBLE);
-            layoutAnwerTakeVideo.setVisibility(View.VISIBLE);
+            layoutAnswerTakeVideo.setVisibility(View.VISIBLE);
             imageViewAnswerTakeVideoIcon.setVisibility(View.VISIBLE);
             textViewQuestionTakeVideo.setVisibility(View.VISIBLE);
             textViewAnswerTakeVideo.setVisibility(View.VISIBLE);
@@ -629,7 +625,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             imageViewAnswerTakeVideo.setVisibility(View.GONE);
 
             layoutQuestionTakeVideo.setBackgroundResource(R.drawable.file_a_claim_question_disabled);
-            layoutAnwerTakeVideo.setBackgroundResource(R.drawable.claim_answer_disabled);
+            layoutAnswerTakeVideo.setBackgroundResource(R.drawable.claim_answer_disabled);
             imageViewAnswerTakeVideoIcon.setBackgroundResource(R.drawable.file_a_claim_take_video_icon_ready);
             textViewQuestionTakeVideo.setText(getResources().getString(R.string.claim_question_take_a_video));
             textViewQuestionTakeVideo.setTextColor(getResources().getColor(R.color.colorInvalid, null));
@@ -643,7 +639,59 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private void updateElseLayout() {
 
+        if (claimCurrentStep == ClaimCurrentStep.ANSWERED_TAKE_VIDEO) {
 
+
+            layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
+            layoutAnwerElse.setBackgroundResource(R.drawable.claim_answer_saved);
+            editTextAnswerElse.setText("");
+            buttonDoneElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewQuestionElse.setText(getResources().getString(R.string.claim_question_else));
+            textViewQuestionElse.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            editTextAnswerElse.setEnabled(true);
+
+        }
+        else if (claimCurrentStep == ClaimCurrentStep.ELSE_ANSWER_EDITING) {
+
+            layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
+            layoutAnwerElse.setBackgroundResource(R.drawable.claim_answer_saved);
+            editTextAnswerElse.setText("");
+            buttonDoneElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewQuestionElse.setText(getResources().getString(R.string.claim_question_else));
+            textViewQuestionElse.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+
+            editTextAnswerElse.setEnabled(true);
+        }
+        else if (claimCurrentStep == ClaimCurrentStep.ANSWERED_ELSE) {
+
+            layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
+            layoutAnwerElse.setBackgroundResource(R.drawable.claim_answer_saved);
+            buttonDoneElse.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            textViewQuestionElse.setText(getResources().getString(R.string.claim_question_else));
+            textViewQuestionElse.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            editTextAnswerElse.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            editTextAnswerElse.setText(claim.getExtraDescription());
+            if (claim.getExtraDescription().isEmpty()) {
+
+                buttonDoneElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            }
+            else {
+                buttonDoneElse.setTextColor(getResources().getColor(R.color.colorNormalBlue, null));
+            }
+            editTextAnswerElse.setEnabled(true);
+        }
+        else {
+
+            layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_disabled);
+            layoutAnwerElse.setBackgroundResource(R.drawable.claim_answer_disabled);
+            buttonDoneElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewQuestionElse.setText(getResources().getString(R.string.claim_question_else));
+            textViewQuestionElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            editTextAnswerElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            editTextAnswerElse.setEnabled(false);
+            buttonDoneElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
+        }
     }
 
     /**

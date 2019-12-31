@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="switch_track_height">27dp</dimen>
+    <dimen name="switch_thumb_radius">18dp</dimen>
+    <dimen name="switch_track_width">36dp</dimen>
+    <dimen name="switch_radius">50dp</dimen>
+    <dimen name="switch_selector_padding">5dp</dimen>
+    <dimen name="switch_stroke_height">0dp</dimen>
+
+
+</resources>

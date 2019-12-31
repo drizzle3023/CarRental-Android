@@ -55,6 +55,14 @@
 
     <color name="colorValid">#7126b4</color>
 
+    <color name="switchBackground">#ECE7F9</color>
+    <color name="switchTrack">#ffd600</color>
+    <color name="switchTrackDisable">#90caf9</color>
+    <color name="switchTrackActive">#1565c0</color>
+    <color name="switchTrackNormal">#7126b4</color>
+    <color name="switchThumbBgActive">#FFFFFF</color>
+    <color name="switchThumbActive">#ad1457</color>
+    <color name="switchThumbkNormal">#64b5f6</color>
 
 
 

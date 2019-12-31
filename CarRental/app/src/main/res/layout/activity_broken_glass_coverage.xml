@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorOnboardingBackcolor"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:background="@color/colorOnboardingBackcolor">
+
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="9dp"
+                android:background="@null"
+                android:padding="10dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="Add vehicle coverage"
+                android:textColor="@color/colorCoverageTitle"
+                android:textSize="17sp" />
+
+
+
+            <ImageButton
+                android:id="@+id/button_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="9dp"
+                android:background="@null"
+                android:src="@drawable/icon_edit" />
+
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/add_broken_glass_coverage"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="23dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/broken_glass">
+
+        </ImageView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="23dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/colorNormalText"
+            android:fontFamily="@font/sf_pro_display_semibold"
+            android:textSize="15sp"
+            android:text="@string/broken_glasses"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/colorNormalText"
+            android:fontFamily="@font/sf_pro_display_semibold"
+            android:textSize="17sp"
+            android:text="@string/price_for_broken_glass_coverage"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="13dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/colorNormalText"
+            android:fontFamily="@font/sf_pro_display_semibold"
+            android:textSize="13sp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="64dp"
+            android:textAlignment="center"
+            android:text="@string/description_for_broken_glass_coverage"/>
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textView27"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:gravity="center"
+            android:paddingLeft="18dp"
+            android:layout_marginLeft="84dp"
+            android:layout_marginRight="85dp"
+            android:background="@drawable/add_broken_coverage_date_textfield"
+            android:text="TextView" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:minHeight="20dp" />
+
+        <CheckBox
+            android:id="@+id/agree_term_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="36dp"
+            android:layout_marginRight="36dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableLeft="@drawable/checkbox_selector"
+            android:drawablePadding="10dp"
+            android:text="I agreed to the Terms of Service" />
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="20dp" />
+
+        <Switch
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginBottom="38dp"
+            android:background="@drawable/add_broken_switch_background"
+            android:fontFamily="@font/sf_pro_text_medium"
+            android:paddingLeft="18dp"
+            android:paddingRight="8dp"
+            android:switchMinWidth="50dp"
+            android:text="Coverage active"
+            android:textAlignment="center"
+            android:textColor="@color/colorNormalBlue"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/switch_thumb_custom"
+            android:thumbTextPadding="@dimen/switch_thumb_radius"
+            android:track="@drawable/switch_track_custom" />
+
+
+
+    </LinearLayout>
+</LinearLayout>

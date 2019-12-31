@@ -61,4 +61,9 @@
     <!-- Error messages for empty fields -->
     <string name="required_name">Please input name.</string>
     <string name="required_phone_number">Please input phone number.</string>
+
+    <string name="broken_glasses">Broken glasses</string>
+    <string name="price_for_broken_glass_coverage">2.50 € / mo</string>
+
+    <string name="description_for_broken_glass_coverage">Pays for covered damage to your vehicle caused by anything other than an accident.</string>
 </resources>

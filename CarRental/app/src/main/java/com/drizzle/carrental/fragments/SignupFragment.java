@@ -3,7 +3,6 @@ package com.drizzle.carrental.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,25 +12,36 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.activities.HomeActivity;
+import com.drizzle.carrental.activities.SplashActivity;
 import com.drizzle.carrental.activities.VerifyCodeActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.Utils;
+import com.drizzle.carrental.models.VehicleType;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 //import com.mukesh.countrypicker.Country;
@@ -39,12 +49,14 @@ import retrofit2.Response;
 
 //import butterknife.BindView;
 
-public class SignupFragment extends Fragment implements View.OnClickListener {
+public class SignupFragment extends Fragment implements View.OnClickListener, Callback<ResponseBody> {
 
     //private Country selectedCountry = null;
 
 //    @BindView(R.id.text_country_prefix)
 //    TextView countryPrefixTextView;
+
+    ProgressDialog progressDialog;
 
     private Country selectedCountry = null;
 
@@ -65,7 +77,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         editTextCountryNumber = view.findViewById(R.id.text_country_prefix);
         editTextPhoneNumber = view.findViewById(R.id.edittext_phonenumber);
         editTextEmailAddress = view.findViewById(R.id.edittext_email_address);
-        editTextSignUp = view.findViewById(R.id.signup_name);
+        editTextSignUp = view.findViewById(R.id.edittext_signup_name);
 
         int code = Utils.getCurrentCountryCode(getActivity());
         String countryCode = "+" + code;
@@ -89,6 +101,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
         getControlHandlersAndLinkActions(view);
+
+        progressDialog = new ProgressDialog(getActivity());
 
         updateView();
 
@@ -114,7 +128,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void showAlert(String title, String message, int resourceId) {
+    private void showToast(String message, int resourceId) {
 
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 
@@ -124,80 +138,89 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         } else if (resourceId == R.id.edittext_phonenumber) {
 
             editTextPhoneNumber.requestFocus();
-        } else if (resourceId == R.id.signup_name) {
+        } else if (resourceId == R.id.edittext_signup_name) {
 
             editTextSignUp.requestFocus();
         }
     }
 
-    private void submitSignUpRequestAndNavigateToVerifyScreen() {
+    private void submitSignUpRequest() {
 
         String strEmail = editTextEmailAddress.getText().toString();
-        int code = Utils.getCurrentCountryCode(getActivity());
-        String countryCode = "+" + code;
-        String strPhone = countryCode + editTextPhoneNumber.getText().toString();
+
+        String strPhone = editTextCountryNumber.getText() + editTextPhoneNumber.getText().toString();
         String strName = editTextSignUp.getText().toString();
+
+        if (strName.isEmpty()) {
+
+            showToast(getString(R.string.validation_user_name_empty), R.id.edittext_signup_name);
+            return;
+        }
+
+        if (strEmail.isEmpty()) {
+
+            showToast(getString(R.string.validation_email_empty), R.id.edittext_signup_name);
+            return;
+        }
+
+        if (editTextPhoneNumber.getText().toString().isEmpty()) {
+
+            showToast(getString(R.string.validation_mobile_empty), R.id.edittext_signup_name);
+            return;
+        }
+
 
         if (!Utils.isValidMail(strEmail)) {
 
-            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_email), R.id.edittext_email_address);
+            showToast(getString(R.string.validation_wrong_email), R.id.edittext_email_address);
         } else if (!Utils.isValidMobile(strPhone)) {
 
-            showAlert(getString(R.string.default_message_title), getString(R.string.validation_wrong_phonenumber), R.id.edittext_phonenumber);
-        } else if (strName.equalsIgnoreCase("")){
-            showAlert(getString(R.string.default_message_title), getString(R.string.required_name), R.id.signup_name);
+            showToast(getString(R.string.validation_wrong_phonenumber), R.id.edittext_phonenumber);
         } else {
 
             // Send sign up request to server
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
 
-            ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            JSONObject paramObject = new JSONObject();
 
-            JsonObject gsonObject = new JsonObject();
             try {
-                JSONObject paramObject = new JSONObject();
 
                 paramObject.put("name", strName);
                 paramObject.put("email", strEmail);
                 paramObject.put("mobile", strPhone);
-                paramObject.put("car_type_id", 1);
-                paramObject.put("world_zone", "EUROPE");
 
-                JsonParser jsonParser = new JsonParser();
-                gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
-
-                Call<ResponseBody> callSync = apiInterface.signUp(gsonObject);
-                Response<ResponseBody> response = callSync.execute();
-
-                progressDialog.dismiss();
-
-                JSONObject object = new JSONObject(response.body().string());
-
-                if (object.getString("success").equalsIgnoreCase("true")){
-
-                    Intent intent = new Intent(getActivity(), VerifyCodeActivity.class);
-                    getActivity().finish();
-                    getActivity().startActivity(intent);
-
-                } else {
-
-                    JSONObject data = object.getJSONObject("data");
-                    Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e){
-
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
+                paramObject.put("car_type_id", Globals.selectedVehicleType.getId());
+                paramObject.put("world_zone", Globals.selectedServiceArea.getAreaName());
+            } catch (JSONException e) {
 
                 e.printStackTrace();
-                Toast.makeText(getContext(), getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
+
+            JsonParser jsonParser = new JsonParser();
+            JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+            //get apiInterface
+            ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            //display waiting dialog
+            showWaitingScreen();
+            //send request
+            apiInterface.signUp(gSonObject).enqueue(this);
         }
 
     }
+
+    private void showWaitingScreen() {
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -205,18 +228,17 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         if (view.getId() == R.id.createaccount_button) {
             if (ifAgreeTerm) {
 
-                submitSignUpRequestAndNavigateToVerifyScreen();
+                submitSignUpRequest();
             } else {
+
                 return;
             }
 
         } else if (view.getId() == R.id.agree_term_checkbox) {
-            if (checkAgreeTerm.isChecked()) {
-                ifAgreeTerm = true;
-            } else {
-                ifAgreeTerm = false;
-            }
+
+            ifAgreeTerm = checkAgreeTerm.isChecked();
             updateSignupButtonStyle();
+
         } else if (view.getId() == R.id.text_country_prefix) {
 
             displayCountryPicker();
@@ -243,4 +265,71 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         CountryPicker picker = builder.build();
         picker.showDialog(getActivity());
     }
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+        hideWaitingScreen();
+
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (object == null) {
+
+            Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+                navigateToVerifyScreen();
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
+            } else {
+
+                Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+        hideWaitingScreen();
+        Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+    }
+
+    private void navigateToVerifyScreen() {
+
+        Intent newIntent = new Intent(getContext(), VerifyCodeActivity.class);
+        startActivity(newIntent);
+    }
+
 }

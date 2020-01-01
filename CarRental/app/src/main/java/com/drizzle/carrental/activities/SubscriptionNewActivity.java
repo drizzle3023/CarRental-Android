@@ -145,7 +145,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
         //Toast.makeText(getApplicationContext(), countryNames[position], Toast.LENGTH_LONG).show();
 
-
+        Globals.selectedVehicleType = vehicleTypes.get(position);
     }
 
     @Override
@@ -243,13 +243,13 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
             }
         } else {
 
-            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (object == null) {
 
-            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -274,11 +274,11 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                 Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
             } else {
 
-                Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
 
-            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

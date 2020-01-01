@@ -49,6 +49,9 @@
     <string name="file_a_claim_answer_damaged_part">Select image</string>
     <string name="file_a_claim_answer_take_video">Take video</string>
 
+    <string name="validation_user_name_empty">User name is empty.</string>
+    <string name="validation_email_empty">User name is empty.</string>
+    <string name="validation_mobile_empty">User name is empty.</string>
     <string name="validation_wrong_email">Email address is incorrect.</string>
     <string name="validation_wrong_phonenumber">Phone number is incorrect.</string>
 
@@ -57,6 +60,8 @@
 
     <!-- Error messages of server connection -->
     <string name="something_went_wrong">Something went wrong!</string>
+    <string name="message_no_response">No response from server.</string>
+
 
     <!-- Error messages for empty fields -->
     <string name="required_name">Please input name.</string>

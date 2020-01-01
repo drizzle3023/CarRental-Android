@@ -137,14 +137,14 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
             }
         } else {
 
-            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             return;
         }
 
 
         if (object == null) {
 
-            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -171,7 +171,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
             }
         } catch (JSONException e) {
 
-            Toast.makeText(this, Constants.MESSAGE_NO_RESPONSE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

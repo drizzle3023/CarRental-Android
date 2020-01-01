@@ -106,7 +106,6 @@ public class LoginFragment extends Fragment {
                                     if (object.getString("success").equals("true")){
 
                                         Intent newIntent = new Intent(getActivity(), VerifyCodeActivity.class);
-                                        newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(newIntent);
 
 

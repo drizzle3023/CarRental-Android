@@ -17,13 +17,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.adapters.CustomAdapterCompanySelect;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
+import com.drizzle.carrental.globals.VolleyMultipartRequest;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.VehicleType;
 import com.drizzle.carrental.services.GetAddressIntentService;
@@ -50,7 +59,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -288,43 +299,76 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
         hideWaitingScreen();
         Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void saveCoverageToDb() {
 
         isGettingCompanyListOrSubitAction = false;
 
-        JSONObject paramObject = new JSONObject();
-
-        try {
-
-            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-            paramObject.put("name", selectedCompany.getName());
-            paramObject.put("latitude", Globals.coverage.getLocation().getLatitude());
-            paramObject.put("longitude", Globals.coverage.getLocation().getLongitude());
-            paramObject.put("address", Globals.coverage.getLocationAddress());
-            paramObject.put("company_id", selectedCompany.getId());
-            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
-            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
-            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-        }
-
-        JsonParser jsonParser = new JsonParser();
-        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
-
-        //get apiInterface
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        //display waiting dialog
         showWaitingScreen();
-        //send request
 
-        apiInterface.addCoverage(gSonObject).enqueue(this);
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(
+                Request.Method.POST, Constants.SERVER_HTTP_URL + "/api/add-coverage",
+                new com.android.volley.Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        hideWaitingScreen();
 
+                        String res = new String(response.data);
+                        try {
+                            JSONObject jsonObject = new JSONObject(res);
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            if (jsonObject.getString("success").equals("true")) {
+
+                                Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                                backToPreviousActivity();
+                            } else {
+                                Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(StartCoverageActivity.this, getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideWaitingScreen();
+                Toast.makeText(StartCoverageActivity.this, getResources().getString(R.string.message_no_response), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> paramObject = new HashMap<>();
+
+                paramObject.put("access_token", SharedHelper.getKey(StartCoverageActivity.this, "access_token"));
+                paramObject.put("name", selectedCompany.getName());
+                paramObject.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
+                paramObject.put("longitude", String.format("%f",Globals.coverage.getLocation().getLongitude()));
+                paramObject.put("address", Globals.coverage.getLocationAddress());
+                paramObject.put("company_id", String.format("%d", selectedCompany.getId()));
+                paramObject.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
+                paramObject.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000));
+                paramObject.put("state", String.format("%d",CoverageState.UNCOVERED.getIntValue()));
+
+                return paramObject;
+            }
+
+            @Override
+            protected Map<String, VolleyMultipartRequest.DataPart> getByteData() throws AuthFailureError {
+                Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(volleyMultipartRequest);
     }
 
     private void navigateToRecordVehicleActivity() {

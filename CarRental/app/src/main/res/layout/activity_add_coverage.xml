@@ -13,7 +13,7 @@
 
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/button_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -86,6 +86,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/layout_coverage_line"
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:minHeight="30dp"
@@ -101,6 +102,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_coverage_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -247,8 +249,10 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/layout_video_vehicle_line"
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
+                android:minHeight="30dp"
                 android:orientation="vertical">
 
                 <View
@@ -261,6 +265,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_video_vehicle_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -278,7 +283,7 @@
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"
-                        android:background="@drawable/video_thumbnails"
+                        android:background="@drawable/video_vehicle"
                         android:src="@drawable/test" />
 
                 </LinearLayout>
@@ -335,8 +340,10 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/layout_video_mile_line"
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
+                android:minHeight="30dp"
                 android:orientation="vertical">
 
                 <View
@@ -349,6 +356,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_video_mile_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -366,7 +374,7 @@
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"
-                        android:background="@drawable/video_thumbnails"
+                        android:background="@drawable/video_mile"
                         android:src="@drawable/test" />
 
 

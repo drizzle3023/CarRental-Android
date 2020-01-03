@@ -1,8 +1,11 @@
 package com.drizzle.carrental.enumerators;
 
 public enum CoverageState {
-    COVERED ("Covered", 0),
-    UNCOVERED ("Uncovered", 1);
+    UNCOVERED ("Uncovered", 1),
+    COVERED ("Covered", 2),
+    CANCELLED ("Cancelled", 3),
+    EXPIRED ("Expired", 4);
+
 
     private String stringValue;
     private int intValue;
@@ -15,5 +18,10 @@ public enum CoverageState {
     @Override
     public String toString() {
         return stringValue;
+    }
+
+    public int getIntValue() {
+
+        return intValue;
     }
 }

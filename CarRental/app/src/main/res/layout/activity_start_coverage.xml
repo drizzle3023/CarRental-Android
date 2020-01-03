@@ -114,35 +114,35 @@
 
         </FrameLayout>
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/layout_rental_company"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="44dp"
             android:layout_marginBottom="15dp"
+            android:background="@drawable/coverage_add_button"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textview_rental_company"
-                style="@style/AppTheme.StartCoverageButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/coverage_add_button"
-                android:gravity="center_vertical"
-                android:hint="Rental Company"
-                android:linksClickable="true"
-                android:paddingLeft="50dp"
-                android:paddingRight="18dp" />
-
-            <ImageButton
-                android:id="@+id/button_rental_comany"
+            <ImageView
+                android:id="@+id/company_select_dropdown_button"
                 android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:background="@null"
-                android:paddingLeft="15dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/spinner" />
 
-                android:src="@drawable/icon_company" />
+            <Spinner
+                android:id="@+id/spinner_company_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:spinnerMode="dropdown" />
 
-        </FrameLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

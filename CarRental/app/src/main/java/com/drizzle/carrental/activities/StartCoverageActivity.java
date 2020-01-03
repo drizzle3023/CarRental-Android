@@ -5,42 +5,70 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.adapters.CustomAdapterCompanySelect;
+import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.models.Company;
+import com.drizzle.carrental.models.VehicleType;
 import com.drizzle.carrental.services.GetAddressIntentService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationResult;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import android.location.Location;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-public class StartCoverageActivity extends AppCompatActivity implements View.OnClickListener {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class StartCoverageActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, Callback<ResponseBody> {
 
     /**
      * UI Control Handlers
      */
+
+    ProgressDialog progressDialog;
+
     private ImageButton buttonBack;
 
     private FrameLayout layoutPickUpLocation;
-    private FrameLayout layoutRentalCompany;
+    private RelativeLayout layoutRentalCompany;
     private FrameLayout layoutStartDate;
     private FrameLayout layoutEndDate;
 
@@ -50,6 +78,12 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private TextView textViewEndDate;
 
     private Button buttonDone;
+    private Spinner spinnerCompanySelector;
+    private ImageView buttonDropDown;
+
+    private ArrayList<Company> companies;
+
+    private Company selectedCompany;
 
     /**
      * Vars for location address
@@ -60,6 +94,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private Location currentLocation;
     private LocationCallback locationCallback;
 
+    private boolean isGettingCompanyListOrSubitAction = true;
     /**
      * Get UI Control Handlers and link events
      */
@@ -68,9 +103,12 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         buttonBack = (ImageButton) findViewById(R.id.button_back);
 
         layoutPickUpLocation = (FrameLayout) findViewById(R.id.layout_pickup_location);
-        layoutRentalCompany = (FrameLayout) findViewById(R.id.layout_rental_company);
+        layoutRentalCompany = findViewById(R.id.layout_rental_company);
         layoutStartDate = (FrameLayout) findViewById(R.id.layout_start_date);
         layoutEndDate = (FrameLayout) findViewById(R.id.layout_dropoff_date);
+
+        spinnerCompanySelector = findViewById(R.id.spinner_company_select);
+        buttonDropDown = findViewById(R.id.company_select_dropdown_button);
 
         buttonDone = (Button) findViewById(R.id.button_done);
 
@@ -81,9 +119,10 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         layoutEndDate.setOnClickListener(this);
         buttonDone.setOnClickListener(this);
 
+        //spinner = (Spinner) findViewById(R.id.compan);
+        spinnerCompanySelector.setOnItemSelectedListener(this);
 
         textViewPickUpLocation = (TextView) findViewById(R.id.textview_pickup_location);
-        textViewCompany = (TextView) findViewById(R.id.textview_rental_company);
         textViewStartDate = (TextView) findViewById(R.id.textview_start_date);
         textViewEndDate = (TextView) findViewById(R.id.textview_end_date);
 
@@ -99,6 +138,10 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 currentLocation = locationResult.getLocations().get(0);
+
+                isGettingCompanyListOrSubitAction = true;
+
+                fetchCompaniesFromServer();
 
                 Globals.coverage.setLocation(currentLocation);
 
@@ -118,12 +161,169 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_coverage);
 
+        companies = new ArrayList<>();
+
+        progressDialog = new ProgressDialog(this);
+
         getControlHandlersAndLinkActions();
 
+        getCurrentAddress();
+
+
+    }
+
+    private void fetchCompaniesFromServer() {
+
+        //prepare restrofit2 request parameters
+        JsonObject gSonObject = new JsonObject();
+
+        //set parameters using org.JSONObject
+        JSONObject paramObject = new JSONObject();
+        try {
+
+            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+            paramObject.put("latitude", currentLocation.getLatitude());
+            paramObject.put("longitude", currentLocation.getLongitude());
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+
+        JsonParser jsonParser = new JsonParser();
+        gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        //display waiting dialog
+        showWaitingScreen();
+        //send request
+        apiInterface.getNearCompanyList(gSonObject).enqueue(this);
+    }
+
+    private void showWaitingScreen() {
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+        hideWaitingScreen();
+
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (object == null) {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+                JSONObject data = object.getJSONObject("data");
+
+                if (isGettingCompanyListOrSubitAction) {
+
+                    JSONArray listObject = data.getJSONArray("companyList");
+                    companies = new Gson().fromJson(listObject.toString(), new TypeToken<List<Company>>() {
+                    }.getType());
+
+                    updateCompanySpinner();
+
+                }
+                else { //case of submit action
+
+                    Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                    backToPreviousActivity();
+                }
+
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+            } else {
+
+                Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+        hideWaitingScreen();
+        Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
     }
 
     private void saveCoverageToDb() {
 
+        isGettingCompanyListOrSubitAction = false;
+
+        JSONObject paramObject = new JSONObject();
+
+        try {
+
+            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+            paramObject.put("name", selectedCompany.getName());
+            paramObject.put("latitude", Globals.coverage.getLocation().getLatitude());
+            paramObject.put("longitude", Globals.coverage.getLocation().getLongitude());
+            paramObject.put("address", Globals.coverage.getLocationAddress());
+            paramObject.put("company_id", selectedCompany.getId());
+            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
+            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
+            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+        }
+
+        JsonParser jsonParser = new JsonParser();
+        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        //display waiting dialog
+        showWaitingScreen();
+        //send request
+
+        apiInterface.addCoverage(gSonObject).enqueue(this);
 
     }
 
@@ -139,13 +339,14 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         switch (view.getId()) {
 
             case R.id.button_back:
-
+                setResult(RESULT_CANCELED);
+                finish();
                 break;
 
             case R.id.button_done:
 
                 saveCoverageToDb();
-                backToPreviousActivity();
+
 
                 break;
 
@@ -246,6 +447,24 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    private void updateCompanySpinner() {
+
+        CustomAdapterCompanySelect adapter = new CustomAdapterCompanySelect(getApplicationContext(), companies);
+        spinnerCompanySelector.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        selectedCompany = companies.get(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     private class LocationAddressResultReceiver extends ResultReceiver {
         LocationAddressResultReceiver(Handler handler) {
             super(handler);
@@ -270,6 +489,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             String currentAdd = resultData.getString("address_result");
 
             Globals.coverage.setLocationAddress(currentAdd);
+
 
             showResults(currentAdd);
         }
@@ -296,7 +516,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
 
         backToPreviousActivity();
     }

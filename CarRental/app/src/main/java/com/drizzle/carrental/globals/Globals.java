@@ -24,4 +24,7 @@ public class Globals {
 
     public static Coverage coverage = new Coverage(); //current active coverage
 
+    public static String stringPhoneNumber = ""; //string phone number
+
+    public static boolean isSignUpOrLoginRequest = true;
 }

@@ -76,6 +76,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                 }
                 else { //case of "Done"
 
+
                     setResult(RESULT_OK);
                     finish();
                 }
@@ -94,6 +95,11 @@ public class BaseCameraActivity extends AppCompatActivity {
         });
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+    }
+
+    private void submitCoverageVehicleVideo() {
+
 
     }
 
@@ -279,17 +285,17 @@ public class BaseCameraActivity extends AppCompatActivity {
 
     public static String getVideoFilePath() {
 
-        return getAndroidMoviesFolder().getAbsolutePath() + "/" + new SimpleDateFormat("yyyyMM_dd-HHmmss").format(new Date()) + "cameraRecorder.mp4";
-//        String filePath;
-//        if (Constants.isRecordingVehicleOrMile) {
-//
-//            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.VEHICLE_VIDEO_FILE_NAME;
-//        }
-//        else {
-//
-//            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.MILE_VIDEO_FILE_NAME;
-//        }
-//        return filePath;
+        //return getAndroidMoviesFolder().getAbsolutePath() + "/" + new SimpleDateFormat("yyyyMM_dd-HHmmss").format(new Date()) + "cameraRecorder.mp4";
+        String filePath;
+        if (Constants.isRecordingVehicleOrMile) {
+
+            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.VEHICLE_VIDEO_FILE_NAME;
+        }
+        else {
+
+            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.MILE_VIDEO_FILE_NAME;
+        }
+        return filePath;
     }
 
     public static File getAndroidMoviesFolder() {

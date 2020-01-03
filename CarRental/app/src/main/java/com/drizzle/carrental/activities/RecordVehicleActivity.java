@@ -113,7 +113,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
             else {
 
                 //remove recorded file
-                //Utils.removeTemporaryFile(BaseCameraActivity.getVideoFilePath());
+                Utils.removeTemporaryFile(BaseCameraActivity.getVideoFilePath());
             }
         }
     }

@@ -303,7 +303,14 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         try {
             if (object.getString("success").equals("true")) {
 
+                String strPhone = editTextCountryNumber.getText().toString();
+                strPhone = strPhone + editTextPhoneNumber.getText();
+                Globals.stringPhoneNumber = strPhone;
+
+                Globals.isSignUpOrLoginRequest = true;
+
                 navigateToVerifyScreen();
+
             } else if (object.getString("success").equals("false")) {
 
                 JSONObject data = object.getJSONObject("data");
@@ -331,5 +338,6 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         Intent newIntent = new Intent(getContext(), VerifyCodeActivity.class);
         startActivity(newIntent);
     }
+
 
 }

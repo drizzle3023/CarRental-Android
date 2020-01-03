@@ -45,4 +45,12 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("api/get-car-type-list")
     Call<ResponseBody> getCarTypeList(@Body JsonObject body);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/get-near-company-list")
+    Call<ResponseBody> getNearCompanyList(@Body JsonObject body);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/add-coverage")
+    Call<ResponseBody> addCoverage(@Body JsonObject body);
 }

@@ -33,7 +33,12 @@ public class Coverage {
 
     String locationAddress;
 
-    ArrayList<String> carURLs = new ArrayList<>();
+    String urlVehicle;
+
+    String urlMile;
+
+    int claimCount;
+
 
     public String getPeriod() {
 

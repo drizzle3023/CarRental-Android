@@ -105,6 +105,8 @@ public class LoginFragment extends Fragment {
 
                                     if (object.getString("success").equals("true")){
 
+                                        Globals.stringPhoneNumber = strPhoneNumber;
+                                        Globals.isSignUpOrLoginRequest = false;
                                         Intent newIntent = new Intent(getActivity(), VerifyCodeActivity.class);
                                         startActivity(newIntent);
 

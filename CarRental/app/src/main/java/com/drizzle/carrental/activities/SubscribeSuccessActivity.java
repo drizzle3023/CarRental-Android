@@ -26,7 +26,6 @@ public class SubscribeSuccessActivity extends Activity {
                 startActivity(intent);
             }
         });
-
     }
 
 }

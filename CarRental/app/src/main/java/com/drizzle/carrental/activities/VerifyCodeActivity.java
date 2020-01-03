@@ -3,8 +3,8 @@ package com.drizzle.carrental.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -13,100 +13,49 @@ import android.widget.Toast;
 
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
-import com.drizzle.carrental.globals.Constants;
-import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
-public class VerifyCodeActivity extends Activity {
+import static com.drizzle.carrental.globals.Globals.stringPhoneNumber;
+
+public class VerifyCodeActivity extends Activity implements View.OnClickListener, OnOtpCompletionListener, Callback<ResponseBody> {
 
     private Button verifyButton;
     private OtpView otpView;
+
+    private String stringOtp;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verifycode);
 
-        verifyButton = (Button) findViewById(R.id.button_verify);
+        progressDialog = new ProgressDialog(this);
+
+        verifyButton = findViewById(R.id.button_verify);
         otpView = findViewById(R.id.otp_view);
 
 
-        verifyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        verifyButton.setOnClickListener(this);
 
-                // Send sign up request to server
-                final ProgressDialog progressDialog = new ProgressDialog(VerifyCodeActivity.this);
-                progressDialog.setMessage("Please wait...");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
-                ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-
-                JsonObject gsonObject = new JsonObject();
-                try {
-                    JSONObject paramObject = new JSONObject();
-
-                    paramObject.put("code", otpView.getText().toString());
-
-                    JsonParser jsonParser = new JsonParser();
-                    gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
-
-                    Call<ResponseBody> callSync = apiInterface.signVerify(gsonObject);
-                    Response<ResponseBody> response = callSync.execute();
-
-                    progressDialog.dismiss();
-
-                    JSONObject object = new JSONObject(response.body().string());
-
-                    if (object.getString("success").equalsIgnoreCase("true")){
-
-                        JSONObject data = object.getJSONObject("data");
-                        String access_token = data.getString("access_token");
-
-                        SharedHelper.putKey(VerifyCodeActivity.this, "access_token", access_token);
-
-                        Globals.isLoggedIn = true;
-                        Intent intent = new Intent(VerifyCodeActivity.this, PaymentActivity.class);
-                        finish();
-                        startActivity(intent);
-
-                    } else {
-
-                        JSONObject data = object.getJSONObject("data");
-                        Toast.makeText(VerifyCodeActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e){
-
-                    if (progressDialog.isShowing())
-                        progressDialog.dismiss();
-
-                    e.printStackTrace();
-                    Toast.makeText(VerifyCodeActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-        otpView.setOtpCompletionListener(new OnOtpCompletionListener() {
-            @Override
-            public void onOtpCompleted(String otp) {
-
-                enableVerifyButton(true);
-
-            }
-        });
+        otpView.setOtpCompletionListener(this);
 
         otpView.addTextChangedListener(new TextWatcher() {
 
@@ -142,7 +91,143 @@ public class VerifyCodeActivity extends Activity {
         else {
             verifyButton.setBackgroundResource(R.drawable.inactive_button);
         }
-
     }
 
+    private void submitVerifyRequestToServer() {
+
+
+        // Send sign up request to server
+        JSONObject paramObject = new JSONObject();
+
+        try {
+
+            paramObject.put("mobile", Globals.stringPhoneNumber);
+            paramObject.put("code", stringOtp);
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+        }
+
+        JsonParser jsonParser = new JsonParser();
+        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        //display waiting dialog
+        showWaitingScreen();
+        //send request
+        apiInterface.signVerify(gSonObject).enqueue(this);
+    }
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+        hideWaitingScreen();
+
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (object == null) {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+                if (Globals.isSignUpOrLoginRequest) {
+                    navigateToPaymentActivity();
+                }
+                else {
+                    Globals.isLoggedIn = true;
+                    JSONObject dataObject = object.getJSONObject("data");
+                    SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
+                    navigateToHomeActivity();
+                }
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
+            } else {
+
+                Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+        hideWaitingScreen();
+        Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.button_verify) {
+            submitVerifyRequestToServer();
+        }
+    }
+
+    @Override
+    public void onOtpCompleted(String otp) {
+
+        stringOtp = otp;
+        enableVerifyButton(true);
+    }
+
+    private void showWaitingScreen() {
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
+    private void navigateToPaymentActivity() {
+
+        Intent newIntent = new Intent(this, PaymentActivity.class);
+        startActivity(newIntent);
+    }
+
+    private void navigateToHomeActivity() {
+
+        Intent newIntent = new Intent(this, HomeActivity.class);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(newIntent);
+        finish();
+    }
 }

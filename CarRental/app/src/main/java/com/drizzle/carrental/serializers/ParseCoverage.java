@@ -25,6 +25,9 @@ public class ParseCoverage implements Serializable {
 
     JSONObject company;
 
+    @SerializedName("claim_count")
+    int claimCount;
+
     @SerializedName("start_at")
     double startAt;
 

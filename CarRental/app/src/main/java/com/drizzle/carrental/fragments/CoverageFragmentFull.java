@@ -2,6 +2,7 @@ package com.drizzle.carrental.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,12 @@ import com.drizzle.carrental.activities.AddCoverageActivity;
 import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.models.Company;
+import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.serializers.ParseCompany;
 import com.drizzle.carrental.serializers.ParseCoverage;
 import com.google.gson.Gson;
@@ -25,6 +31,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
+
+import java.util.GregorianCalendar;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -49,6 +57,13 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void updateView() {
 
+        if (Globals.coverage.isActiveState()) {
+
+            buttonClaims.setVisibility(View.INVISIBLE);
+        }
+        else {
+
+        }
     }
 
     private void initVariables() {
@@ -65,7 +80,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         initVariables();
 
-        updateView();
+
 
         getActiveCoverage();
 
@@ -85,7 +100,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         try {
             JSONObject paramObject = new JSONObject();
 
-            paramObject.put("access_token", Globals.AccessToken);
+            paramObject.put("access_token", SharedHelper.getKey(getActivity(), "access_token"));
 
             JsonParser jsonParser = new JsonParser();
             gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
@@ -106,12 +121,43 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                             ParseCoverage parseCoverage = new Gson().fromJson(jsonCoverage.toString(), new TypeToken<ParseCoverage>() {}.getType());
 
-                            // Parse company object from json object
-                            JSONObject company = parseCoverage.getCompany();
-                            ParseCompany parseCompany = new Gson().fromJson(company.toString(), new TypeToken<ParseCompany>() {}.getType());
+                            Coverage coverage = new Coverage();
+                            coverage.setTitle(parseCoverage.getName());
+                            coverage.setState(CoverageState.values()[parseCoverage.getState()]);
 
-                            // Set every values of this serializer to the coverage model.
-                            Toast.makeText(getContext(), "Coverage Name: " + parseCoverage.getName() + "\nCompany Name: " + parseCompany.getName(), Toast.LENGTH_SHORT).show();
+                            JSONObject companyObject = parseCoverage.getCompany();
+                            Company company = new Company();
+                            company.setId(companyObject.getLong("id"));
+                            company.setName(companyObject.getString("name"));
+                            company.setType(companyObject.getString("type"));
+                            coverage.setCompany(company);
+
+                            GregorianCalendar dateFrom = new GregorianCalendar();
+                            dateFrom.setTimeInMillis((long)parseCoverage.getStartAt() * 1000);
+
+                            GregorianCalendar dateTo = new GregorianCalendar();
+                            dateTo.setTimeInMillis((long)parseCoverage.getEndAt() * 1000);
+
+
+                            Location location = new Location("location");
+                            location.setLatitude(parseCoverage.getLatitude());
+                            location.setLongitude(parseCoverage.getLongitude());
+
+                            coverage.setLocationAddress(parseCoverage.getAddress());
+                            coverage.setUrlVehicle(parseCoverage.getVideoVehicle());
+                            coverage.setUrlMile(parseCoverage.getVideoMile());
+                            coverage.setClaimCount(parseCoverage.getClaimCount());
+
+                            if (coverage.getState() == CoverageState.COVERED) {
+
+                                coverage.setActiveState(true);
+                            }
+                            else {
+                                coverage.setActiveState(false);
+                            }
+
+                            updateView();
+                            Globals.coverage = coverage;
 
                         } else{
                             JSONObject data = object.getJSONObject("data");
@@ -134,6 +180,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Override

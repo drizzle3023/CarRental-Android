@@ -15,6 +15,10 @@
     <string name="coverage_empty_title">Rental Coverage</string>
     <string name="coverage_empty_content">One subscription gives you multiple rental coverages</string>
 
+    <string name="coverage_expired_title">Your coverage finished</string>
+    <string name="no_remainingtime">0d 00h 00m</string>
+
+
     <string name="history_title">History</string>
     <string name="empty_history">Your coverage activity ( Coverages and claims ) will show up here.</string>
 
@@ -72,4 +76,12 @@
     <string name="price_for_broken_glass_coverage">2.50 € / mo</string>
 
     <string name="description_for_broken_glass_coverage">Pays for covered damage to your vehicle caused by anything other than an accident.</string>
+
+    <string name="claim_reason_car_accident">Car Accident</string>
+    <string name="claim_reason_car_stolen">My car was stolen</string>
+    <string name="claim_reason_rock_hit_glass">A rock hit my glass</string>
+    <string name="claim_reason_natural_hazard">Natural hazard</string>
+    <string name="claim_reason_other_reason">+Other reason</string>
+
+
 </resources>

@@ -86,7 +86,7 @@ public class RecordMileActivity extends Activity implements View.OnClickListener
 
         if (view.getId() == R.id.button_start) {
 
-            Constants.isRecordingVehicleOrMile = false;
+            Constants.isRecordingVehicleOrMileOrDamagedPart = 2;
             Intent intent = new Intent(RecordMileActivity.this, MyCameraActivity.class);
             startActivity(intent);
         }

@@ -51,7 +51,7 @@ import retrofit2.Response;
 
 public class SignupFragment extends Fragment implements View.OnClickListener, Callback<ResponseBody> {
 
-    //private Country selectedCountry = null;
+//private Country selectedCountry = null;
 
 //    @BindView(R.id.text_country_prefix)
 //    TextView countryPrefixTextView;
@@ -169,6 +169,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
             return;
         }
 
+        strEmail = strEmail.replace(" ", "");
 
         if (!Utils.isValidMail(strEmail)) {
 

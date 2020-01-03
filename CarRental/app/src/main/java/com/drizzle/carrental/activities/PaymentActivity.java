@@ -25,6 +25,7 @@ import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.services.YourDropService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -76,8 +77,8 @@ public class PaymentActivity extends FragmentActivity{
         try {
             JSONObject paramObject = new JSONObject();
 
-            paramObject.put("access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
-            paramObject.put("car_type_id", 1);
+            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+            paramObject.put("car_type_id", Globals.selectedVehicleType.getId());
 
             JsonParser jsonParser = new JsonParser();
             gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());

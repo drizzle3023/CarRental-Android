@@ -17,6 +17,8 @@ import lombok.Setter;
 @Setter
 public class Coverage {
 
+    Long id;
+
     String title;
 
     boolean activeState;
@@ -65,13 +67,22 @@ public class Coverage {
 
         String strDate = "";
 
-        DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
-        strDate = df.format(dateTo.getTime());
+        try {
+            DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+            strDate = df.format(dateTo.getTime());
+        }
+        catch (Exception e) {
+
+        }
 
         return strDate;
     }
 
 
+    public String getRemainingTime() {
+
+        return getDateToString();
+    }
 
 
 }

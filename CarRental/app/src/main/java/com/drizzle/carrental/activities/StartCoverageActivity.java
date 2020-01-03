@@ -411,6 +411,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+
     @SuppressWarnings("MissingPermission")
     private void getAddress() {
 

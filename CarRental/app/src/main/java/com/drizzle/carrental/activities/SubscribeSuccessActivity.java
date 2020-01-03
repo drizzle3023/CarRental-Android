@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Globals;
 
 public class SubscribeSuccessActivity extends Activity {
 
@@ -22,6 +23,7 @@ public class SubscribeSuccessActivity extends Activity {
             @Override
             public void onClick(View view)
             {
+                Globals.isLoggedIn = true;
                 Intent intent=new Intent(SubscribeSuccessActivity.this, HomeActivity.class);
                 startActivity(intent);
             }

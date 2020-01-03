@@ -117,11 +117,11 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
             viewHolder.textViewTitle.setText(historyModel.getCoverage().getTitle());
             viewHolder.textViewState.setText(historyModel.getCoverage().getState().toString());
             viewHolder.textViewPeriod.setText(historyModel.getCoverage().getPeriod());
-            String image_url="";
-            if (!historyModel.getCoverage().getCarURLs().isEmpty()) {
-                image_url = historyModel.getCoverage().getCarURLs().get(0);
-            }
-            Picasso.get().load(image_url).placeholder(R.drawable.icon_add_coverage).into(viewHolder.imageButton);
+
+            //Picasso.get().load(image_url).placeholder(R.drawable.icon_add_coverage).into(viewHolder.imageButton);
+            //Picasso.get().load(image_url).placeholder(R.drawable.icon_add_coverage).into(viewHolder.imageButton);
+            viewHolder.imageButton.setImageResource(R.drawable.video_vehicle);
+
 
             viewHolder.textViewLocation.setText(historyModel.getCoverage().getLocationAddress());
 

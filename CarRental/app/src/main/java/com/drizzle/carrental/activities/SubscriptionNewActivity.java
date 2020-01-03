@@ -188,13 +188,6 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
         //set parameters using org.JSONObject
         JSONObject paramObject = new JSONObject();
-        try {
-
-            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-        }
 
         JsonParser jsonParser = new JsonParser();
         gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());

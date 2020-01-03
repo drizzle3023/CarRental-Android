@@ -32,8 +32,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.IntBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
@@ -287,14 +285,18 @@ public class BaseCameraActivity extends AppCompatActivity {
 
         //return getAndroidMoviesFolder().getAbsolutePath() + "/" + new SimpleDateFormat("yyyyMM_dd-HHmmss").format(new Date()) + "cameraRecorder.mp4";
         String filePath;
-        if (Constants.isRecordingVehicleOrMile) {
+        if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
             filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.VEHICLE_VIDEO_FILE_NAME;
         }
-        else {
+        else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
             filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.MILE_VIDEO_FILE_NAME;
         }
+        else {
+            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.DAMAGED_VIDEO_FILE_NAME;
+        }
+
         return filePath;
     }
 
@@ -313,13 +315,16 @@ public class BaseCameraActivity extends AppCompatActivity {
     public static String getImageFilePath() {
 
         String filePath;
-        if (Constants.isRecordingVehicleOrMile) {
+        if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
             filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.VEHICLE_IMAGE_FILE_NAME;
         }
-        else {
+        else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
             filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.MILE_IMAGE_FILE_NAME;
+        }
+        else {
+            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.DAMAGED_VIDEO_FILE_NAME;
         }
         return filePath;
     }

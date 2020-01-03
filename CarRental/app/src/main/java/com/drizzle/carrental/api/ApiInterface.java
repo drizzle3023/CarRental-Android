@@ -53,4 +53,8 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("api/add-coverage")
     Call<ResponseBody> addCoverage(@Body JsonObject body);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/get-claim-list")
+    Call<ResponseBody> getClaimList(@Body JsonObject body);
 }

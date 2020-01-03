@@ -27,4 +27,5 @@ public class Globals {
     public static String stringPhoneNumber = ""; //string phone number
 
     public static boolean isSignUpOrLoginRequest = true;
+
 }

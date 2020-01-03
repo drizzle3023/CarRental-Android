@@ -102,20 +102,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:padding="20dp"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/button_start_coverage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_marginRight="28dp"
+                android:scaleType="fitXY"
+                android:layout_marginRight="20dp"
                 android:background="@null"
-                android:paddingLeft="15dp"
-                android:paddingTop="19dp"
-                android:paddingBottom="19dp"
-                android:src="@drawable/icon_add_coverage" />
+                android:src="@drawable/covered_coverage_image" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -131,7 +128,7 @@
                 </Space>
 
                 <TextView
-                    android:id="@+id/textView11"
+                    android:id="@+id/textview_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -143,15 +140,52 @@
                     android:textColor="@color/colorNormalText"
                     android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/textView12"
+                <LinearLayout
+                    android:id="@+id/layout_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="You have unlimited coverages"
-                    android:textSize="13sp" />
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_location">
+
+                    </ImageView>
+                    <TextView
+                        android:id="@+id/textview_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=" You have unlimited coverages"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView122"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/sf_pro_text_regular"
+                        android:text=" Ending in"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/textview_period"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorNormalBlue"
+                        android:text=" "
+                        android:textSize="15sp" />
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/buttongotit"
+                    android:id="@+id/button_got_it"
                     android:layout_width="103dp"
                     android:layout_height="40dp"
                     android:layout_gravity="left"
@@ -198,16 +232,16 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/imageButton4"
+                    android:id="@+id/imagebutton_assistence"
                     android:background="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="8dp"
-                    android:src="@drawable/assitence" />
+                    android:src="@drawable/assitence_disabled" />
 
                 <TextView
-                    android:id="@+id/textView131"
+                    android:id="@+id/textview_assistence"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
@@ -222,16 +256,16 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/imageButton41"
+                    android:id="@+id/imagebutton_lostkeys"
                     android:background="@null"
-                    android:src="@drawable/lost_keys"
+                    android:src="@drawable/lost_keys_disabled"
                     android:layout_marginBottom="8dp"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:id="@+id/textView132"
+                    android:id="@+id/textview_lostkeys"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
@@ -246,16 +280,16 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/imageButton42"
+                    android:id="@+id/imagebutton_broken_glasses"
                     android:background="@null"
                     android:layout_marginBottom="8dp"
-                    android:src="@drawable/lost_keys"
+                    android:src="@drawable/lost_keys_disabled"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:id="@+id/textView133"
+                    android:id="@+id/textview_broken_glasses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
@@ -270,16 +304,16 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/imageButton44"
+                    android:id="@+id/imagebutton_cover_theft"
                     android:background="@null"
-                    android:src="@drawable/lost_keys"
+                    android:src="@drawable/lost_keys_disabled"
                     android:layout_gravity="center"
                     android:layout_marginBottom="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:id="@+id/textView134"
+                    android:id="@+id/textview_cover_theft"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"

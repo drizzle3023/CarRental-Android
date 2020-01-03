@@ -159,6 +159,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
             if (object.getString("success").equals("true")) {
 
                 if (Globals.isSignUpOrLoginRequest) {
+                    JSONObject dataObject = object.getJSONObject("data");
+                    SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     navigateToPaymentActivity();
                 }
                 else {

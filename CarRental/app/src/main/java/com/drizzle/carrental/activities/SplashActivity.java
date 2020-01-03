@@ -138,6 +138,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         } else {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            navigateToOnboardingActivity();
             return;
         }
 
@@ -172,8 +173,10 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         } catch (JSONException e) {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+
             e.printStackTrace();
         }
+        navigateToOnboardingActivity();
     }
 
     //callback of failed api request
@@ -181,6 +184,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
     public void onFailure(Call<ResponseBody> call, Throwable t) {
 
         hideWaitingScreen();
+        navigateToOnboardingActivity();
     }
 
     private void navigateToHomeActivity() {

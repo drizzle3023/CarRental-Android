@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/dialog_radius"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="100dp"
+    android:padding="40dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dialog_radius"
+
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imagebutton_left_fender_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_weight="1"
+                android:src="@drawable/damaged_zone_left_fender_panel">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_left_front_door"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_left_front_door">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_left_quarter_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_left_quarter_panel">
+
+            </ImageButton>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imagebutton_left_hood"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_weight="1"
+                android:src="@drawable/damaged_zone_left_hood">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_left_roof"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_left_roof">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_left_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_left_back">
+
+            </ImageButton>
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imagebutton_right_hood"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_weight="1"
+                android:src="@drawable/damaged_zone_right_hood">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_right_roof"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_right_roof">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_right_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_right_back">
+
+            </ImageButton>
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imagebutton_right_fender_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_weight="1"
+                android:src="@drawable/damaged_zone_right_fender_panel">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_right_front_door"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_right_front_door">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/imagebutton_right_quarter_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/damaged_zone_right_quarter_panel">
+
+            </ImageButton>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_done"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
+            android:textAllCaps="true"
+            android:textColor="@color/colorNormalBlue"
+            android:textSize="15sp"
+            android:fontFamily="@font/sf_pro_text_medium"
+            android:text="Done">
+
+        </Button>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

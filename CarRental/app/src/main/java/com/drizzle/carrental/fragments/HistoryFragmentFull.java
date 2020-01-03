@@ -197,12 +197,7 @@ public class HistoryFragmentFull extends Fragment {
                                         History historyModel = dataModels.get(position);
                                     }
                                 });
-
                             }
-
-
-
-
 
                         } else {
                             JSONObject data = object.getJSONObject("data");
@@ -258,8 +253,6 @@ public class HistoryFragmentFull extends Fragment {
                 coverage.setDateFrom(new GregorianCalendar(2019, 2, 2));
                 coverage.setDateTo(new GregorianCalendar(2020, 2, 1));
                 coverage.setLocationAddress("New York, United States");
-                coverage.getCarURLs().add("http://i.imgur.com/DvpvklR.png");
-                coverage.getCarURLs().add("https://png.pngtree.com/element_our/20190523/ourlarge/pngtree-car-driving-box-type-long-motor-vehicle-line-image_1088711.jpg");
 
                 historyModel.setCoverage(coverage);
                 historyModel.setPaymentOrCoverage(false);

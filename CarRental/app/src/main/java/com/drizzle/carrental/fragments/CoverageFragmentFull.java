@@ -2,6 +2,7 @@ package com.drizzle.carrental.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import okhttp3.ResponseBody;
@@ -43,15 +45,56 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private ImageButton buttonStartCoverage;
     private Button buttonClaims;
+    private Button buttonGotIt;
 
+    private TextView textViewCoverageTitle;
+    private TextView textViewCoverageLocation;
+    private TextView textViewCoveragePeriod;
+    private LinearLayout layoutPeriod;
+    private LinearLayout layoutLocation;
+
+    private ImageButton imageButtonAssistence;
+    private TextView textViewAssistence;
+
+    private ImageButton imageButtonLostKeys;
+    private TextView textViewLostKeys;
+
+    private ImageButton imageButtonBrokenGlasses;
+    private TextView textViewBrokenGlasses;
+
+    private ImageButton imageButtonCoverTheft;
+    private TextView textViewCoverTheft;
 
     private void getControlHandlersAndLinkActions(View view) {
 
         buttonStartCoverage = view.findViewById(R.id.button_start_coverage);
         buttonClaims = view.findViewById(R.id.button_claims);
 
+
+        textViewCoverageTitle = view.findViewById(R.id.textview_title);
+        textViewCoverageLocation = view.findViewById(R.id.textview_address);
+        textViewCoveragePeriod = view.findViewById(R.id.textview_period);
+
+        layoutPeriod = view.findViewById(R.id.layout_period);
+        layoutLocation = view.findViewById(R.id.layout_location);
+
+        buttonGotIt = view.findViewById(R.id.button_got_it);
+
+        imageButtonAssistence = view.findViewById(R.id.imagebutton_assistence);
+        textViewAssistence = view.findViewById(R.id.textview_assistence);
+
+        imageButtonBrokenGlasses = view.findViewById(R.id.imagebutton_broken_glasses);
+        textViewBrokenGlasses = view.findViewById(R.id.textview_broken_glasses);
+
+        imageButtonLostKeys = view.findViewById(R.id.imagebutton_lostkeys);
+        textViewLostKeys = view.findViewById(R.id.textview_lostkeys);
+
+        imageButtonCoverTheft = view.findViewById(R.id.imagebutton_cover_theft);
+        textViewCoverTheft = view.findViewById(R.id.textview_cover_theft);
+
         buttonStartCoverage.setOnClickListener(this);
         buttonClaims.setOnClickListener(this);
+        buttonGotIt.setOnClickListener(this);
 
     }
 
@@ -59,11 +102,51 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         if (Globals.coverage.isActiveState()) {
 
-            buttonClaims.setVisibility(View.INVISIBLE);
-        }
-        else {
+            buttonClaims.setVisibility(View.VISIBLE);
+            buttonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
 
+            textViewCoverageTitle.setText(Globals.coverage.getTitle());
+            textViewCoverageLocation.setText(Globals.coverage.getLocationAddress());
+            textViewCoveragePeriod.setText(Globals.coverage.getRemainingTime());
+            buttonGotIt.setVisibility(View.GONE);
+
+        } else {
+            buttonClaims.setVisibility(View.INVISIBLE);
+            buttonGotIt.setVisibility(View.VISIBLE);
+            if (Globals.coverage.getState() == CoverageState.CANCELLED) {
+
+                buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+            } else if (Globals.coverage.getState() == CoverageState.EXPIRED) {
+
+                textViewCoverageTitle.setText(R.string.coverage_expired_title);
+                layoutLocation.setVisibility(View.GONE);
+                textViewCoveragePeriod.setText(R.string.no_remainingtime);
+                buttonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
+
+                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
+                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+
+                textViewAssistence.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
+            } else {
+
+                imageButtonAssistence.setImageResource(R.drawable.assitence_active);
+                imageButtonAssistence.setImageResource(R.drawable.lost_keys_enabled);
+                imageButtonAssistence.setImageResource(R.drawable.lost_keys_enabled);
+                imageButtonAssistence.setImageResource(R.drawable.lost_keys_enabled);
+
+                textViewAssistence.setTextColor(Color.BLACK);
+                textViewLostKeys.setTextColor(Color.BLACK);
+                textViewBrokenGlasses.setTextColor(Color.BLACK);
+                textViewCoverTheft.setTextColor(Color.BLACK);
+            }
         }
+
     }
 
     private void initVariables() {
@@ -79,7 +162,6 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         getControlHandlersAndLinkActions(view);
 
         initVariables();
-
 
 
         getActiveCoverage();
@@ -114,30 +196,36 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     try {
                         JSONObject object = new JSONObject(response.body().string());
 
-                        if (object.getString("success").equals("true")){
+                        if (object.getString("success").equals("true")) {
 
                             JSONObject data = object.getJSONObject("data");
                             JSONObject jsonCoverage = data.getJSONObject("coverage");
 
-                            ParseCoverage parseCoverage = new Gson().fromJson(jsonCoverage.toString(), new TypeToken<ParseCoverage>() {}.getType());
+                            ParseCoverage parseCoverage = new Gson().fromJson(jsonCoverage.toString(), new TypeToken<ParseCoverage>() {
+                            }.getType());
 
                             Coverage coverage = new Coverage();
+                            coverage.setId((long)parseCoverage.getId());
                             coverage.setTitle(parseCoverage.getName());
                             coverage.setState(CoverageState.values()[parseCoverage.getState()]);
 
                             JSONObject companyObject = parseCoverage.getCompany();
                             Company company = new Company();
-                            company.setId(companyObject.getLong("id"));
-                            company.setName(companyObject.getString("name"));
-                            company.setType(companyObject.getString("type"));
+//                            company.setId(companyObject.getLong("id"));
+//                            company.setName(companyObject.getString("name"));
+//                            company.setType(companyObject.getString("type"));
                             coverage.setCompany(company);
 
+
                             GregorianCalendar dateFrom = new GregorianCalendar();
-                            dateFrom.setTimeInMillis((long)parseCoverage.getStartAt() * 1000);
+                            dateFrom.setTimeInMillis((long) parseCoverage.getStartAt() * 1000);
+
 
                             GregorianCalendar dateTo = new GregorianCalendar();
-                            dateTo.setTimeInMillis((long)parseCoverage.getEndAt() * 1000);
+                            dateTo.setTimeInMillis((long) parseCoverage.getEndAt() * 1000);
 
+                            coverage.setDateFrom(dateFrom);
+                            coverage.setDateTo(dateTo);
 
                             Location location = new Location("location");
                             location.setLatitude(parseCoverage.getLatitude());
@@ -151,15 +239,14 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                             if (coverage.getState() == CoverageState.COVERED) {
 
                                 coverage.setActiveState(true);
-                            }
-                            else {
+                            } else {
                                 coverage.setActiveState(false);
                             }
 
-                            updateView();
+
                             Globals.coverage = coverage;
 
-                        } else{
+                        } else {
                             JSONObject data = object.getJSONObject("data");
                             Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
                         }
@@ -167,6 +254,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                     }
+
+                    updateView();
                 }
 
                 @Override
@@ -174,6 +263,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     progressDialog.dismiss();
                     t.printStackTrace();
                     Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
+
+                    updateView();
                 }
             });
 

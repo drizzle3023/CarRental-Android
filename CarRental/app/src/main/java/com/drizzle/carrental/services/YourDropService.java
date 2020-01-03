@@ -12,6 +12,7 @@ import com.adyen.checkout.dropin.service.DropInService;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -38,7 +39,7 @@ public class YourDropService extends DropInService {
         try {
             JSONObject paramObject = new JSONObject();
 
-            paramObject.put("access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
+            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
             paramObject.put("paymentComponentData", jsonObject);
             paramObject.put("payment_id", Globals.paymentId);
 

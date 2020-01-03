@@ -19,4 +19,8 @@ public enum ClaimState {
     public String toString() {
         return stringValue;
     }
+
+    public int getIntValue() {
+        return intValue;
+    }
 }

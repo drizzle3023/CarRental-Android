@@ -55,6 +55,7 @@
         <activity android:name=".activities.MyCameraActivity" />
         <activity android:name=".activities.ClaimsActivity" />
         <activity android:name=".activities.AddClaimActivity" />
+        <activity android:name=".activities.AddLocationActivity" />
 
         <service
             android:name=".services.GetAddressIntentService"

@@ -1,39 +1,136 @@
 package com.drizzle.carrental.activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.enumerators.DamagedPart;
 import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Claim;
+import com.drizzle.carrental.models.Company;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class AddClaimActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+public class AddClaimActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, Callback<ResponseBody> {
+
+    final int ADD_LOCATION_REQUEST_CODE = 1;
+    public static final int MY_CAMERA_ACTIVITY_REQUEST_CODE = 2;
+
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 88888;
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        hideWaitingScreen();
+
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (object == null) {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+            } else {
+
+                Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+        hideWaitingScreen();
+        Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+    }
 
     public enum ClaimCurrentStep {
 
@@ -66,6 +163,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    ProgressDialog progressDialog;
 
     /**
      * UI Control Handlers
@@ -218,6 +316,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         buttonEditTakeVideo.setOnClickListener(this);
         imageViewAnswerTakeVideo.setOnClickListener(this);
 
+
         buttonDoneElse.setOnClickListener(this);
         buttonSubmitClaim.setOnClickListener(this);
 
@@ -263,9 +362,14 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_claim);
 
+        progressDialog = new ProgressDialog(this);
+
+        claim = new Claim();
+        isModified = true;
+
         getControlHandlersAndLinkActions();
 
-        prepareTestData();
+        //prepareTestData();
 
         updateViewContent();
     }
@@ -330,6 +434,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             buttonDoneTextAnswerWhatHappenedDescription.setVisibility(View.VISIBLE);
 
             layoutQuestionWhatHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
+            textViewAnswerWhatHappenedTitle.setTextColor(getResources().getColor(R.color.colorNormalText, null));
             layoutAnswerWhatHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
             imageViewAnswerWhatHappendIcon.setImageResource(R.drawable.file_a_claim_answer_what_happened_icon_editing);
             buttonEditAnswerWhatHappened.setBackgroundResource(R.drawable.icon_edit);
@@ -353,6 +458,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             buttonEditAnswerWhatHappened.setText("");
             textViewAnswerWhatHappenedTitle.setText(claim.getWhatHappened());
             textViewAnswerWhatHappenedDescription.setText(claim.getWhatHappened());
+            textViewAnswerWhatHappenedTitle.setTextColor(getResources().getColor(R.color.colorNormalText, null));
         }
     }
 
@@ -611,7 +717,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewAnswerTakeVideo.setTypeface(null, Typeface.ITALIC);
             buttonEditTakeVideo.setText("");
             buttonEditTakeVideo.setBackgroundResource(R.drawable.icon_edit);
-            Picasso.get().load(claim.getImageURL()).placeholder(null).into(imageViewAnswerTakeVideo);
+            imageViewAnswerTakeVideo.setImageResource(R.drawable.image_damaged_zone);
+            //Picasso.get().load(claim.getImageURL()).placeholder(null).into(imageViewAnswerTakeVideo);
 
         } else {
 
@@ -650,8 +757,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewQuestionElse.setTextColor(getResources().getColor(R.color.colorNormalText, null));
             editTextAnswerElse.setEnabled(true);
 
-        }
-        else if (claimCurrentStep == ClaimCurrentStep.ELSE_ANSWER_EDITING) {
+        } else if (claimCurrentStep == ClaimCurrentStep.ELSE_ANSWER_EDITING) {
 
             layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
             layoutAnwerElse.setBackgroundResource(R.drawable.claim_answer_saved);
@@ -661,8 +767,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewQuestionElse.setTextColor(getResources().getColor(R.color.colorNormalText, null));
 
             editTextAnswerElse.setEnabled(true);
-        }
-        else if (claimCurrentStep == ClaimCurrentStep.ANSWERED_ELSE) {
+        } else if (claimCurrentStep == ClaimCurrentStep.ANSWERED_ELSE) {
 
             layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_enabled);
             layoutAnwerElse.setBackgroundResource(R.drawable.claim_answer_saved);
@@ -674,13 +779,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             if (claim.getExtraDescription().isEmpty()) {
 
                 buttonDoneElse.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-            }
-            else {
+            } else {
                 buttonDoneElse.setTextColor(getResources().getColor(R.color.colorNormalBlue, null));
             }
             editTextAnswerElse.setEnabled(true);
-        }
-        else {
+        } else {
 
             layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_disabled);
             layoutAnwerElse.setBackgroundResource(R.drawable.claim_answer_disabled);
@@ -694,6 +797,60 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    private void saveClaimToDb(ClaimState claimState) {
+
+        claim.setClaimState(claimState);
+        JSONObject paramObject = new JSONObject();
+
+        try {
+
+            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+            paramObject.put("latitude", claim.getWhereHappened().getLatitude());
+            paramObject.put("longitude", claim.getWhereHappened().getLongitude());
+            paramObject.put("address", claim.getAddressHappened());
+            paramObject.put("coverage_id", Globals.coverage.getId());
+            paramObject.put("what_happened", claim.getWhatHappened());
+            paramObject.put("time_happened", claim.getDateString());
+            paramObject.put("damaged_part", claim.getDamagedPartsString());
+            paramObject.put("note", claim.getExtraDescription());
+            paramObject.put("state", claimState);
+
+//            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
+//            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
+//            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+        }
+
+        JsonParser jsonParser = new JsonParser();
+        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        //display waiting dialog
+        showWaitingScreen();
+        //send request
+
+        apiInterface.addCoverage(gSonObject).enqueue(this);
+    }
+
+
+    private void showWaitingScreen() {
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
+
     /**
      * OnClick Handlers
      *
@@ -704,12 +861,398 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
         switch (view.getId()) {
 
+            case R.id.button_save:
+                saveClaimToDb(ClaimState.INCOMPLETE);
+                break;
+
             case R.id.button_back:
                 finish();
                 break;
+            case R.id.button_done_answer_else:
+                Utils.hideKeyboard(this);
+                break;
 
+            case R.id.button_submit:
+                saveClaimToDb(ClaimState.NOT_APPROVED);
+                finish();
+
+            case R.id.textview_answer_what_happend_title:
+                final Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.dialog_claim_reason_selector);
+                dialog.setTitle("");
+
+                Button buttonCarAccident = dialog.findViewById(R.id.button_car_accident);
+                Button buttonCarStolen = dialog.findViewById(R.id.button_car_stolen);
+                Button buttonRockHitGlass = dialog.findViewById(R.id.button_rock_hit_glass);
+                Button buttonNaturalHazard = dialog.findViewById(R.id.button_natural_hazard);
+                Button buttonOtherReason = dialog.findViewById(R.id.button_other_reason);
+
+                buttonCarAccident.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        claim.setWhatHappened(getResources().getString(R.string.claim_reason_car_accident));
+                        dialog.dismiss();
+                        updateViewContent();
+                    }
+                });
+
+                buttonCarStolen.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        claim.setWhatHappened(getResources().getString(R.string.claim_reason_car_stolen));
+                        dialog.dismiss();
+                        updateViewContent();
+                    }
+                });
+
+                buttonRockHitGlass.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        claim.setWhatHappened(getResources().getString(R.string.claim_reason_rock_hit_glass));
+                        dialog.dismiss();
+                        updateViewContent();
+                    }
+                });
+
+                buttonNaturalHazard.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        claim.setWhatHappened(getResources().getString(R.string.claim_reason_natural_hazard));
+                        dialog.dismiss();
+                        updateViewContent();
+                    }
+                });
+
+                buttonOtherReason.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        claimCurrentStep = ClaimCurrentStep.WHAT_HAPPENED_EDITING;
+                        //claim.setWhatHappened(getResources().getString(R.string.claim_reason_other_reason));
+                        dialog.dismiss();
+                        updateViewContent();
+                    }
+                });
+
+                dialog.show();
+                break;
+            case R.id.imagebutton_clear_answer_what_happened_description:
+                editTextAnswerWhatHappenedDescription.setText("");
+                break;
+
+            case R.id.button_done_answer_what_happend_description:
+                claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                claim.setWhatHappened(editTextAnswerWhatHappenedDescription.getText().toString());
+                updateViewContent();
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                //Find the currently focused view, so we can grab the correct window token from it.
+                View view1 = getCurrentFocus();
+                //If no view currently has focus, create a new one, just so we can grab a window token from it
+                if (view1 == null) {
+                    view1 = new View(this);
+                }
+                imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+
+                break;
+
+            case R.id.textview_answer_when_happend:
+                showDatePicker();
+                break;
+
+            case R.id.textview_answer_where_happened:
+                navigateToAddLocationActivity();
+                break;
+
+            case R.id.textview_answer_damaged_part:
+                displaySelectDamagedPartDialog();
+
+                break;
+
+            case R.id.textview_answer_take_video:
+                checkPermission();
+                Constants.isRecordingVehicleOrMileOrDamagedPart = 3;
+                Intent intent = new Intent(AddClaimActivity.this, MyCameraActivity.class);
+                startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
 
         }
+    }
+
+
+    private boolean checkPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+
+        // request camera permission if it has not been grunted.
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+            return false;
+        }
+
+        return true;
+    }
+
+    private void displaySelectDamagedPartDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_select_damaged_parts);
+        dialog.setTitle("");
+
+        ImageButton imageButtonLeftFenderPanel = dialog.findViewById(R.id.imagebutton_left_fender_panel);
+        ImageButton imageButtonLeftFrontDoor = dialog.findViewById(R.id.imagebutton_left_front_door);
+        ImageButton imageButton_leftQuarterPanel = dialog.findViewById(R.id.imagebutton_left_quarter_panel);
+        ImageButton imageButtonLeftHood = dialog.findViewById(R.id.imagebutton_left_hood);
+        ImageButton imageButtonRightHood = dialog.findViewById(R.id.imagebutton_right_hood);
+        ImageButton imageButtonRightRoof = dialog.findViewById(R.id.imagebutton_right_roof);
+        ImageButton imageButtonLeftRoof = dialog.findViewById(R.id.imagebutton_left_roof);
+        ImageButton imageButtonLeftBack = dialog.findViewById(R.id.imagebutton_left_bottom);
+        ImageButton imageButtonRightBack = dialog.findViewById(R.id.imagebutton_right_back);
+        ImageButton imageButtonRightFenderPanel = dialog.findViewById(R.id.imagebutton_right_fender_panel);
+        ImageButton imageButtonRightFrontDoor = dialog.findViewById(R.id.imagebutton_right_front_door);
+        ImageButton imageButtonRightQuarterPanel = dialog.findViewById(R.id.imagebutton_right_quarter_panel);
+        Button doneButton = dialog.findViewById(R.id.button_done);
+
+        ArrayList<DamagedPart> selectedParts = new ArrayList<>();
+
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!selectedParts.isEmpty()) {
+                    claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
+                }
+                claim.setDamagedParts(selectedParts);
+                updateViewContent();
+                dialog.dismiss();
+            }
+        });
+
+        imageButtonLeftFenderPanel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.LEFT_FENDER_PANEL)) {
+                    selectedParts.remove(DamagedPart.LEFT_FENDER_PANEL);
+                    imageButtonLeftFenderPanel.setImageResource(R.drawable.damaged_zone_left_fender_panel);
+                } else {
+                    selectedParts.add(DamagedPart.LEFT_FENDER_PANEL);
+                    imageButtonLeftFenderPanel.setImageResource(R.drawable.damaged_zone_left_fender_panel_selected);
+                }
+            }
+        });
+
+        imageButtonLeftFrontDoor.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.LEFT_FRONT_DOOR)) {
+                    selectedParts.remove(DamagedPart.LEFT_FRONT_DOOR);
+                    imageButtonLeftFrontDoor.setImageResource(R.drawable.damaged_zone_left_front_door);
+                } else {
+                    selectedParts.add(DamagedPart.LEFT_FRONT_DOOR);
+                    imageButtonLeftFrontDoor.setImageResource(R.drawable.damaged_zone_left_front_door_selected);
+                }
+            }
+        });
+
+        imageButton_leftQuarterPanel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.LEFT_QUARTER_PANEL)) {
+                    selectedParts.remove(DamagedPart.LEFT_QUARTER_PANEL);
+                    imageButton_leftQuarterPanel.setImageResource(R.drawable.damaged_zone_left_quarter_panel);
+                } else {
+                    selectedParts.add(DamagedPart.LEFT_QUARTER_PANEL);
+                    imageButton_leftQuarterPanel.setImageResource(R.drawable.damaged_zone_left_quarter_panel_selected);
+                }
+            }
+        });
+
+        imageButtonLeftHood.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.LEFT_HOOD)) {
+                    selectedParts.remove(DamagedPart.LEFT_HOOD);
+                    imageButtonLeftHood.setImageResource(R.drawable.damaged_zone_left_hood);
+                } else {
+                    selectedParts.add(DamagedPart.LEFT_HOOD);
+                    imageButtonLeftHood.setImageResource(R.drawable.damaged_zone_left_hood_selected);
+                }
+            }
+        });
+
+        imageButtonLeftRoof.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.LEFT_ROOF)) {
+                    selectedParts.remove(DamagedPart.LEFT_ROOF);
+                    imageButtonLeftRoof.setImageResource(R.drawable.damaged_zone_left_roof);
+                } else {
+                    selectedParts.add(DamagedPart.LEFT_ROOF);
+                    imageButtonLeftRoof.setImageResource(R.drawable.damaged_zone_left_roof_selected);
+                }
+            }
+        });
+
+        imageButtonLeftBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.LEFT_BACK)) {
+                    selectedParts.remove(DamagedPart.LEFT_BACK);
+                    imageButtonLeftBack.setImageResource(R.drawable.damaged_zone_left_back);
+                } else {
+                    selectedParts.add(DamagedPart.LEFT_BACK);
+                    imageButtonLeftBack.setImageResource(R.drawable.damaged_zone_left_back_selected);
+                }
+            }
+        });
+
+        imageButtonRightHood.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.RIGHT_HOOD)) {
+                    selectedParts.remove(DamagedPart.RIGHT_HOOD);
+                    imageButtonRightHood.setImageResource(R.drawable.damaged_zone_right_hood);
+                } else {
+                    selectedParts.add(DamagedPart.RIGHT_HOOD);
+                    imageButtonRightHood.setImageResource(R.drawable.damaged_zone_right_hood_selected);
+                }
+            }
+        });
+
+
+        imageButtonRightRoof.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.RIGHT_ROOF)) {
+                    selectedParts.remove(DamagedPart.RIGHT_ROOF);
+                    imageButtonRightRoof.setImageResource(R.drawable.damaged_zone_right_roof);
+                } else {
+                    selectedParts.add(DamagedPart.RIGHT_ROOF);
+                    imageButtonRightRoof.setImageResource(R.drawable.damaged_zone_right_roof_selected);
+                }
+            }
+        });
+
+
+        imageButtonRightBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.RIGHT_BACK)) {
+                    selectedParts.remove(DamagedPart.RIGHT_BACK);
+                    imageButtonRightBack.setImageResource(R.drawable.damaged_zone_right_back);
+                } else {
+                    selectedParts.add(DamagedPart.RIGHT_BACK);
+                    imageButtonRightBack.setImageResource(R.drawable.damaged_zone_right_back_selected);
+                }
+            }
+        });
+
+        imageButtonRightFenderPanel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.RIGHT_FENDER_PANEL)) {
+                    selectedParts.remove(DamagedPart.RIGHT_FENDER_PANEL);
+                    imageButtonRightFenderPanel.setImageResource(R.drawable.damaged_zone_right_fender_panel);
+                } else {
+                    selectedParts.add(DamagedPart.RIGHT_FENDER_PANEL);
+                    imageButtonRightFenderPanel.setImageResource(R.drawable.damaged_zone_right_fender_panel_selected);
+                }
+            }
+        });
+
+        imageButtonRightFrontDoor.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.RIGHT_FRONT_DOOR)) {
+                    selectedParts.remove(DamagedPart.RIGHT_FRONT_DOOR);
+                    imageButtonRightFrontDoor.setImageResource(R.drawable.damaged_zone_right_front_door);
+                } else {
+                    selectedParts.add(DamagedPart.RIGHT_FRONT_DOOR);
+                    imageButtonRightFrontDoor.setImageResource(R.drawable.damaged_zone_right_front_door_selected);
+                }
+            }
+        });
+
+        imageButtonRightQuarterPanel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (selectedParts.contains(DamagedPart.RIGHT_QUARTER_PANEL)) {
+                    selectedParts.remove(DamagedPart.RIGHT_QUARTER_PANEL);
+                    imageButtonRightQuarterPanel.setImageResource(R.drawable.damaged_zone_right_fender_panel);
+                } else {
+                    selectedParts.add(DamagedPart.RIGHT_QUARTER_PANEL);
+                    imageButtonRightQuarterPanel.setImageResource(R.drawable.damaged_zone_right_fender_panel_selected);
+                }
+            }
+        });
+
+
+        dialog.show();
+    }
+
+    private void navigateToAddLocationActivity() {
+
+        Intent intent = new Intent(AddClaimActivity.this, AddLocationActivity.class);
+        startActivityForResult(intent, ADD_LOCATION_REQUEST_CODE);
+    }
+
+    private void showDatePicker() {
+
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        DatePickerDialog pickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                claimCurrentStep = ClaimCurrentStep.ANSWERED_WHENHAPPENED;
+                claim.setWhenHappened(new GregorianCalendar(year, month, dayOfMonth));
+                textViewAnswerWhenHappened.setText(claim.getDateString());
+                updateViewContent();
+
+            }
+        }, year, month, day);
+
+        pickerDialog.show();
     }
 
     @Override
@@ -722,6 +1265,29 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude()), Constants.DEFAULT_MAP_ZOOM_LEVEL));
 
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == ADD_LOCATION_REQUEST_CODE) {
+
+            if (resultCode == RESULT_OK) {
+                claimCurrentStep = ClaimCurrentStep.ANSWERED_WHEREHAPPENED;
+                claim.setWhereHappened(Constants.selectedLocation);
+                updateViewContent();
+            }
+        }
+
+        if (requestCode == MY_CAMERA_ACTIVITY_REQUEST_CODE) {
+
+            if (resultCode == RESULT_OK) {
+                claimCurrentStep = ClaimCurrentStep.ANSWERED_TAKE_VIDEO;
+                //
+                updateViewContent();
+            }
+        }
+        super.onActivityResult(requestCode, requestCode, data);
     }
 
 }

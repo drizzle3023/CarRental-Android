@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop="24dp"
+    android:paddingLeft="44dp"
+    android:paddingRight="44dp"
+    android:paddingBottom="44dp"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:background="@drawable/dialog_radius">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_radius"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_car_accident"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@drawable/button_claim_reason_selector"
+            android:layout_marginBottom="12dp"
+            android:textSize="15sp"
+            android:textColor="@color/colorNormalText"
+            android:textAllCaps="false"
+            android:text="@string/claim_reason_car_accident" />
+
+        <Button
+            android:id="@+id/button_car_stolen"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@drawable/button_claim_reason_selector"
+            android:layout_marginBottom="12dp"
+            android:textSize="15sp"
+            android:textColor="@color/colorNormalText"
+            android:textAllCaps="false"
+            android:text="@string/claim_reason_car_stolen" />
+
+        <Button
+            android:id="@+id/button_rock_hit_glass"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@drawable/button_claim_reason_selector"
+            android:layout_marginBottom="12dp"
+            android:textSize="15sp"
+            android:textColor="@color/colorNormalText"
+            android:textAllCaps="false"
+            android:text="@string/claim_reason_rock_hit_glass" />
+
+        <Button
+            android:id="@+id/button_natural_hazard"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@drawable/button_claim_reason_selector"
+            android:layout_marginBottom="12dp"
+            android:textSize="15sp"
+            android:textColor="@color/colorNormalText"
+            android:textAllCaps="false"
+            android:text="@string/claim_reason_natural_hazard" />
+
+        <Button
+            android:id="@+id/button_other_reason"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@drawable/button_claim_reason_selector"
+            android:textSize="15sp"
+            android:textColor="@color/colorNormalBlue"
+            android:textAllCaps="false"
+            android:text="@string/claim_reason_other_reason" />
+
+    </LinearLayout>
+
+</RelativeLayout>

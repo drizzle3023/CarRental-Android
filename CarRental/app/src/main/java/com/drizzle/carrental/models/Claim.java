@@ -45,4 +45,20 @@ public class Claim {
         return strDate;
 
     }
+
+    public String getDamagedPartsString() {
+
+        String strDamagedParts = "";
+
+        for (int i = 0; i < damagedParts.size(); i ++) {
+
+            strDamagedParts = strDamagedParts + damagedParts.get(i).toString() + ",";
+        }
+
+        if (!strDamagedParts.isEmpty()) {
+            strDamagedParts = strDamagedParts.substring(0, strDamagedParts.length() - 1);
+        }
+
+        return strDamagedParts;
+    }
 }

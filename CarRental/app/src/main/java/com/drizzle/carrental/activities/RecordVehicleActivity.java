@@ -54,7 +54,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
 
         if (view.getId() == R.id.button_start) {
 
-            Constants.isRecordingVehicleOrMile = true;
+            Constants.isRecordingVehicleOrMileOrDamagedPart = 1;
             Intent intent = new Intent(RecordVehicleActivity.this, MyCameraActivity.class);
             startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
         }

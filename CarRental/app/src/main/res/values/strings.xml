@@ -83,5 +83,9 @@
     <string name="claim_reason_natural_hazard">Natural hazard</string>
     <string name="claim_reason_other_reason">+Other reason</string>
 
+    <string name="enter_verification_code">Enter validation code</string>
+
+    <string name="incorrect_verficiation_code">Incorrect code, please try again</string>
+
 
 </resources>

@@ -14,12 +14,16 @@
         android:layout_marginTop="35dp"
         android:layout_marginRight="36dp"
         android:layout_marginBottom="15dp"
-        android:nextFocusForward="@+id/edittext_email_address"
+        android:focusedByDefault="true"
         android:fontFamily="@font/sf_pro_display_regular"
         android:hint="Name"
+        android:imeOptions="actionNext"
+        android:nextFocusForward="@+id/edittext_email_address"
         android:singleLine="true"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
+
+    <requestFocus />
 
     <EditText
         android:id="@+id/edittext_email_address"
@@ -29,9 +33,10 @@
         android:layout_marginRight="36dp"
         android:layout_marginBottom="15dp"
         android:fontFamily="@font/sf_pro_display_regular"
+        android:hint="Email"
+        android:imeOptions="actionNext"
         android:nextFocusForward="@+id/edittext_phonenumber"
         android:singleLine="true"
-        android:hint="Email"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 
@@ -62,14 +67,13 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="8dp"
-            android:fontFamily="@font/sf_pro_display_semibold"
-            android:gravity="center"
-            android:text="+000"
             android:clickable="true"
             android:focusable="false"
+            android:fontFamily="@font/sf_pro_display_semibold"
+            android:gravity="center"
             android:inputType="none"
             android:singleLine="true"
-            android:nextFocusForward="@+id/edittext_phonenumber"
+            android:text="+000"
             android:textColor="@color/colorNormalBlue"
             android:textSize="17sp" />
 
@@ -78,11 +82,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true"
-            android:nextFocusForward="@id/agree_term_checkbox"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:singleLine="true" />
 
     </LinearLayout>
+
 
     <CheckBox
         android:id="@+id/agree_term_checkbox"
@@ -95,12 +99,14 @@
         android:checked="false"
         android:drawableLeft="@drawable/checkbox_selector"
         android:drawablePadding="10dp"
+        android:textColorLink="@android:color/holo_blue_dark"
         android:text="I agreed to the Terms of Service" />
+
 
     <Button
         android:id="@+id/createaccount_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="36dp"
         android:background="@drawable/inactive_button"

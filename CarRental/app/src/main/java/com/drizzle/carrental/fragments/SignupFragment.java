@@ -4,7 +4,14 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +50,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.icu.lang.UProperty.INT_START;
 
 //import com.mukesh.countrypicker.Country;
 //import com.mukesh.countrypicker.CountryPicker;
@@ -92,6 +101,13 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
 
     private void updateView() {
 
+
+        checkAgreeTerm.setText(Html.fromHtml("I agree to the " +
+                "<a href='" + Constants.SERVER_HTTP_URL + "'><i>Terms of Service</i></a>"));
+
+        checkAgreeTerm.setClickable(true);
+        checkAgreeTerm.setMovementMethod(LinkMovementMethod.getInstance());
+
     }
 
     @Nullable
@@ -107,6 +123,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         updateView();
 
         context = getContext();
+
 
         return view;
     }

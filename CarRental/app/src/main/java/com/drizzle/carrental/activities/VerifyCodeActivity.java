@@ -3,12 +3,16 @@ package com.drizzle.carrental.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.drizzle.carrental.api.ApiClient;
@@ -26,6 +30,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import javax.net.ssl.HostnameVerifier;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,8 +43,10 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
     private Button verifyButton;
     private OtpView otpView;
-
+    private ImageButton buttonBack;
     private String stringOtp;
+
+    private TextView textViewContentView;
 
     ProgressDialog progressDialog;
 
@@ -51,7 +59,9 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         verifyButton = findViewById(R.id.button_verify);
         otpView = findViewById(R.id.otp_view);
+        textViewContentView = findViewById(R.id.textview_contentview);
 
+        textViewContentView.setText(getResources().getString(R.string.enter_verification_code));
 
         verifyButton.setOnClickListener(this);
 
@@ -68,8 +78,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                                       int before, int count) {
                 if (otpView.getText().length() == 4) {
                     enableVerifyButton(true);
-                }
-                else {
+                } else {
                     enableVerifyButton(false);
                 }
             }
@@ -79,6 +88,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
             }
         });
+
+        buttonBack = findViewById(R.id.button_back);
     }
 
     public void enableVerifyButton(boolean isEnable) {
@@ -87,9 +98,12 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         if (isEnable) {
             verifyButton.setBackgroundResource(R.drawable.active_button);
-        }
-        else {
+            otpView.setTextColor(getResources().getColor(R.color.colorNormalBlue, null));
+            otpView.setLineColor(getResources().getColor(R.color.colorNormalBlue, null));
+        } else {
             verifyButton.setBackgroundResource(R.drawable.inactive_button);
+            otpView.setTextColor(getResources().getColor(R.color.colorNormalBlue, null));
+            otpView.setLineColor(getResources().getColor(R.color.colorOtpLineInvalid, null));
         }
     }
 
@@ -162,8 +176,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     JSONObject dataObject = object.getJSONObject("data");
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     navigateToPaymentActivity();
-                }
-                else {
+                } else {
                     Globals.isLoggedIn = true;
                     JSONObject dataObject = object.getJSONObject("data");
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
@@ -171,8 +184,14 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                 }
             } else if (object.getString("success").equals("false")) {
 
+                enableVerifyButton(false);
+                textViewContentView.setText(getResources().getString(R.string.incorrect_verficiation_code));
+                textViewContentView.setTextColor(Color.RED);
+                otpView.setTextColor(Color.RED);
+
                 JSONObject data = object.getJSONObject("data");
                 Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
 
             } else {
 
@@ -197,6 +216,9 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         if (v.getId() == R.id.button_verify) {
             submitVerifyRequestToServer();
+        }
+        if (v.getId() == R.id.button_back) {
+            finish();
         }
     }
 
@@ -232,4 +254,5 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
         startActivity(newIntent);
         finish();
     }
+
 }

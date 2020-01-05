@@ -11,10 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
-import com.drizzle.carrental.activities.AddCoverageActivity;
 import com.drizzle.carrental.activities.SignUpLoginActivity;
+import com.drizzle.carrental.activities.SubscriptionNewActivity;
 import com.drizzle.carrental.globals.Constants;
-import com.drizzle.carrental.globals.Globals;
 
 public class ProfileFragmentEmpty extends Fragment implements View.OnClickListener {
 
@@ -54,7 +53,7 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
                 navigateToLoginActivity();
                 break;
             case R.id.link_signup:
-                navigateToSignUpActivity();
+                navigateToSubscriptionNewActivity();
                 break;
 
             case R.id.link_faqs:
@@ -64,10 +63,9 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
         }
     }
 
-    private void navigateToSignUpActivity() {
+    private void navigateToSubscriptionNewActivity() {
 
-        Constants.isNavigateToSignupOrLogin = true;
-        Intent intent = new Intent(getActivity(), SignUpLoginActivity.class);
+        Intent intent = new Intent(getActivity(), SubscriptionNewActivity.class);
         startActivity(intent);
     }
 

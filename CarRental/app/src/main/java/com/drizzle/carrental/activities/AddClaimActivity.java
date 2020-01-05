@@ -362,7 +362,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_claim);
 
-        progressDialog = new ProgressDialog(this);
+        //progressDialog = new ProgressDialog(this);
 
         claim = new Claim();
         isModified = true;
@@ -810,10 +810,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             paramObject.put("address", claim.getAddressHappened());
             paramObject.put("coverage_id", Globals.coverage.getId());
             paramObject.put("what_happened", claim.getWhatHappened());
-            paramObject.put("time_happened", claim.getDateString());
+            paramObject.put("time_happened", claim.getWhenHappened().getTimeInMillis() / 1000);
             paramObject.put("damaged_part", claim.getDamagedPartsString());
             paramObject.put("note", claim.getExtraDescription());
-            paramObject.put("state", claimState);
+            paramObject.put("state", claimState.getIntValue());
 
 //            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
 //            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
@@ -831,23 +831,23 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         //get apiInterface
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         //display waiting dialog
-        showWaitingScreen();
+        //showWaitingScreen();
         //send request
 
-        apiInterface.addCoverage(gSonObject).enqueue(this);
+        apiInterface.addClaim(gSonObject).enqueue(this);
     }
 
 
     private void showWaitingScreen() {
 
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+//        progressDialog.setMessage("Please wait...");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
     }
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
     }
 
 
@@ -862,7 +862,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         switch (view.getId()) {
 
             case R.id.button_save:
-                saveClaimToDb(ClaimState.INCOMPLETE);
+                //saveClaimToDb(ClaimState.INCOMPLETE);
                 break;
 
             case R.id.button_back:
@@ -873,7 +873,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.button_submit:
-                saveClaimToDb(ClaimState.NOT_APPROVED);
+               // saveClaimToDb(ClaimState.NOT_APPROVED);
                 finish();
 
             case R.id.textview_answer_what_happend_title:
@@ -943,11 +943,12 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     }
                 });
 
-                dialog.show();
+                  dialog.show();
                 break;
             case R.id.imagebutton_clear_answer_what_happened_description:
                 editTextAnswerWhatHappenedDescription.setText("");
                 break;
+
 
             case R.id.button_done_answer_what_happend_description:
                 claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
@@ -979,10 +980,13 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.textview_answer_take_video:
+
                 checkPermission();
                 Constants.isRecordingVehicleOrMileOrDamagedPart = 3;
-                Intent intent = new Intent(AddClaimActivity.this, MyCameraActivity.class);
-                startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
+
+                    Intent intent = new Intent(AddClaimActivity.this, MyCameraActivity.class);
+                    startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
+
 
         }
     }

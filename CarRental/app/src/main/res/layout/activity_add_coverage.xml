@@ -80,6 +80,23 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/layout_coverage_line_hidden"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            android:minHeight="30dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/view31"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/colorDivider"
+                android:minHeight="30dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/layout_coverage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -243,6 +260,23 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/layout_video_vehicle_line_hidden"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            android:minHeight="30dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/view32"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/colorDivider"
+                android:minHeight="30dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/layout_video_vehicle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -334,6 +368,23 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/layout_video_mile_line_hidden"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            android:minHeight="30dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/view33"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/colorDivider"
+                android:minHeight="30dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/layout_video_mile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -405,7 +456,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button_add"
+            android:id="@+id/button_got_it"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginLeft="27dp"

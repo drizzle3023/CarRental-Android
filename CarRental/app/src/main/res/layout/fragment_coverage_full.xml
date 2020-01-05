@@ -51,7 +51,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorOnboardingBackcolor"
+            android:background="@drawable/coverage_caption_bar_radius"
             android:orientation="horizontal">
 
             <ImageView
@@ -109,6 +109,7 @@
                 android:id="@+id/button_start_coverage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:scaleType="fitXY"
                 android:layout_marginRight="20dp"
                 android:background="@null"
@@ -116,16 +117,14 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                </Space>
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp" />
 
                 <TextView
                     android:id="@+id/textview_title"
@@ -135,23 +134,25 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/sf_pro_display_semibold"
                     android:lineSpacingMultiplier="1.2"
-                    android:paddingTop="15dp"
-                    android:text="Start covering your \nrental car now. "
+                    android:text="Start covering your rental car now."
                     android:textColor="@color/colorNormalText"
                     android:textSize="15sp" />
 
                 <LinearLayout
                     android:id="@+id/layout_location"
+                    android:layout_gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/imageview_location_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/icon_location">
 
                     </ImageView>
+
                     <TextView
                         android:id="@+id/textview_address"
                         android:layout_width="match_parent"
@@ -170,17 +171,17 @@
                         android:id="@+id/textView122"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/sf_pro_text_regular"
                         android:text=" Ending in"
+                        android:textColor="@color/black"
                         android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/textview_period"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorNormalBlue"
                         android:text=" "
+                        android:textColor="@color/colorNormalBlue"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -191,7 +192,6 @@
                     android:layout_gravity="left"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="32dp"
-                    android:layout_marginBottom="90dp"
                     android:background="@drawable/gradient_button"
                     android:fontFamily="@font/sf_pro_display_semibold"
                     android:text="GOT IT"
@@ -202,10 +202,8 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                </Space>
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp" />
 
             </LinearLayout>
         </LinearLayout>

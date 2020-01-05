@@ -41,6 +41,7 @@ import retrofit2.Response;
 
 public class ClaimsActivity extends Activity implements View.OnClickListener, Callback<ResponseBody> {
 
+    final int CLAIM_ADD_REQUEST = 1;
     /**
      * UI Control Handlers
      */
@@ -117,7 +118,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
         getControlHandlersAndLinkActions();
 
-        //fetchClaimListFromServer();
+
 
     }
 
@@ -144,7 +145,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
     private void navigateToFileAClaimActivity() {
 
         Intent intent = new Intent(ClaimsActivity.this, AddClaimActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, CLAIM_ADD_REQUEST);
     }
 
     private void fetchClaimListFromServer() {
@@ -249,5 +250,16 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         hideWaitingScreen();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CLAIM_ADD_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                //fetchClaimListFromServer();
+            }
+        }
     }
 }

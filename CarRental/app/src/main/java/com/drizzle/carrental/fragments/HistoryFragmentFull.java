@@ -121,7 +121,7 @@ public class HistoryFragmentFull extends Fragment {
                                     int state = content.getInt("state");
                                     CoverageState coverageState = CoverageState.values()[state];
 
-                                    //coverage.setActiveState(true);
+                                    coverage.setActiveState(true);
                                     coverage.setState(coverageState);
 
                                     coverage.setTitle(content.getString("name"));
@@ -159,7 +159,7 @@ public class HistoryFragmentFull extends Fragment {
                                     JSONObject content = history.getContent();
 
                                     int state = content.getInt("state");
-                                    PaymentState paymentState = PaymentState.values()[state];
+                                    PaymentState paymentState = PaymentState.values()[state - 1];
 
                                     payment.setState(paymentState);
                                     payment.setTitle(paymentState.name());
@@ -184,6 +184,9 @@ public class HistoryFragmentFull extends Fragment {
                                     historyModel.setPayment(payment);
                                     historyModel.setPaymentOrCoverage(true);
 
+                                }
+                                else {
+                                    continue;
                                 }
 
                                 dataModels.add(historyModel);

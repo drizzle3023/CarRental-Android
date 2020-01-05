@@ -24,7 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    static final int ADD_COVERAGE_ACTIVITY_REQUEST = 1;
+    public static final int ADD_COVERAGE_ACTIVITY_REQUEST = 1;
 
     protected Fragment curFragment;
     protected BottomNavigationView bottomNavigationView;
@@ -33,13 +33,13 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coverage_ready);
+            setContentView(R.layout.activity_coverage_ready);
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
+            bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+            bottomNavigationView.setOnNavigationItemSelectedListener(this);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
 
-        if (Globals.isLoggedIn) {
+            if (Globals.isLoggedIn) {
             showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
         }
         else {
@@ -131,17 +131,14 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_COVERAGE_ACTIVITY_REQUEST) {
+        updateView();
 
-            if (resultCode == RESULT_OK) {
-
-                updateView();
-            }
-        }
     }
 
     public void updateView() {
 
-
+        if (Globals.isLoggedIn) {
+            showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
+        }
     }
 }

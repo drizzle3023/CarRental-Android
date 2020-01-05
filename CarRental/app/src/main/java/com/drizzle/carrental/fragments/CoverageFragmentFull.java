@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.AddCoverageActivity;
 import com.drizzle.carrental.activities.ClaimsActivity;
+import com.drizzle.carrental.activities.HomeActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ClaimState;
@@ -65,6 +66,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
     private ImageButton imageButtonCoverTheft;
     private TextView textViewCoverTheft;
 
+    private ImageView imageViewLocationIcon;
+
     private void getControlHandlersAndLinkActions(View view) {
 
         buttonStartCoverage = view.findViewById(R.id.button_start_coverage);
@@ -92,6 +95,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         imageButtonCoverTheft = view.findViewById(R.id.imagebutton_cover_theft);
         textViewCoverTheft = view.findViewById(R.id.textview_cover_theft);
 
+        imageViewLocationIcon = view.findViewById(R.id.imageview_location_icon);
+
         buttonStartCoverage.setOnClickListener(this);
         buttonClaims.setOnClickListener(this);
         buttonGotIt.setOnClickListener(this);
@@ -103,23 +108,31 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         if (Globals.coverage.isActiveState()) {
 
             buttonClaims.setVisibility(View.VISIBLE);
+
             buttonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
 
             textViewCoverageTitle.setText(Globals.coverage.getTitle());
             textViewCoverageLocation.setText(Globals.coverage.getLocationAddress());
             textViewCoveragePeriod.setText(Globals.coverage.getRemainingTime());
             buttonGotIt.setVisibility(View.GONE);
+            imageViewLocationIcon.setVisibility(View.VISIBLE);
+            layoutPeriod.setVisibility(View.VISIBLE);
 
         } else {
             buttonClaims.setVisibility(View.INVISIBLE);
-            buttonGotIt.setVisibility(View.VISIBLE);
+            buttonGotIt.setVisibility(View.GONE);
+            layoutPeriod.setVisibility(View.GONE);
+            imageViewLocationIcon.setVisibility(View.GONE);
+
             if (Globals.coverage.getState() == CoverageState.CANCELLED) {
 
                 buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
             } else if (Globals.coverage.getState() == CoverageState.EXPIRED) {
 
+                buttonGotIt.setVisibility(View.VISIBLE);
                 textViewCoverageTitle.setText(R.string.coverage_expired_title);
                 layoutLocation.setVisibility(View.GONE);
+                imageViewLocationIcon.setVisibility(View.GONE);
                 textViewCoveragePeriod.setText(R.string.no_remainingtime);
                 buttonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
 
@@ -135,10 +148,12 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             } else {
 
-                imageButtonAssistence.setImageResource(R.drawable.assitence_active);
-                imageButtonAssistence.setImageResource(R.drawable.lost_keys_enabled);
-                imageButtonAssistence.setImageResource(R.drawable.lost_keys_enabled);
-                imageButtonAssistence.setImageResource(R.drawable.lost_keys_enabled);
+                buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+
+                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
+                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
 
                 textViewAssistence.setTextColor(Color.BLACK);
                 textViewLostKeys.setTextColor(Color.BLACK);
@@ -276,12 +291,28 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
     }
 
     @Override
+    public void onResume() {
+
+        getActiveCoverage();
+
+        super.onResume();
+
+
+    }
+
+    @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
 
             case R.id.button_start_coverage:
-                navigateToAddCoverageActivity();
+                if(Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
+                    Toast.makeText(getActivity(), "Coverage already exists.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    navigateToAddCoverageActivity();
+                }
+
                 break;
             case R.id.button_claims:
                 navigateToClaimsActivity();
@@ -294,7 +325,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
      */
     private void navigateToAddCoverageActivity() {
         Intent intent = new Intent(getActivity(), AddCoverageActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, HomeActivity.ADD_COVERAGE_ACTIVITY_REQUEST);
     }
 
     /**

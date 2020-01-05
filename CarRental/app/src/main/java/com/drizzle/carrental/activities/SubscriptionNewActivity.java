@@ -95,13 +95,14 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
     private void updateView() {
 
-        CustomAdapterSubscriptionCarTypeSelect customAdapter = new CustomAdapterSubscriptionCarTypeSelect(getApplicationContext(), vehicleTypes);
-        spinner.setAdapter(customAdapter);
-
         DecimalFormat df = new DecimalFormat("0.00");
 
-        textViewPrice.setText(df.format(Globals.selectedVehicleType.getPricePerYear()) + "€ / per year");
-
+        if (Globals.selectedVehicleType.getCurrency().equals(Constants.CURRENCY_EURO)) {
+            textViewPrice.setText(df.format(Globals.selectedVehicleType.getPricePerYear()) + getResources().getString(R.string.euro_character) + " / per year");
+        }
+        else {
+            textViewPrice.setText(df.format(Globals.selectedVehicleType.getPricePerYear()) + getResources().getString(R.string.usd_character) + " / per year");
+        }
     }
 
     private void initVariables() {
@@ -143,9 +144,10 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-        //Toast.makeText(getApplicationContext(), countryNames[position], Toast.LENGTH_LONG).show();
 
         Globals.selectedVehicleType = vehicleTypes.get(position);
+
+        updateView();
     }
 
     @Override
@@ -260,7 +262,11 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                         e.printStackTrace();
                     }
                 }
-                updateView();
+
+                CustomAdapterSubscriptionCarTypeSelect customAdapter = new CustomAdapterSubscriptionCarTypeSelect(getApplicationContext(), vehicleTypes);
+                spinner.setAdapter(customAdapter);
+
+
             } else if (object.getString("success").equals("false")) {
 
                 JSONObject data = object.getJSONObject("data");

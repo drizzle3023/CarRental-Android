@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -144,8 +146,11 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 fetchCompaniesFromServer();
 
                 Globals.coverage.setLocation(currentLocation);
+                String strAddress = getAddressFromLocation();
+                Globals.coverage.setLocationAddress(strAddress);
+                textViewPickUpLocation.setText(strAddress);
 
-                getAddress();
+                //getAddress();
                 fusedLocationClient.removeLocationUpdates(locationCallback);
             }
 
@@ -241,6 +246,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             return;
         }
 
+
         if (object == null) {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
@@ -264,6 +270,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 else { //case of submit action
 
                     Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                    Globals.coverage.setId(data.getLong("coverage_id"));
                     backToPreviousActivity();
                 }
 
@@ -415,17 +422,41 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     @SuppressWarnings("MissingPermission")
     private void getAddress() {
 
-        if (!Geocoder.isPresent()) {
-            Toast.makeText(this,
-                    "Can't find current address, ",
-                    Toast.LENGTH_SHORT).show();
-            return;
+
+
+//        if (!Geocoder.isPresent()) {
+//            Toast.makeText(this,
+//                    "Can't find current address, ",
+//                    Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        Intent intent = new Intent(this, GetAddressIntentService.class);
+//        intent.putExtra("add_receiver", addressResultReceiver);
+//        intent.putExtra("add_location", currentLocation);
+//        startService(intent);
+    }
+
+    private String getAddressFromLocation() {
+
+        Geocoder geocoder;
+        List<Address> addresses = new ArrayList<>();
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(Globals.coverage.getLocation().getLatitude(), Globals.coverage.getLocation().getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        Intent intent = new Intent(this, GetAddressIntentService.class);
-        intent.putExtra("add_receiver", addressResultReceiver);
-        intent.putExtra("add_location", currentLocation);
-        startService(intent);
+        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String country = addresses.get(0).getCountryName();
+        String postalCode = addresses.get(0).getPostalCode();
+        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+        return address;
     }
 
 
@@ -489,10 +520,9 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
             String currentAdd = resultData.getString("address_result");
 
-            Globals.coverage.setLocationAddress(currentAdd);
+            //Globals.coverage.setLocationAddress(currentAdd);
 
-
-            showResults(currentAdd);
+            //showResults(currentAdd);
         }
     }
 

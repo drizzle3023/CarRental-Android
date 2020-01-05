@@ -35,6 +35,9 @@ public class Constants {
 
     public static final String HISTORY_TYPE_PAYMENT = "Payment";
 
+    public static final String CURRENCY_EURO = "EUR";
+
+    public static final String CURRENCY_USD = "USD";
     /**
      * Temporary variables
      */

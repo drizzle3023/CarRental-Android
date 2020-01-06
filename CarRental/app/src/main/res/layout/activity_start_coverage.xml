@@ -100,7 +100,7 @@
                 android:background="@null"
                 android:paddingLeft="20dp"
 
-                android:src="@drawable/icon_location" />
+                android:src="@drawable/icon_location_transparent" />
 
 
             <ImageButton

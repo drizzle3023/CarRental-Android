@@ -98,6 +98,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         viewHolder.textViewClaimDate.setText(claim.getDateString());
         viewHolder.textViewClaimLocation.setText(claim.getAddressHappened());
 
+        viewHolder.imageButtonRemoveClaim.setVisibility(View.GONE);
+
         switch (claim.getClaimState()) {
             case APPROVED:
                 viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_approved);
@@ -110,6 +112,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
                 viewHolder.textViewClaimStatus.setTextColor(getContext().getResources().getColor(R.color.colorClaimListClaimStateNotApproved, null));
                 break;
             case INCOMPLETE:
+                viewHolder.imageButtonRemoveClaim.setVisibility(View.VISIBLE);
                 viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_incomplete);
                 viewHolder.textViewClaimStatus.setText(R.string.text_claim_state_incomplete);
                 viewHolder.textViewClaimStatus.setTextColor(getContext().getResources().getColor(R.color.colorClaimListClaimStateIncomplete, null));

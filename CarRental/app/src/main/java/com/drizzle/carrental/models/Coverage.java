@@ -1,6 +1,7 @@
 package com.drizzle.carrental.models;
 
 import android.location.Location;
+import android.security.keystore.StrongBoxUnavailableException;
 
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Constants;
@@ -81,7 +82,19 @@ public class Coverage {
 
     public String getRemainingTime() {
 
-        return getDateToString();
+        String strPeriod = getDateToString();
+
+        if (dateFrom != null && dateTo != null) {
+
+            long timeStampFrom = dateFrom.getTimeInMillis();
+            long timeStampTo = dateTo.getTimeInMillis();
+
+            long remaining = (timeStampTo - timeStampFrom) / 1000;
+
+            strPeriod = String.format("%dd %dh %dm", remaining / 86400, (remaining % 86400) / 3600, (remaining % 3600) / 60);
+        }
+
+        return strPeriod;
     }
 
 

@@ -2,10 +2,10 @@ package com.drizzle.carrental.enumerators;
 
 public enum ClaimState {
 
-    APPROVED ("Approved", 0),
-    NOT_APPROVED ("Not Approved", 1),
-    EXPERT_UNDERGOING("Expert Undergoing...", 2),
-    INCOMPLETE("Incomplete", 3);
+    APPROVED ("Approved", 4),
+    NOT_APPROVED ("Not Approved", 2),
+    EXPERT_UNDERGOING("Expert Undergoing...", 3),
+    INCOMPLETE("Incomplete", 1);
 
     private String stringValue;
     private int intValue;

@@ -5,18 +5,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.MyProfile;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
-public class ProfileFragmentFull extends Fragment implements View.OnClickListener {
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 
-    MyProfile profile;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ProfileFragmentFull extends Fragment implements View.OnClickListener, Callback<ResponseBody> {
 
     TextView textViewName;
     TextView textViewPhoneNumber;
@@ -35,7 +50,6 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
         View view = inflater.inflate(R.layout.fragment_profile_full, container, false);
 
-        profile = Globals.profile;
 
         textViewName = (TextView) view.findViewById(R.id.textview_name);
         textViewPhoneNumber = (TextView) view.findViewById(R.id.textview_phonenumber);
@@ -56,21 +70,58 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         linkAbout.setOnClickListener(this);
         linkLogout.setOnClickListener(this);
 
-        textViewName.setText(profile.getName());
-        textViewPhoneNumber.setText(profile.getMobile());
-
-        try {
-            int cardNoLength = profile.getCreditCardNo().length();
-            textViewCardNo.setText("****" + profile.getCreditCardNo().substring(cardNoLength - 4));
-        }
-        catch (Exception e) {
-            textViewCardNo.setText("****");
-        }
-
-
-
+        updateFragment();
         return view;
 
+    }
+
+    public void updateFragment() {
+
+        if (Globals.profile != null) {
+
+            if (Globals.profile.getName() != null) {
+                textViewName.setText(Globals.profile.getName());
+            }
+            if (Globals.profile.getMobile() != null) {
+                textViewPhoneNumber.setText(Globals.profile.getMobile());
+            }
+
+            try {
+                int cardNoLength = Globals.profile.getCreditCardNo().length();
+                textViewCardNo.setText("****" + Globals.profile.getCreditCardNo().substring(cardNoLength - 4));
+            }
+            catch (Exception e) {
+                textViewCardNo.setText("****");
+            }
+        }
+    }
+
+    /**
+     * fetch user profile from saved access_token
+     */
+    private void fetchProfileFromServer() {
+
+        //prepare restrofit2 request parameters
+        JsonObject gSonObject = new JsonObject();
+
+        //set parameters using org.JSONObject
+        JSONObject paramObject = new JSONObject();
+        try {
+
+            paramObject.put("access_token", SharedHelper.getKey(getActivity(), "access_token"));
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+
+        JsonParser jsonParser = new JsonParser();
+        gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+
+        //send request
+        apiInterface.getUserProfile(gSonObject).enqueue(this);
     }
 
     @Override
@@ -104,5 +155,71 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
         }
 
+    }
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        if (object == null) {
+
+            Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+
+                JSONObject data = object.getJSONObject("data");
+                JSONObject profileData = data.getJSONObject("profile");
+                MyProfile myProfile = new Gson().fromJson(profileData.toString(), new TypeToken<MyProfile>() {}.getType());
+
+                Globals.profile = myProfile;
+
+                updateFragment();
+
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(getActivity(), data.getString("message"), Toast.LENGTH_SHORT).show();
+            } else {
+
+                Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+        Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
     }
 }

@@ -18,7 +18,6 @@ import com.drizzle.carrental.globals.Constants;
 
 public class RecordMileActivity extends Activity implements View.OnClickListener {
 
-    public static final int RESULT_CODE_BACK = 1000001;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88888;
 
     /**
@@ -104,7 +103,7 @@ public class RecordMileActivity extends Activity implements View.OnClickListener
 
     private void backToPrevious() {
 
-        setResult(RESULT_CODE_BACK);
+        setResult(RESULT_OK);
         super.onBackPressed();
     }
 }

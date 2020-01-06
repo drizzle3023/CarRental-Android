@@ -87,5 +87,14 @@
 
     <string name="incorrect_verficiation_code">Incorrect code, please try again</string>
 
+    <string name="message_company_id_is_missing">Please select a company.</string>
+    <string name="message_address_is_missing">Couldn\'t get your current address.</string>
+    <string name="message_enddate_is_missing">Please select your start date.</string>
+    <string name="message_startdate_is_missing">Please select your end date.</string>
+    <string name="message_period_is_not_correct">Please select valid date range.</string>
+
+    <string name="message_input_what_happened">Please answer what happened.</string>
+
+
 
 </resources>

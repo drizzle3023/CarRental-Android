@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -105,7 +106,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void updateView() {
 
-        if (Globals.coverage.isActiveState()) {
+        if (Globals.coverage != null) {
 
             buttonClaims.setVisibility(View.VISIBLE);
 
@@ -118,6 +119,11 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
             imageViewLocationIcon.setVisibility(View.VISIBLE);
             layoutPeriod.setVisibility(View.VISIBLE);
 
+            textViewAssistence.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
         } else {
             buttonClaims.setVisibility(View.INVISIBLE);
             buttonGotIt.setVisibility(View.GONE);
@@ -129,10 +135,14 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
             } else if (Globals.coverage.getState() == CoverageState.EXPIRED) {
 
+                buttonStartCoverage.setImageResource(R.drawable.video_vehicle);
+                buttonStartCoverage.setAlpha(	0.25f);
+
                 buttonGotIt.setVisibility(View.VISIBLE);
                 textViewCoverageTitle.setText(R.string.coverage_expired_title);
                 layoutLocation.setVisibility(View.GONE);
                 imageViewLocationIcon.setVisibility(View.GONE);
+                layoutPeriod.setVisibility(View.VISIBLE);
                 textViewCoveragePeriod.setText(R.string.no_remainingtime);
                 buttonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
 
@@ -155,13 +165,53 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
                 imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
 
-                textViewAssistence.setTextColor(Color.BLACK);
-                textViewLostKeys.setTextColor(Color.BLACK);
-                textViewBrokenGlasses.setTextColor(Color.BLACK);
-                textViewCoverTheft.setTextColor(Color.BLACK);
             }
         }
+    }
 
+    private void updateBottomBar() {
+
+        if (Globals.coverage.isActiveState()) {
+
+            buttonStartCoverage.setImageResource(R.drawable.video_vehicle);
+
+            imageButtonAssistence.setImageResource(R.drawable.assitence_active);
+            imageButtonLostKeys.setImageResource(R.drawable.lost_keys_enabled);
+            imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_enabled);
+            imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_enabled);
+
+            textViewAssistence.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+            textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+            textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
+        } else {
+
+            if (Globals.coverage.getState() == CoverageState.EXPIRED) {
+
+
+
+
+                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
+                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+
+                textViewAssistence.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+
+            } else {
+
+                buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
+                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
+                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+
+            }
+        }
     }
 
     private void initVariables() {
@@ -220,9 +270,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                             }.getType());
 
                             Coverage coverage = new Coverage();
-                            coverage.setId((long)parseCoverage.getId());
+                            coverage.setId((long) parseCoverage.getId());
                             coverage.setTitle(parseCoverage.getName());
-                            coverage.setState(CoverageState.values()[parseCoverage.getState()]);
+
+                            coverage.setState(CoverageState.values()[parseCoverage.getState() - 1]);
 
                             JSONObject companyObject = parseCoverage.getCompany();
                             Company company = new Company();
@@ -306,13 +357,16 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         switch (view.getId()) {
 
             case R.id.button_start_coverage:
-                if(Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
+                if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
                     Toast.makeText(getActivity(), "Coverage already exists.", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     navigateToAddCoverageActivity();
                 }
 
+                break;
+
+            case R.id.button_got_it:
+                navigateToAddCoverageActivity();
                 break;
             case R.id.button_claims:
                 navigateToClaimsActivity();

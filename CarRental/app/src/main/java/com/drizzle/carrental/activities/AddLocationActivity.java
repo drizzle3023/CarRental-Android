@@ -39,6 +39,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 
     SupportMapFragment mapView;
 
+    private Boolean getLocation = false;
     /**
      * Vars for location address
      */
@@ -93,8 +94,10 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.button_submit:
-                setResult(RESULT_OK);
-                finish();
+                if (getLocation) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
                 break;
         }
     }
@@ -123,7 +126,9 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
                 map.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Marker"));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), Constants.DEFAULT_MAP_ZOOM_LEVEL));
 
+                getLocation = true;
                 Constants.selectedLocation = currentLocation;
+
                 fusedLocationClient.removeLocationUpdates(locationCallback);
 
             }

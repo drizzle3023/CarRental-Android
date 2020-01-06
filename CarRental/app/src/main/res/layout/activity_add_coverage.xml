@@ -84,6 +84,7 @@
             android:layout_width="44dp"
             android:layout_height="40dp"
             android:minHeight="30dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -107,6 +108,7 @@
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:minHeight="30dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <View
@@ -129,6 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_weight="1"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
 

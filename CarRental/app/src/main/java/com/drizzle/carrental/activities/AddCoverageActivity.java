@@ -77,8 +77,34 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
     /**
      * Temporary variables for state
      */
-    private boolean isEditMode;
+    public enum CoverageCurrentStep {
 
+        NEW("NEW ", 0),
+        COVERAGE_ADDED("COVERAGE_ADDED", 1),
+        VIDEO_VEHICLE_ADDED("VIDEO_VEHICLE_ADDED", 2),
+        COMPLETED("COMPLETED", 3);
+
+        private String stringValue;
+        private int intValue;
+
+        private CoverageCurrentStep(String toString, int value) {
+            stringValue = toString;
+            intValue = value;
+        }
+
+        public int getIntValue() {
+
+            return intValue;
+        }
+
+        @Override
+        public String toString() {
+            return stringValue;
+        }
+    }
+
+    private boolean isEditMode;
+    private CoverageCurrentStep coverageCurrentStep = CoverageCurrentStep.NEW;
 
     /**
      * get control handlers by id and add listenres
@@ -209,7 +235,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         } else {
             layoutVideoMileLineHidden.setVisibility(View.GONE);
             layoutVideoMile.setVisibility(View.VISIBLE);
-            buttonVideoVehicle.setImageResource(R.drawable.video_mile);
+            buttonVideoMile.setImageResource(R.drawable.video_mile);
         }
 
         if (isEditMode) {
@@ -225,6 +251,29 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
             buttonDeleteVideoMile.setVisibility(View.GONE);
         }
 
+        if (coverageCurrentStep.equals(CoverageCurrentStep.NEW)) {
+
+            captionStartCoverage.setBackgroundResource(R.drawable.coverage_add_button);
+            captionRecordCar.setBackgroundResource(0);
+            captionRecordMile.setBackgroundResource(0);
+        }
+        else if (coverageCurrentStep.equals(CoverageCurrentStep.COVERAGE_ADDED)) {
+
+            captionStartCoverage.setBackgroundResource(0);
+            captionRecordCar.setBackgroundResource(R.drawable.coverage_add_button);
+            captionRecordMile.setBackgroundResource(0);
+        }
+        else if (coverageCurrentStep.equals(CoverageCurrentStep.VIDEO_VEHICLE_ADDED)) {
+
+            captionStartCoverage.setBackgroundResource(0);
+            captionRecordCar.setBackgroundResource(0);
+            captionRecordMile.setBackgroundResource(R.drawable.coverage_add_button);
+        }
+        else {
+            captionStartCoverage.setBackgroundResource(0);
+            captionRecordCar.setBackgroundResource(0);
+            captionRecordMile.setBackgroundResource(0);
+        }
     }
 
     /**
@@ -257,13 +306,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
             case R.id.caption_start_coverage:
             case R.id.button_start_coverage:
 
-                if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
-                    Toast.makeText(this, "Coverage already exists.", Toast.LENGTH_SHORT).show();
-
-                }
-                else {
-                    navigateToStartCoveragePage();
-                }
+                navigateToStartCoveragePage();
                 break;
 
             case R.id.caption_record_car:
@@ -325,6 +368,25 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
             if (resultCode == RESULT_OK) {
                 coverage = Globals.coverage;
+                coverageCurrentStep = CoverageCurrentStep.COVERAGE_ADDED;
+                updateView();
+            }
+        }
+        else if (requestCode == RECORD_VEHICLE_ACTIVITY_REQUEST) {
+
+            if (resultCode == RESULT_OK) {
+                vehicleVideoURL = Globals.coverage.getUrlVehicle();
+                vehicleVideoURL = "aaa";
+                        coverageCurrentStep = CoverageCurrentStep.VIDEO_VEHICLE_ADDED;
+                updateView();
+            }
+        }
+        else if (requestCode == RECORD_MILE_ACTIVITY_REQUEST) {
+
+            if (resultCode == RESULT_OK) {
+                vehicleMileURL = Globals.coverage.getUrlMile();
+                vehicleMileURL  = "aaa";
+                coverageCurrentStep = CoverageCurrentStep.COMPLETED;
                 updateView();
             }
         }

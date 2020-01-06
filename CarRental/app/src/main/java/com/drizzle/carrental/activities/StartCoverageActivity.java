@@ -13,9 +13,11 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.provider.Settings;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.*;
 
 import com.drizzle.carrental.R;
@@ -25,9 +27,9 @@ import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Company;
-import com.drizzle.carrental.models.VehicleType;
-import com.drizzle.carrental.services.GetAddressIntentService;
+import com.drizzle.carrental.models.Coverage;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -96,7 +98,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private Location currentLocation;
     private LocationCallback locationCallback;
 
-    private boolean isGettingCompanyListOrSubitAction = true;
+    private boolean isGettingCompanyListOrSubmitAction = true;
     /**
      * Get UI Control Handlers and link events
      */
@@ -141,12 +143,12 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             public void onLocationResult(LocationResult locationResult) {
                 currentLocation = locationResult.getLocations().get(0);
 
-                isGettingCompanyListOrSubitAction = true;
+                isGettingCompanyListOrSubmitAction = true;
 
                 fetchCompaniesFromServer();
 
                 Globals.coverage.setLocation(currentLocation);
-                String strAddress = getAddressFromLocation();
+                String strAddress = Utils.getAddressFromLocation(getApplicationContext(), Globals.coverage.getLocation());
                 Globals.coverage.setLocationAddress(strAddress);
                 textViewPickUpLocation.setText(strAddress);
 
@@ -258,14 +260,17 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                 JSONObject data = object.getJSONObject("data");
 
-                if (isGettingCompanyListOrSubitAction) {
+                if (isGettingCompanyListOrSubmitAction) {
 
                     JSONArray listObject = data.getJSONArray("companyList");
                     companies = new Gson().fromJson(listObject.toString(), new TypeToken<List<Company>>() {
                     }.getType());
 
-                    updateCompanySpinner();
-
+                    if (!companies.isEmpty()) {
+                        updateCompanySpinner();
+                        selectedCompany = companies.get(0);
+                        Globals.coverage.setCompany(selectedCompany);
+                    }
                 }
                 else { //case of submit action
 
@@ -277,13 +282,21 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             } else if (object.getString("success").equals("false")) {
 
                 JSONObject data = object.getJSONObject("data");
+                if (isGettingCompanyListOrSubmitAction) {
+                    Globals.coverage = new Coverage();
+                }
                 Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
             } else {
-
+                if (isGettingCompanyListOrSubmitAction) {
+                    Globals.coverage = new Coverage();
+                }
                 Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
 
+            if (isGettingCompanyListOrSubmitAction) {
+                Globals.coverage = new Coverage();
+            }
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -294,12 +307,44 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     public void onFailure(Call<ResponseBody> call, Throwable t) {
 
         hideWaitingScreen();
+        Globals.coverage = new Coverage();
         Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
     }
 
     private void saveCoverageToDb() {
 
-        isGettingCompanyListOrSubitAction = false;
+        if (Globals.coverage.getCompany() == null) {
+
+            Toast.makeText(this, getResources().getString(R.string.message_company_id_is_missing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Globals.coverage.getCompany().getName().isEmpty() || !(Globals.coverage.getCompany().getId() > 0)) {
+
+            Toast.makeText(this, getResources().getString(R.string.message_company_id_is_missing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Globals.coverage.getLocationAddress().isEmpty()) {
+
+            Toast.makeText(this, getResources().getString(R.string.message_address_is_missing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Globals.coverage.getDateFrom() == null) {
+
+            Toast.makeText(this, getResources().getString(R.string.message_startdate_is_missing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Globals.coverage.getDateTo() == null) {
+
+            Toast.makeText(this, getResources().getString(R.string.message_enddate_is_missing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Globals.coverage.getDateTo().before(Globals.coverage.getDateFrom())) {
+
+            Toast.makeText(this, getResources().getString(R.string.message_period_is_not_correct), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        isGettingCompanyListOrSubmitAction = false;
 
         JSONObject paramObject = new JSONObject();
 
@@ -354,7 +399,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                 saveCoverageToDb();
 
-
                 break;
 
             case R.id.layout_pickup_location:
@@ -394,6 +438,14 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 }
             }
         }, year, month, day);
+
+        Window window = pickerDialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        window.setAttributes(wlp);
+
 
         pickerDialog.show();
     }
@@ -437,27 +489,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 //        startService(intent);
     }
 
-    private String getAddressFromLocation() {
 
-        Geocoder geocoder;
-        List<Address> addresses = new ArrayList<>();
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        try {
-            addresses = geocoder.getFromLocation(Globals.coverage.getLocation().getLatitude(), Globals.coverage.getLocation().getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-        String city = addresses.get(0).getLocality();
-        String state = addresses.get(0).getAdminArea();
-        String country = addresses.get(0).getCountryName();
-        String postalCode = addresses.get(0).getPostalCode();
-        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-
-        return address;
-    }
 
 
     @Override

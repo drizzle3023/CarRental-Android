@@ -108,10 +108,21 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
         } else {
 
             if (historyModel.getCoverage().isActiveState()) {
-                viewHolder.textViewActiveState.setText(R.string.one_claim_active);
+                int claimCount = 0;
+                String claimDescription = "";
+                try {
+                    claimCount = historyModel.getCoverage().getClaimCount();
+                } catch (Exception e) {
+
+                }
+
+                claimDescription = String.format("%d claims", claimCount);
+
+                viewHolder.textViewActiveState.setText(claimDescription);
                 viewHolder.textViewActiveState.setTextAppearance(R.style.AppTheme_HistoryRowItemEnabled);
             } else {
-                viewHolder.textViewActiveState.setText(R.string.one_claim_resolved);
+                //viewHolder.textViewActiveState.setText(R.string.one_claim_resolved);
+                viewHolder.textViewActiveState.setVisibility(View.GONE);
                 viewHolder.textViewActiveState.setTextAppearance(R.style.AppTheme_HistoryRowItemEnabled);
             }
             viewHolder.textViewTitle.setText(historyModel.getCoverage().getTitle());

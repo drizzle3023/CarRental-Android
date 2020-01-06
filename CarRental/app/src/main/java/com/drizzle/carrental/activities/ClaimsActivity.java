@@ -3,6 +3,7 @@ package com.drizzle.carrental.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.Claim;
 import com.drizzle.carrental.models.VehicleType;
+import com.drizzle.carrental.serializers.ParseClaim;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -54,6 +56,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
     ProgressDialog progressDialog;
 
     ArrayList<Claim> dataModels;
+    ArrayList<ParseClaim> parseDataModels;
 
     /**
      * get control handlers by id and add listenres
@@ -67,7 +70,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
         dataModels = new ArrayList<>();
 
-        prepareTestData();
+        //prepareTestData();
 
         adapter = new CustomAdapterForClaimListView(dataModels, this);
 
@@ -118,7 +121,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
         getControlHandlersAndLinkActions();
 
-
+        fetchClaimListFromServer();
 
     }
 
@@ -226,8 +229,36 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                 JSONObject data = object.getJSONObject("data");
                 JSONArray listObject = data.getJSONArray("claimList");
 
-                dataModels = new Gson().fromJson(listObject.toString(), new TypeToken<List<Claim>>() {}.getType());
+                parseDataModels = new Gson().fromJson(listObject.toString(), new TypeToken<List<ParseClaim>>() {}.getType());
 
+                for (int i = 0; i < parseDataModels.size(); i ++) {
+
+                    ParseClaim parseClaim = parseDataModels.get(i);
+                    Claim claim = new Claim();
+
+                    claim.setId(parseClaim.getId());
+                    claim.setWhatHappened(parseClaim.getWhatHappened());
+
+                    GregorianCalendar calendar = new GregorianCalendar();
+                    calendar.setTimeInMillis(parseClaim.getTimeHappened() * 1000);
+
+                    claim.setWhenHappened(calendar);
+
+                    Location location = new Location("location");
+                    location.setLatitude(parseClaim.getLatitude());
+                    location.setLongitude(parseClaim.getLongitude());
+                    claim.setWhereHappened(location);
+
+                    claim.setAddressHappened(parseClaim.getAddress());
+
+                    claim.setDamagedPartsFromString(parseClaim.getDamagedPart());
+                    claim.setVideoURL(parseClaim.getVideo());
+                    claim.setExtraDescription(parseClaim.getNote());
+
+                    claim.setClaimState(ClaimState.values()[parseClaim.getState() - 1]);
+
+                    dataModels.add(claim);
+                }
                 adapter = new CustomAdapterForClaimListView(dataModels, this);
 
                 listView.setAdapter(adapter);
@@ -257,9 +288,9 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CLAIM_ADD_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                //fetchClaimListFromServer();
-            }
+            //if (resultCode == RESULT_OK) {
+                fetchClaimListFromServer();
+            //}
         }
     }
 }

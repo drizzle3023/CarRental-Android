@@ -18,6 +18,8 @@ import lombok.Setter;
 @Setter
 public class Claim {
 
+    long id; //id of claim
+
     String whatHappened; //answer for "What happened"
 
     GregorianCalendar whenHappened; //answer for "When this happened"
@@ -41,7 +43,9 @@ public class Claim {
         String strDate = "";
 
         DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT_FOR_CLAIM);
-        strDate = df.format(whenHappened.getTime());
+        if (whenHappened != null) {
+            strDate = df.format(whenHappened.getTime());
+        }
         return strDate;
 
     }
@@ -50,15 +54,21 @@ public class Claim {
 
         String strDamagedParts = "";
 
-        for (int i = 0; i < damagedParts.size(); i ++) {
+        if (damagedParts != null) {
+            for (int i = 0; i < damagedParts.size(); i++) {
 
-            strDamagedParts = strDamagedParts + damagedParts.get(i).toString() + ",";
+                strDamagedParts = strDamagedParts + damagedParts.get(i).toString() + ",";
+            }
+
+            if (!strDamagedParts.isEmpty()) {
+                strDamagedParts = strDamagedParts.substring(0, strDamagedParts.length() - 1);
+            }
         }
-
-        if (!strDamagedParts.isEmpty()) {
-            strDamagedParts = strDamagedParts.substring(0, strDamagedParts.length() - 1);
-        }
-
         return strDamagedParts;
+    }
+
+    public void setDamagedPartsFromString(String strPartList) {
+
+
     }
 }

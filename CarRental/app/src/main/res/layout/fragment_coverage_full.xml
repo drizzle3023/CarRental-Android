@@ -147,6 +147,7 @@
 
                     <ImageView
                         android:id="@+id/imageview_location_icon"
+                        android:paddingRight="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/icon_location">
@@ -172,7 +173,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/sf_pro_text_regular"
-                        android:text=" Ending in"
+                        android:text=" Ending in "
                         android:textColor="@color/black"
                         android:textSize="13sp" />
 

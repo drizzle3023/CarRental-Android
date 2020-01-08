@@ -76,7 +76,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         linkAbout.setOnClickListener(this);
         linkLogout.setOnClickListener(this);
 
-        if (Globals.profile.getName().isEmpty()) {
+        if (Globals.profile.getName() == null || Globals.profile.getName().isEmpty()) {
             fetchProfileFromServer();
         }
         else {

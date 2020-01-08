@@ -81,7 +81,7 @@
             android:textSize="11sp" />
 
         <TextView
-            android:id="@+id/subscriptionNewAmount"
+            android:id="@+id/textview_price_per_year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -109,7 +109,7 @@
                 android:src="@drawable/check_item" />
 
             <TextView
-                android:id="@+id/subscriptionNewDescription1"
+                android:id="@+id/textview_rental_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -137,7 +137,7 @@
                 android:src="@drawable/check_item" />
 
             <TextView
-                android:id="@+id/subscriptionNewDescription2"
+                android:id="@+id/textview_vehicle_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="50dp"
@@ -163,7 +163,7 @@
                 android:src="@drawable/check_item" />
 
             <TextView
-                android:id="@+id/subscriptionNewDescription3"
+                android:id="@+id/textview_worldzone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="50dp"
@@ -175,7 +175,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/expires"
+            android:id="@+id/textview_expire_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"

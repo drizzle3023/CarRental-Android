@@ -1,5 +1,7 @@
 package com.drizzle.carrental.fragments;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +10,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.activities.MainActivity;
+import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.MyProfile;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -70,7 +76,13 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         linkAbout.setOnClickListener(this);
         linkLogout.setOnClickListener(this);
 
-        updateFragment();
+        if (Globals.profile.getName().isEmpty()) {
+            fetchProfileFromServer();
+        }
+        else {
+            updateFragment();
+        }
+
         return view;
 
     }
@@ -152,6 +164,23 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
         }
         if (view.getId() == R.id.link_logout) {
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Logout")
+                    .setMessage("Do you really want to logout?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            SharedHelper.clearSharedPreferences(getActivity());
+                            Utils.resetAllGlobals();
+                            Intent intent = new Intent(getActivity(), OnboardingActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }})
+                    .setNegativeButton(android.R.string.no, null).show();
+
+
 
         }
 

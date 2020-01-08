@@ -1,5 +1,6 @@
 package com.drizzle.carrental.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
@@ -11,18 +12,100 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.Claim;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implements View.OnClickListener {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implements View.OnClickListener, Callback<ResponseBody> {
 
     private ArrayList<Claim> dataSet;
     Context mContext;
+    private int lastPosition = -1;
+    ProgressDialog progressDialog;
+
+    private int indexToBeRemoved = -1;
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        hideWaitingScreen();
+
+        String responseString = null;
+        try {
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject object = null;
+        if (responseString != null) {
+            try {
+                object = new JSONObject(responseString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (object == null) {
+
+            Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            if (object.getString("success").equals("true")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
+                dataSet.remove(indexToBeRemoved);
+                notifyDataSetChanged();
+
+            } else if (object.getString("success").equals("false")) {
+
+                JSONObject data = object.getJSONObject("data");
+                Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
+            } else {
+
+                Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+
+            Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+        hideWaitingScreen();
+        Toast.makeText(getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+    }
 
     // View lookup cache
     private static class ViewHolder {
@@ -52,13 +135,63 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         Claim claim = (Claim) object;
 
         switch (v.getId()) {
-            case R.id.imageButton:
+            case R.id.imagebutton_remove_claim:
 
+//                if (claim != null) {
+//                    if (claim.getId() > 0) {
+//                        indexToBeRemoved = position;
+//                        removeClaimFromServer(claim.getId());
+//                    } else {
+//                        Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+//                }
                 break;
         }
     }
 
-    private int lastPosition = -1;
+    private void removeClaimFromServer(long claimId) {
+
+        JSONObject paramObject = new JSONObject();
+
+        try {
+
+            paramObject.put("access_token", SharedHelper.getKey(getContext(), "access_token"));
+            paramObject.put("claim_id", claimId);
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+            Toast.makeText(getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+        }
+
+        JsonParser jsonParser = new JsonParser();
+        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+        //get apiInterface
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        //display waiting dialog
+        showWaitingScreen();
+        //send request
+
+        apiInterface.addClaim(gSonObject).enqueue(this);
+    }
+
+    private void showWaitingScreen() {
+
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -81,6 +214,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             viewHolder.imageButtonRemoveClaim = convertView.findViewById(R.id.imagebutton_remove_claim);
             viewHolder.imageViewClaimStatus = convertView.findViewById(R.id.imageview_claim_state);
 
+            //viewHolder.imageButtonRemoveClaim.setOnClickListener(this);
             result = convertView;
             convertView.setTag(viewHolder);
 

@@ -21,6 +21,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88888;
 
+    private boolean cameraPermission = false;
     /**
      * UI Control Handlers
      *
@@ -54,13 +55,15 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
 
         if (view.getId() == R.id.button_start) {
 
-            Constants.isRecordingVehicleOrMileOrDamagedPart = 1;
-            Intent intent = new Intent(RecordVehicleActivity.this, MyCameraActivity.class);
-            startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
+            if (cameraPermission) {
+                Constants.isRecordingVehicleOrMileOrDamagedPart = 1;
+                Intent intent = new Intent(RecordVehicleActivity.this, MyCameraActivity.class);
+                startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
+            }
         }
         if (view.getId() == R.id.button_back) {
 
-            backToPrevious();
+            finish();
         }
     }
 
@@ -78,6 +81,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
             return false;
         }
+        cameraPermission = true;
 
         return true;
     }
@@ -87,8 +91,10 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
         switch (requestCode) {
             case CAMERA_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    cameraPermission = true;
                     Toast.makeText(RecordVehicleActivity.this, "camera permission has been grunted.", Toast.LENGTH_SHORT).show();
                 } else {
+                    cameraPermission = false;
                     Toast.makeText(RecordVehicleActivity.this, "[WARN] camera permission is not grunted.", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -98,7 +104,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
     @Override
     public void onBackPressed(){
 
-        backToPrevious();
+        finish();
     }
 
     @Override
@@ -108,7 +114,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
 
             if (resultCode == RESULT_OK) {
 
-                finish();
+                backToPrevious();
             }
             else {
 

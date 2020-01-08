@@ -375,7 +375,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_claim);
 
-        //progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
 
         claim = new Claim();
         isModified = true;
@@ -688,6 +688,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             if (damagedZoneCount > 1) {
                 String strCount = "+" + (damagedZoneCount - 1);
                 textViewDamagedZoneCount.setText(strCount);
+                textViewDamagedZoneCount.setVisibility(View.VISIBLE);
             } else {
                 textViewDamagedZoneCount.setVisibility(View.GONE);
             }
@@ -924,7 +925,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         //get apiInterface
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         //display waiting dialog
-        //showWaitingScreen();
+        showWaitingScreen();
         //send request
 
         apiInterface.addClaim(gSonObject).enqueue(this);
@@ -933,14 +934,14 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private void showWaitingScreen() {
 
-//        progressDialog.setMessage("Please wait...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.show();
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
     private void hideWaitingScreen() {
 
-        //progressDialog.dismiss();
+        progressDialog.dismiss();
     }
 
 
@@ -969,7 +970,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.button_submit:
                 isSaveOrSubmit = false;
-                saveClaimToDb(ClaimState.NOT_APPROVED);
+                saveClaimToDb(ClaimState.PENDING_REVIEW);
                 break;
 
             case R.id.textview_answer_what_happend_title:
@@ -1154,10 +1155,14 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 if (!selectedParts.isEmpty()) {
                     claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
+                    claim.setDamagedParts(selectedParts);
+                    updateViewContent();
+                    dialog.dismiss();
                 }
-                claim.setDamagedParts(selectedParts);
-                updateViewContent();
-                dialog.dismiss();
+                else {
+                    Toast.makeText(getParent(), R.string.message_select_damaged_zone, Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

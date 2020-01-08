@@ -15,11 +15,15 @@ import androidx.annotation.Nullable;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Utils;
 
 public class RecordMileActivity extends Activity implements View.OnClickListener {
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 88888;
 
+    public static final int MY_CAMERA_ACTIVITY_REQUEST_CODE = 1;
+
+    private boolean cameraPermission = false;
     /**
      * UI Control Handlers
      *
@@ -52,7 +56,7 @@ public class RecordMileActivity extends Activity implements View.OnClickListener
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
             return false;
         }
-
+        cameraPermission = true;
         return true;
     }
 
@@ -62,8 +66,10 @@ public class RecordMileActivity extends Activity implements View.OnClickListener
             case CAMERA_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(RecordMileActivity.this, "camera permission has been grunted.", Toast.LENGTH_SHORT).show();
+                    cameraPermission = true;
                 } else {
                     Toast.makeText(RecordMileActivity.this, "[WARN] camera permission is not grunted.", Toast.LENGTH_SHORT).show();
+                    cameraPermission = false;
                 }
                 break;
         }
@@ -85,25 +91,44 @@ public class RecordMileActivity extends Activity implements View.OnClickListener
 
         if (view.getId() == R.id.button_start) {
 
-            Constants.isRecordingVehicleOrMileOrDamagedPart = 2;
-            Intent intent = new Intent(RecordMileActivity.this, MyCameraActivity.class);
-            startActivity(intent);
+            if (cameraPermission) {
+                Constants.isRecordingVehicleOrMileOrDamagedPart = 2;
+                Intent intent = new Intent(RecordMileActivity.this, MyCameraActivity.class);
+                startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
+            }
         }
         if (view.getId() == R.id.button_back) {
 
-            backToPrevious();
+            finish();
         }
     }
 
     @Override
     public void onBackPressed(){
 
-        backToPrevious();
+        finish();
     }
 
     private void backToPrevious() {
 
         setResult(RESULT_OK);
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == MY_CAMERA_ACTIVITY_REQUEST_CODE) {
+
+            if (resultCode == RESULT_OK) {
+
+                backToPrevious();
+            }
+            else {
+
+                //remove recorded file
+                Utils.removeTemporaryFile(BaseCameraActivity.getVideoFilePath());
+            }
+        }
     }
 }

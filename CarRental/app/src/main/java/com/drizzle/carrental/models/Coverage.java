@@ -9,6 +9,7 @@ import com.drizzle.carrental.globals.Constants;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import lombok.Getter;
@@ -86,7 +87,8 @@ public class Coverage {
 
         if (dateFrom != null && dateTo != null) {
 
-            long timeStampFrom = dateFrom.getTimeInMillis();
+            long timeStampFrom = GregorianCalendar.getInstance().getTimeInMillis();
+
             long timeStampTo = dateTo.getTimeInMillis();
 
             long remaining = (timeStampTo - timeStampFrom) / 1000;

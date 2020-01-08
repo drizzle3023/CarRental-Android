@@ -38,7 +38,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity"/>
         <activity android:name=".activities.OnboardingActivity" />
         <activity android:name=".fragments.CoverageFragmentEmpty" />
         <activity android:name=".activities.SubscriptionNewActivity" />

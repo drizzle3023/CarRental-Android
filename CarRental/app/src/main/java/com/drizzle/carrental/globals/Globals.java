@@ -13,8 +13,6 @@ public class Globals {
 
     public static boolean isLoggedIn = false;
 
-    public static String AccessToken = "";
-
     public static MyProfile profile = new MyProfile();
 
     public static VehicleType  selectedVehicleType = new VehicleType();

@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.drizzle.carrental.enumerators.ServiceArea;
+import com.drizzle.carrental.models.Coverage;
+import com.drizzle.carrental.models.MyProfile;
+import com.drizzle.carrental.models.VehicleType;
 import com.google.android.gms.location.LocationCallback;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
@@ -94,6 +98,18 @@ public class Utils {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void resetAllGlobals() {
+
+        Globals.isLoggedIn  = false;
+        Globals.profile  = new MyProfile();
+        Globals.selectedVehicleType  = new VehicleType();
+        Globals.selectedServiceArea  = new ServiceArea();
+        Globals.paymentId  = 0;
+        Globals.coverage  = new Coverage(); //current active coverage
+        Globals.stringPhoneNumber  = ""; //string phone number
+        Globals.isSignUpOrLoginRequest  = true;
     }
 
 }

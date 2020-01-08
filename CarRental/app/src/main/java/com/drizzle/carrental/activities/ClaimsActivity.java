@@ -229,6 +229,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                 JSONObject data = object.getJSONObject("data");
                 JSONArray listObject = data.getJSONArray("claimList");
 
+                dataModels.clear();
                 parseDataModels = new Gson().fromJson(listObject.toString(), new TypeToken<List<ParseClaim>>() {}.getType());
 
                 for (int i = 0; i < parseDataModels.size(); i ++) {
@@ -262,6 +263,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                 adapter = new CustomAdapterForClaimListView(dataModels, this);
 
                 listView.setAdapter(adapter);
+                
 
             } else if (object.getString("success").equals("false")) {
 

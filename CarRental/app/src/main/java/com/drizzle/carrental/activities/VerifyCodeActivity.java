@@ -57,6 +57,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         progressDialog = new ProgressDialog(this);
 
+        buttonBack = findViewById(R.id.button_back);
+
         verifyButton = findViewById(R.id.button_verify);
         otpView = findViewById(R.id.otp_view);
         textViewContentView = findViewById(R.id.textview_contentview);
@@ -64,6 +66,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
         textViewContentView.setText(getResources().getString(R.string.enter_verification_code));
 
         verifyButton.setOnClickListener(this);
+
+        buttonBack.setOnClickListener(this);
 
         otpView.setOtpCompletionListener(this);
 
@@ -89,7 +93,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
             }
         });
 
-        buttonBack = findViewById(R.id.button_back);
+
     }
 
     public void enableVerifyButton(boolean isEnable) {

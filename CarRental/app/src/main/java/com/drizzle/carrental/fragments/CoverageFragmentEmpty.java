@@ -11,13 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.activities.SubscriptionNewActivity;
 
-public class CoverageFragmentEmpty extends Fragment {
+public class CoverageFragmentEmpty extends Fragment implements View.OnClickListener {
 
     private ImageButton buttonBack;
     private ImageButton buttonContact;
-    private ImageButton buttonHelp;
+    private ImageButton buttonInformation;
     private Button buttonLearnMore;
     private ImageButton buttonHistory;
     private ImageButton buttonCoverage;
@@ -29,26 +30,46 @@ public class CoverageFragmentEmpty extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_coverage_empty, container, false);
 
-        buttonBack = (ImageButton) view.findViewById(R.id.coverageBackbutton);
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                getActivity().finish();
-            }
-        });
+        buttonBack = view.findViewById(R.id.button_back);
+        buttonBack.setOnClickListener(this);
 
-        buttonLearnMore = (Button) view.findViewById(R.id.coverageButtonLearnmore);
-        buttonLearnMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent=new Intent(getActivity(), SubscriptionNewActivity.class);
-                startActivity(intent);
-            }
-        });
+        buttonLearnMore = view.findViewById(R.id.button_learn_more);
+        buttonLearnMore.setOnClickListener(this);
 
+        buttonInformation = view.findViewById(R.id.button_information);
+        buttonInformation.setOnClickListener(this);
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.button_back:
+
+                getActivity().finish();
+                break;
+            case R.id.button_learn_more:
+
+                navigateToSubscriptionNewActivity();
+                break;
+            case R.id.button_information:
+
+                navigateToOnBoardingActivity();
+                break;
+        }
+    }
+
+    private void navigateToSubscriptionNewActivity() {
+
+        Intent intent=new Intent(getActivity(), SubscriptionNewActivity.class);
+        startActivity(intent);
+    }
+
+    private void navigateToOnBoardingActivity() {
+
+        Intent intent=new Intent(getActivity(), OnboardingActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
 }

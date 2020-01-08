@@ -210,6 +210,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void showWaitingScreen() {
 
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -429,12 +430,53 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                 if (resourceId == R.id.layout_start_date) {
 
-                    Globals.coverage.setDateFrom(new GregorianCalendar(year, month, dayOfMonth));
-                    textViewStartDate.setText(Globals.coverage.getDateFromString());
+                    GregorianCalendar currentDate = new GregorianCalendar();
+                    currentDate.set(Calendar.HOUR, 0);
+                    currentDate.set(Calendar.MINUTE, 0);
+                    currentDate.set(Calendar.SECOND, 0);
+                    currentDate.set(Calendar.MILLISECOND, 0);
+                    currentDate.set(Calendar.AM_PM, Calendar.AM);
+
+                    GregorianCalendar selectedDate = new GregorianCalendar(year, month, dayOfMonth);
+
+                    if (selectedDate.before(currentDate)) {
+
+                        Globals.coverage.setDateFrom(null);
+                        textViewStartDate.setText("");
+                        Toast.makeText(getBaseContext(), R.string.pickup_date_is_past, Toast.LENGTH_SHORT).show();
+
+                    }
+                    else {
+
+                        Globals.coverage.setDateFrom(new GregorianCalendar(year, month, dayOfMonth));
+                        textViewStartDate.setText(Globals.coverage.getDateFromString());
+                    }
+
                 } else if (resourceId == R.id.layout_dropoff_date) {
 
-                    Globals.coverage.setDateTo(new GregorianCalendar(year, month, dayOfMonth));
-                    textViewEndDate.setText(Globals.coverage.getDateToString());
+                    if (Globals.coverage.getDateFrom() == null) {
+
+                        Toast.makeText(getBaseContext(), R.string.pickup_date_is_null, Toast.LENGTH_SHORT).show();
+                        textViewEndDate.setText("");
+                        return;
+                    }
+                    else {
+
+                        GregorianCalendar pickupDate = Globals.coverage.getDateFrom();
+                        GregorianCalendar selectedDate = new GregorianCalendar(year, month, dayOfMonth);
+
+                        if (selectedDate.before(pickupDate)) {
+
+                            Globals.coverage.setDateTo(null);
+                            textViewEndDate.setText("");
+                            Toast.makeText(getBaseContext(), R.string.dropoff_date_is_past, Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Globals.coverage.setDateTo(new GregorianCalendar(year, month, dayOfMonth));
+                            textViewEndDate.setText(Globals.coverage.getDateToString());
+
+                        }
+                    }
                 }
             }
         }, year, month, day);

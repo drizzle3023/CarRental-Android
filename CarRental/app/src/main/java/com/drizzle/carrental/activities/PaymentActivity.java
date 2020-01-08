@@ -6,9 +6,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
@@ -33,6 +37,10 @@ import com.google.gson.JsonParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -40,14 +48,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PaymentActivity extends FragmentActivity{
+public class PaymentActivity extends FragmentActivity {
 
     private Button buttonPay;
+
+    private TextView textViewPricePerYear;
+
+    private TextView textViewRentalType;
+
+    private TextView textViewVehicleType;
+
+    private TextView textViewWorldZone;
+
+    private TextView textViewExpireDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
+
+        textViewRentalType = findViewById(R.id.textview_rental_type);
+        textViewVehicleType = findViewById(R.id.textview_vehicle_type);
+        textViewWorldZone = findViewById(R.id.textview_worldzone);
+        textViewPricePerYear = findViewById(R.id.textview_price_per_year);
+        textViewExpireDate = findViewById(R.id.textview_expire_date);
 
         buttonPay = findViewById(R.id.button_pay);
         buttonPay.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +85,49 @@ public class PaymentActivity extends FragmentActivity{
             }
         });
 
+        initView();
     }
 
+
+    private void initView() {
+
+        double amount = Globals.selectedVehicleType.getPricePerYear();
+        String currency = Globals.selectedVehicleType.getCurrency();
+
+        String strAmount = String.format(Locale.getDefault(),  "%.2f", amount);
+        if (currency.equals("EUR")) {
+            currency = getResources().getString(R.string.euro_character);
+        }
+        else if (currency.equals("USD")) {
+            currency = getResources().getString(R.string.usd_character);
+        }
+        String paymentInformation = strAmount + " " + currency + " / per year";
+        textViewPricePerYear.setText(paymentInformation);
+
+        textViewRentalType.setText(getText(R.string.rental_type_unlimited_rental));
+        textViewVehicleType.setText("Vehicle - " + Globals.selectedVehicleType.getName());
+        textViewWorldZone.setText("World zone - " + Globals.selectedServiceArea.getAreaName());
+
+        buttonPay.setText("Pay " + strAmount + " " + currency);
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.YEAR, 1);
+
+        String strExpireDate = "";
+
+        DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT_GENERAL);
+            strExpireDate = df.format(calendar.getTime());
+
+
+            String strPrefix = "Covered until ";
+        strExpireDate = strPrefix + strExpireDate;
+
+        Spannable spannable = new SpannableString(strExpireDate);
+
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorNormalBlue, null)), 0, strPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textViewExpireDate.setText(spannable, TextView.BufferType.SPANNABLE);
+
+    }
     /* Get available payment methods from the server.  */
     private void getPaymentMethods() {
 

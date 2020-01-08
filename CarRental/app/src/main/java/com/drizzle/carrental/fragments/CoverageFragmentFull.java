@@ -106,7 +106,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void updateView() {
 
-        if (Globals.coverage != null) {
+        if (Globals.coverage != null && Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
 
             buttonClaims.setVisibility(View.VISIBLE);
 
@@ -167,13 +167,13 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             }
         }
+
+        updateBottomBar();
     }
 
     private void updateBottomBar() {
 
-        if (Globals.coverage.isActiveState()) {
-
-            buttonStartCoverage.setImageResource(R.drawable.video_vehicle);
+        if (Globals.coverage != null && Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
 
             imageButtonAssistence.setImageResource(R.drawable.assitence_active);
             imageButtonLostKeys.setImageResource(R.drawable.lost_keys_enabled);
@@ -314,7 +314,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                         } else {
                             JSONObject data = object.getJSONObject("data");
-                            Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -357,7 +357,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         switch (view.getId()) {
 
             case R.id.button_start_coverage:
-                if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
+                if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0 && Globals.coverage.isActiveState()) {
                     Toast.makeText(getActivity(), "Coverage already exists.", Toast.LENGTH_SHORT).show();
                 } else {
                     navigateToAddCoverageActivity();

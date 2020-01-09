@@ -2,23 +2,17 @@ package com.drizzle.carrental.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
-import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.globals.Globals;
@@ -72,12 +66,12 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
     private void runMainProcess(){
 
-//        Intent newIntent = new Intent(SplashActivity.this, AddClaimActivity.class);
+//        Intent newIntent = new Intent(SplashActivity.this, OnboardingActivity.class);
 //        startActivity(newIntent);
 //        finish();
 //
 //        return;
-        //load saved api token
+//        load saved api token
 //        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
 
         String strAccessToken = SharedHelper.getKey(this, "access_token");

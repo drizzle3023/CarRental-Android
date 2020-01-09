@@ -39,7 +39,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity"/>
-        <activity android:name=".activities.OnboardingActivity" />
         <activity android:name=".fragments.CoverageFragmentEmpty" />
         <activity android:name=".activities.SubscriptionNewActivity" />
         <activity android:name=".activities.SignUpLoginActivity" />
@@ -58,6 +57,8 @@
         <activity android:name=".activities.ClaimsActivity" />
         <activity android:name=".activities.AddClaimActivity" />
         <activity android:name=".activities.AddLocationActivity" />
+        <activity android:name=".activities.OnboardingActivity" />
+
 
         <service
             android:name=".services.GetAddressIntentService"

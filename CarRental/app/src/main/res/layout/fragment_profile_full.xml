@@ -60,7 +60,7 @@
                 style="@style/AppTheme.ProfileItem"
                 android:layout_marginLeft="23dp"
                 android:paddingTop="5dp"
-                android:text="+86 13522171058" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/link_add_email"

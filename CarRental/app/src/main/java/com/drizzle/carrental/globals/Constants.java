@@ -37,6 +37,8 @@ public class Constants {
 
     public static final String HISTORY_TYPE_PAYMENT = "Payment";
 
+    public static final String HISTORY_TYPE_CLAIM = "Claim";
+
     public static final String CURRENCY_EURO = "EUR";
 
     public static final String CURRENCY_USD = "USD";
@@ -50,8 +52,6 @@ public class Constants {
 
 
     public static Location selectedLocation = new Location("selectedLocation"); //selected location when adding a new claim
-
-
 
 
 }

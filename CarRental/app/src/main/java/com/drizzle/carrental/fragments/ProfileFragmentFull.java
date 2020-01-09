@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
-import com.drizzle.carrental.activities.MainActivity;
 import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;

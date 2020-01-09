@@ -21,6 +21,7 @@ import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.enumerators.PaymentState;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.models.Claim;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.History;
@@ -186,6 +187,11 @@ public class HistoryFragmentFull extends Fragment {
 
                                 }
                                 else {
+
+                                    Claim claim = new Claim();
+
+                                    JSONObject content = history.getContent();
+
                                     continue;
                                 }
 

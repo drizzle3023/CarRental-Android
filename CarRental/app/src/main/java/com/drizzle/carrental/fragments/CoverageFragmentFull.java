@@ -389,5 +389,12 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         Intent intent = new Intent(getActivity(), ClaimsActivity.class);
         startActivity(intent);
     }
+
+    private void navigateToPaymentActivity() {
+
+        Intent intent = new Intent(getActivity(), ClaimsActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
 }
 

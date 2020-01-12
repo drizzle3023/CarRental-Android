@@ -1,6 +1,12 @@
 package com.drizzle.carrental.api;
 
+import android.content.Context;
+
 import com.drizzle.carrental.globals.Constants;
+
+import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest;
+
+import java.io.FileNotFoundException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,6 +34,18 @@ public class ApiClient {
                 .build();
 
         return retrofit;
+    }
+
+    public static void uploadFile(Context context, String apiName, String filePath) {
+        MultipartUploadRequest multipartUploadRequest = new MultipartUploadRequest(context, Constants.SERVER_HTTP_URL + "/" + apiName);
+        multipartUploadRequest.setMethod("POST");
+        try {
+            multipartUploadRequest.addFileToUpload(filePath, "video-vehicle");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        multipartUploadRequest.startUpload();
     }
 
 }

@@ -24,6 +24,7 @@ import com.daasuu.camerarecorder.CameraRecorder;
 import com.daasuu.camerarecorder.CameraRecorderBuilder;
 import com.daasuu.camerarecorder.LensFacing;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.cameracomponents.SampleGLView;
 import com.drizzle.carrental.globals.Constants;
 
@@ -74,7 +75,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                 }
                 else { //case of "Done"
 
-
+                    ApiClient.uploadFile(BaseCameraActivity.this, "add-coverage", getVideoFilePath());
                     setResult(RESULT_OK);
                     finish();
                 }

@@ -26,7 +26,7 @@ public class Constants {
 
     public static final  String MILE_IMAGE_FILE_NAME = "CarRentalMile.png";
 
-    public static final String SERVER_HTTP_URL = "http://192.168.1.11";
+    public static final String SERVER_HTTP_URL = "http://192.168.1.13";
 
     //public static final String SERVER_HTTP_URL = "https://sandbox-zone02.netherlands.region.habit.io";
 

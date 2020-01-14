@@ -63,26 +63,32 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/edittext_search"
+<!--            <EditText-->
+<!--                android:id="@+id/edittext_search"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="34dp"-->
+<!--                android:layout_marginLeft="24dp"-->
+<!--                android:layout_marginRight="24dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:textColor="@color/colorCoverageTitle"-->
+<!--                android:fontFamily="@font/sf_pro_display_semibold"-->
+<!--                android:background="@drawable/search_edittext_background"-->
+<!--                android:paddingLeft="12dp"-->
+<!--                android:hint="🔍 Search"-->
+<!--                android:textSize="17sp"/>-->
+
+
+<!--            <Space-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1" />-->
+
+
+            <fragment android:id="@+id/autocomplete_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="34dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_gravity="center"
-                android:textColor="@color/colorCoverageTitle"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:background="@drawable/search_edittext_background"
-                android:paddingLeft="12dp"
-                android:hint="🔍 Search"
-                android:textSize="17sp"/>
-
-
-            <Space
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                />
 
 
         </LinearLayout>

@@ -15,6 +15,7 @@ import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
@@ -34,11 +35,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.api.VolleyMultipartRequest;
 import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.enumerators.DamagedPart;
+import com.drizzle.carrental.globals.AppHelper;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
@@ -62,11 +72,16 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import wseemann.media.FFmpegMediaMetadataRetriever;
+
+import static com.drizzle.carrental.activities.BaseCameraActivity.getImageFilePath;
+import static com.drizzle.carrental.activities.BaseCameraActivity.getVideoFilePath;
 
 public class AddClaimActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, Callback<ResponseBody> {
 
@@ -77,59 +92,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        hideWaitingScreen();
 
-        String responseString = null;
-        try {
-            ResponseBody body = response.body();
-            if (body != null) {
-                responseString = body.string();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject object = null;
-        if (responseString != null) {
-            try {
-                object = new JSONObject(responseString);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (object == null) {
-
-            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            if (object.getString("success").equals("true")) {
-
-                JSONObject data = object.getJSONObject("data");
-                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
-                if (!isSaveOrSubmit) {
-                    finish();
-                }
-
-            } else if (object.getString("success").equals("false")) {
-
-                JSONObject data = object.getJSONObject("data");
-                Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
-            } else {
-
-                Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            }
-        } catch (JSONException e) {
-
-            Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -331,6 +294,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+
     private void setClaim(Claim claim) {
 
         this.claim = claim;
@@ -360,15 +324,22 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         claim.setImageURL("https://png.pngtree.com/element_our/20190523/ourlarge/pngtree-car-driving-box-type-long-motor-vehicle-line-image_1088711.jpg");
         setClaim(claim);
 
+        ArrayList<DamagedPart> temp = new ArrayList<>();
+        temp.add(DamagedPart.LEFT_QUARTER_PANEL);
+        temp.add(DamagedPart.RIGHT_QUARTER_PANEL);
+        temp.add(DamagedPart.RIGHT_ROOF);
+        claim.setDamagedParts(temp);
+
+        //claim.setVideoURL(getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.VEHICLE_VIDEO_FILE_NAME);
+        //claim.setVideoURL("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+
         claimCurrentStep = ClaimCurrentStep.ANSWERED_ELSE;
     }
 
-    public static Bitmap retriveVideoFrameFromVideo(String videoPath)throws Throwable
-    {
+    public static Bitmap retriveVideoFrameFromVideo(String videoPath) throws Throwable {
         Bitmap bitmap = null;
         MediaMetadataRetriever mediaMetadataRetriever = null;
-        try
-        {
+        try {
             mediaMetadataRetriever = new MediaMetadataRetriever();
             if (Build.VERSION.SDK_INT >= 14)
                 mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
@@ -376,32 +347,39 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 mediaMetadataRetriever.setDataSource(videoPath);
             //   mediaMetadataRetriever.setDataSource(videoPath);
             bitmap = mediaMetadataRetriever.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new Throwable("Exception in retriveVideoFrameFromVideo(String videoPath)"+ e.getMessage());
-        }
-        finally
-        {
-            if (mediaMetadataRetriever != null)
-            {
+            throw new Throwable("Exception in retriveVideoFrameFromVideo(String videoPath)" + e.getMessage());
+        } finally {
+            if (mediaMetadataRetriever != null) {
                 mediaMetadataRetriever.release();
             }
         }
+
         return bitmap;
     }
+
+    public Bitmap retriveVideoThumbnailFromURL(String videoPath) {
+
+
+
+        FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+        mmr.setDataSource(videoPath);
+        mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM);
+        mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST);
+        Bitmap b = mmr.getFrameAtTime(2000000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST); // frame at 2 seconds
+        byte[] artwork = mmr.getEmbeddedPicture();
+
+        mmr.release();
+
+        return b;
+    }
+
+
 
 
     private void setCurrentClaimStep() {
 
-//        ArrayList<DamagedPart> temp = new ArrayList<>();
-//        temp.add(DamagedPart.LEFT_QUARTER_PANEL);
-//        temp.add(DamagedPart.RIGHT_QUARTER_PANEL);
-//        temp.add(DamagedPart.RIGHT_ROOF);
-//        claim.setDamagedParts(temp);
-//
-//        claim.setVideoURL("http://192.168.1.13/site-media/Bloom_Checkout_UI_c0P8azg.mp4");
 
         if (claim.getWhatHappened() == null || claim.getWhatHappened().isEmpty()) {
 
@@ -427,8 +405,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
         if (claim.getClaimState() == ClaimState.INCOMPLETE) {
             isEditable = true;
-        }
-        else {
+        } else {
 
             isEditable = false;
         }
@@ -565,8 +542,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     textViewAnswerWhatHappenedTitle.setText(getResources().getString(R.string.file_a_claim_answer_what_happened_text_title));
                     textViewAnswerWhatHappenedDescription.setText(claim.getWhatHappened());
-                }
-                else {
+                } else {
                     textViewAnswerWhatHappenedTitle.setText(claim.getWhatHappened());
                     textViewAnswerWhatHappenedDescription.setVisibility(View.GONE);
                 }
@@ -861,26 +837,16 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             buttonEditTakeVideo.setBackgroundResource(R.drawable.icon_edit);
             imageViewAnswerTakeVideo.setImageResource(R.drawable.image_damaged_zone);
 
-//            ContentResolver contentResolver = getContentResolver();
-//            if (Build.VERSION.SDK_INT >= 29) {
-////                try {
-//                    //imageViewAnswerTakeVideo.setImageBitmap(contentResolver.loadThumbnail(Uri.parse(claim.getVideoURL()), new Size(100, 100), null));
-//                    try {
-//                        imageViewAnswerTakeVideo.setImageBitmap(retriveVideoFrameFromVideo(claim.getVideoURL()));
-//                    } catch (Throwable throwable) {
-//                        throwable.printStackTrace();
-//                    }
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
+
+//            Bitmap bitmap = null;
+//            try {
+//                bitmap = retriveVideoFrameFromVideo(claim.getVideoURL());
+//            } catch (Throwable throwable) {
+//                throwable.printStackTrace();
 //            }
-//            else {
-//                imageViewAnswerTakeVideo.setImageBitmap(ThumbnailUtils.createAudioThumbnail(claim.getVideoURL(), MediaStore.Video.Thumbnails.MINI_KIND));
-//            }
+//            //Bitmap bitmap = retriveVideoThumbnailFromURL(claim.getVideoURL());
+//            imageViewAnswerTakeVideo.setImageBitmap(Bitmap.createScaledBitmap(bitmap, imageViewAnswerTakeVideo.getWidth(), imageViewAnswerTakeVideo.getHeight(), false));
 
-
-
-//            Picasso.get().load(claim.getVideoURL()).placeholder(null).into(imageViewAnswerTakeVideo);
 
         } else {
 
@@ -970,77 +936,169 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
     private void saveClaimToDb(ClaimState claimState) {
 
         claim.setClaimState(claimState);
-        JSONObject paramObject = new JSONObject();
 
-        try {
+//        try {
+//
+//            if (claim.getId() > 0) {
+//
+//                paramObject.put("id", claim.getId());
+//            }
+//
+//            if (claim.getWhatHappened() != null) {
+//                paramObject.put("what_happened", claim.getWhatHappened());
+//
+//            } else {
+//                Toast.makeText(this, getResources().getString(R.string.message_input_what_happened), Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+//
+//            if (claim.getWhereHappened() != null) {
+//                paramObject.put("latitude", claim.getWhereHappened().getLatitude());
+//                paramObject.put("longitude", claim.getWhereHappened().getLongitude());
+//            }
+//
+//            if (claim.getAddressHappened() != null) {
+//                paramObject.put("address", claim.getAddressHappened());
+//            }
+//
+//            if (Globals.coverage != null) {
+//
+//                if (Globals.coverage.getId() != null) {
+//                    paramObject.put("coverage_id", Globals.coverage.getId());
+//                }
+//            }
+//
+//            if (claim.getWhenHappened() != null) {
+//                paramObject.put("time_happened", claim.getWhenHappened().getTimeInMillis() / 1000);
+//            }
+//            if (claim.getDamagedParts() != null) {
+//
+//                if (!claim.getDamagedParts().isEmpty()) {
+//                    paramObject.put("damaged_part", claim.getDamagedPartsString());
+//                }
+//            }
+//            if (claim.getExtraDescription() != null && !claim.getExtraDescription().isEmpty()) {
+//                paramObject.put("note", claim.getExtraDescription());
+//            }
+//            if (claim.getClaimState() != null) {
+//                paramObject.put("state", claimState.getIntValue());
+//            }
+//
+////            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
+////            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
+////            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
+//
+//        } catch (JSONException e) {
+//
+//            e.printStackTrace();
+//            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+//        }
+//
+//        JsonParser jsonParser = new JsonParser();
+//        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+//
+//        //get apiInterface
+//        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+//        //display waiting dialog
+//        showWaitingScreen();
+//        //send request
+//
+//        apiInterface.addClaim(gSonObject).enqueue(this);
 
-            if (claim.getId() > 0) {
-
-                paramObject.put("id", claim.getId());
-            }
-
-            if (claim.getWhatHappened() != null) {
-                paramObject.put("what_happened", claim.getWhatHappened());
-
-            } else {
-                Toast.makeText(this, getResources().getString(R.string.message_input_what_happened), Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-
-            if (claim.getWhereHappened() != null) {
-                paramObject.put("latitude", claim.getWhereHappened().getLatitude());
-                paramObject.put("longitude", claim.getWhereHappened().getLongitude());
-            }
-
-            if (claim.getAddressHappened() != null) {
-                paramObject.put("address", claim.getAddressHappened());
-            }
-
-            if (Globals.coverage != null) {
-
-                if (Globals.coverage.getId() != null) {
-                    paramObject.put("coverage_id", Globals.coverage.getId());
-                }
-            }
-
-            if (claim.getWhenHappened() != null) {
-                paramObject.put("time_happened", claim.getWhenHappened().getTimeInMillis() / 1000);
-            }
-            if (claim.getDamagedParts() != null) {
-
-                if (!claim.getDamagedParts().isEmpty()) {
-                    paramObject.put("damaged_part", claim.getDamagedPartsString());
-                }
-            }
-            if (claim.getExtraDescription() != null && !claim.getExtraDescription().isEmpty()) {
-                paramObject.put("note", claim.getExtraDescription());
-            }
-            if (claim.getClaimState() != null) {
-                paramObject.put("state", claimState.getIntValue());
-            }
-
-//            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
-//            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
-//            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-        }
-
-        JsonParser jsonParser = new JsonParser();
-        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
-
-        //get apiInterface
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        //display waiting dialog
         showWaitingScreen();
-        //send request
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(
+                Request.Method.POST, Constants.SERVER_HTTP_URL + "/api/add-claim",
+                new com.android.volley.Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
 
-        apiInterface.addClaim(gSonObject).enqueue(this);
+                        hideWaitingScreen();
+
+                        String responseString = new String(response.data);
+
+                        JSONObject object = null;
+                        if (responseString != null) {
+                            try {
+                                object = new JSONObject(responseString);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+
+                            Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (object == null) {
+
+                            Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        try {
+                            if (object.getString("success").equals("true")) {
+
+                                JSONObject data = object.getJSONObject("data");
+                                Toast.makeText(AddClaimActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                                if (!isSaveOrSubmit) {
+                                    finish();
+                                }
+
+                            } else if (object.getString("success").equals("false")) {
+
+                                JSONObject data = object.getJSONObject("data");
+                                Toast.makeText(AddClaimActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                            } else {
+
+                                Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+
+                            Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideWaitingScreen();
+                Toast.makeText(AddClaimActivity.this, getResources().getString(R.string.message_no_response), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> paramObject = new HashMap<>();
+
+                //paramObject.put("name", Globals.coverage.getCompany().getName());
+                paramObject.put("latitude", Double.valueOf(claim.getWhereHappened().getLatitude()).toString());
+                paramObject.put("longitude", Double.valueOf(claim.getWhereHappened().getLongitude()).toString());
+                paramObject.put("address", claim.getAddressHappened());
+                paramObject.put("access_token", SharedHelper.getKey(AddClaimActivity.this, "access_token"));
+                paramObject.put("coverage_id", Long.valueOf(Globals.coverage.getId()).toString());
+                paramObject.put("what_happened", claim.getWhatHappened());
+                paramObject.put("time_happened", Long.valueOf(claim.getWhenHappened().getTimeInMillis() / 1000).toString());
+                paramObject.put("damaged_part", claim.getDamagedPartsString());
+                paramObject.put("note", claim.getExtraDescription());
+                paramObject.put("state", Integer.valueOf(claimState.getIntValue()).toString());
+
+                return paramObject;
+            }
+
+            @Override
+            protected Map<String, VolleyMultipartRequest.DataPart> getByteData() throws AuthFailureError {
+                Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
+
+                params.put("video", new VolleyMultipartRequest.DataPart("video-claim"  + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(volleyMultipartRequest);
     }
 
 

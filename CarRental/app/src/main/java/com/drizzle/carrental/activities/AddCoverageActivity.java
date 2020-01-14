@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.globals.Globals;
@@ -113,7 +112,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
         buttonBack = findViewById(R.id.button_back);
         captionStartCoverage = (TextView) findViewById(R.id.caption_start_coverage);
-        buttonStartCoverage = (ImageButton) findViewById(R.id.button_start_coverage);
+        buttonStartCoverage = (ImageButton) findViewById(R.id.imagebutton_start_coverage);
 
         captionRecordCar = (TextView) findViewById(R.id.caption_record_car);
         buttonRecordCar = (ImageButton) findViewById(R.id.button_record_car);
@@ -304,7 +303,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         switch (view.getId()) {
 
             case R.id.caption_start_coverage:
-            case R.id.button_start_coverage:
+            case R.id.imageview_start_coverage:
 
                 navigateToStartCoveragePage();
                 break;
@@ -375,7 +374,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         else if (requestCode == RECORD_VEHICLE_ACTIVITY_REQUEST) {
 
             if (resultCode == RESULT_OK) {
-                vehicleVideoURL = Globals.coverage.getUrlVehicle();
+                vehicleVideoURL = Globals.coverage.getUrlVideoVehicle();
                 //vehicleVideoURL = "aaa";
                         coverageCurrentStep = CoverageCurrentStep.VIDEO_VEHICLE_ADDED;
                 updateView();
@@ -384,7 +383,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         else if (requestCode == RECORD_MILE_ACTIVITY_REQUEST) {
 
             if (resultCode == RESULT_OK) {
-                vehicleMileURL = Globals.coverage.getUrlMile();
+                vehicleMileURL = Globals.coverage.getUrlVideoMile();
                 vehicleMileURL  = "aaa";
                 coverageCurrentStep = CoverageCurrentStep.COMPLETED;
                 updateView();

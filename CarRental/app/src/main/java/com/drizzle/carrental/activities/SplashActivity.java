@@ -72,8 +72,8 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
     }
 
     private void runMainProcess() {
-
-//        Intent newIntent = new Intent(SplashActivity.this, HomeActivity.class);
+//
+//        Intent newIntent = new Intent(SplashActivity.this, AddClaimActivity.class);
 //        startActivity(newIntent);
 //        finish();
 //

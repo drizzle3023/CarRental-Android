@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.opengl.GLException;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -91,6 +92,14 @@ public class BaseCameraActivity extends AppCompatActivity {
                     filepath = getVideoFilePath();
                     cameraRecorder.start(filepath);
                     recordBtn.setText(getString(R.string.app_record_stop));
+
+                    captureBitmap(bitmap -> {
+                        new Handler().post(() -> {
+                            String imagePath = getImageFilePath();
+                            saveAsPngImage(bitmap, imagePath);
+                            exportPngToGallery(getApplicationContext(), imagePath);
+                        });
+                    });
                 }
                 else if (recState.equals(getString(R.string.app_record_stop))) {
 
@@ -193,11 +202,13 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                 if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
-                    params.put("video-vehile", new VolleyMultipartRequest.DataPart("video-vehile" + Globals.coverage.getId(), AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                    params.put("video-vehicle", new VolleyMultipartRequest.DataPart("video-vehicle" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                    params.put("image-vehicle", new VolleyMultipartRequest.DataPart("image-vehicle" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
                 }
                 else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
-                    params.put("video-mile", new VolleyMultipartRequest.DataPart("video-mile" + Globals.coverage.getId(), AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                    params.put("video-mile", new VolleyMultipartRequest.DataPart("video-mile" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                    params.put("image-mile", new VolleyMultipartRequest.DataPart("image-mile" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
                 }
                 return params;
             }

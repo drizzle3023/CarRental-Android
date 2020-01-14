@@ -37,6 +37,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.util.Arrays;
@@ -89,8 +90,8 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
         mapView = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapview_location);
         mapView.getMapAsync(this);
 
-        editTextSearch = findViewById(R.id.edittext_search);
-        editTextSearch.setOnClickListener(this);
+//        editTextSearch = findViewById(R.id.edittext_search);
+//        editTextSearch.setOnClickListener(this);
 
     }
 
@@ -101,6 +102,29 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
+
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+// Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+// Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+
+                Log.i("tiny-debug", "Place: " + place.getName() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("tiny-debug", "An error occurred: " + status);
+            }
+        });
+
 
         //String apiKey = getString(R.string.google_api_key);
 
@@ -167,7 +191,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
 
-            case R.id.edittext_search:
+//            case R.id.edittext_search:
 //                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
 //
 //                // Start the autocomplete intent.
@@ -175,7 +199,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 //                        AutocompleteActivityMode.OVERLAY, fields)
 //                        .build(AddLocationActivity.this);
 //                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-                break;
+//                break;
         }
     }
 

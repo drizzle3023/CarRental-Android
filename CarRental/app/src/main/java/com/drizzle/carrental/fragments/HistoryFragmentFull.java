@@ -27,17 +27,14 @@ import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.History;
 import com.drizzle.carrental.models.Payment;
 import com.drizzle.carrental.serializers.ParseHistory;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -146,9 +143,9 @@ public class HistoryFragmentFull extends Fragment {
                                     calTo.setTimeInMillis(content.getLong("end_at") * 1000);
                                     coverage.setDateTo(calTo);
 
-                                    coverage.setUrlVehicle(content.getString("video_vehicle"));
+                                    coverage.setUrlVideoVehicle(content.getString("video_vehicle"));
 
-                                    coverage.setUrlMile(content.getString("video_mile"));
+                                    coverage.setUrlVideoMile(content.getString("video_mile"));
 
                                     historyModel.setCoverage(coverage);
                                     historyModel.setPaymentOrCoverage(false);

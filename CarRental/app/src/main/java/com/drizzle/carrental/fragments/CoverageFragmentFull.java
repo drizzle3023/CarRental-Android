@@ -2,7 +2,6 @@ package com.drizzle.carrental.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -20,22 +18,22 @@ import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.activities.HomeActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
-import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55;
 import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
-import com.drizzle.carrental.serializers.ParseCompany;
 import com.drizzle.carrental.serializers.ParseCoverage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import okhttp3.ResponseBody;
@@ -45,7 +43,7 @@ import retrofit2.Response;
 
 public class CoverageFragmentFull extends Fragment implements View.OnClickListener {
 
-    private ImageButton buttonStartCoverage;
+    private AppCompatImageView_Round_55 imageButtonStartCoverage;
     private Button buttonClaims;
     private Button buttonGotIt;
 
@@ -71,7 +69,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void getControlHandlersAndLinkActions(View view) {
 
-        buttonStartCoverage = view.findViewById(R.id.button_start_coverage);
+        imageButtonStartCoverage = view.findViewById(R.id.imageview_start_coverage);
         buttonClaims = view.findViewById(R.id.button_claims);
 
 
@@ -98,7 +96,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         imageViewLocationIcon = view.findViewById(R.id.imageview_location_icon);
 
-        buttonStartCoverage.setOnClickListener(this);
+        imageButtonStartCoverage.setOnClickListener(this);
         buttonClaims.setOnClickListener(this);
         buttonGotIt.setOnClickListener(this);
 
@@ -110,7 +108,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             buttonClaims.setVisibility(View.VISIBLE);
 
-            buttonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
+            Picasso.get().load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
 
             textViewCoverageTitle.setText(Globals.coverage.getTitle());
             textViewCoverageLocation.setText(Globals.coverage.getLocationAddress());
@@ -132,11 +130,12 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             if (Globals.coverage.getState() == CoverageState.CANCELLED) {
 
-                buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+                imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
             } else if (Globals.coverage.getState() == CoverageState.EXPIRED) {
 
-                buttonStartCoverage.setImageResource(R.drawable.video_vehicle);
-                buttonStartCoverage.setAlpha(	0.25f);
+                imageButtonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
+                Picasso.get().load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
+                imageButtonStartCoverage.setAlpha(	0.25f);
 
                 buttonGotIt.setVisibility(View.VISIBLE);
                 textViewCoverageTitle.setText(R.string.coverage_expired_title);
@@ -144,7 +143,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 imageViewLocationIcon.setVisibility(View.GONE);
                 layoutPeriod.setVisibility(View.VISIBLE);
                 textViewCoveragePeriod.setText(R.string.no_remainingtime);
-                buttonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
+
 
                 imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
                 imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
@@ -158,7 +157,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             } else {
 
-                buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+                imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
 
                 imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
                 imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
@@ -204,7 +203,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             } else {
 
-                buttonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+                imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
                 imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
                 imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
                 imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
@@ -298,8 +297,11 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                             location.setLongitude(parseCoverage.getLongitude());
 
                             coverage.setLocationAddress(parseCoverage.getAddress());
-                            coverage.setUrlVehicle(parseCoverage.getVideoVehicle());
-                            coverage.setUrlMile(parseCoverage.getVideoMile());
+                            coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + parseCoverage.getVideoVehicle());
+                            coverage.setUrlVideoMile(Constants.MEDIA_PATH_URL + parseCoverage.getVideoMile());
+                            coverage.setUrlImageVehicle(Constants.MEDIA_PATH_URL + parseCoverage.getImageVehicle());
+                            coverage.setUrlImageMile(Constants.MEDIA_PATH_URL + parseCoverage.getImageMile());
+
                             coverage.setClaimCount(parseCoverage.getClaimCount());
 
                             if (coverage.getState() == CoverageState.COVERED) {
@@ -356,7 +358,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         switch (view.getId()) {
 
-            case R.id.button_start_coverage:
+            case R.id.imageview_start_coverage:
                 if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0 && Globals.coverage.isActiveState()) {
                     Toast.makeText(getActivity(), "Coverage already exists.", Toast.LENGTH_SHORT).show();
                 } else {

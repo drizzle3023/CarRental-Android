@@ -34,11 +34,18 @@ public class ParseCoverage implements Serializable {
     @SerializedName("end_at")
     double endAt;
 
+
+    @SerializedName("video_vehicle")
+    String videoVehicle;
+
+    @SerializedName("image_vehicle")
+    String imageVehicle;
+
     @SerializedName("video_mile")
     String videoMile;
 
-    @SerializedName("vidoe_vehicle")
-    String videoVehicle;
+    @SerializedName("image_mile")
+    String imageMile;
 
     int state;
 }

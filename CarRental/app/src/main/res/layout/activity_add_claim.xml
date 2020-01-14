@@ -562,7 +562,7 @@
 
                     <ImageView
                         android:id="@+id/imageview_answer_take_video"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:scaleType="fitXY"
                         android:layout_marginTop="10dp"

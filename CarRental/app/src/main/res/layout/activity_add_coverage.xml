@@ -70,7 +70,7 @@
                 android:text="Start Coverage" />
 
             <ImageButton
-                android:id="@+id/button_start_coverage"
+                android:id="@+id/imagebutton_start_coverage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"

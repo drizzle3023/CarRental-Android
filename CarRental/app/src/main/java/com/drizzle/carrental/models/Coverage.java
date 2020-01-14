@@ -37,9 +37,13 @@ public class Coverage {
 
     String locationAddress;
 
-    String urlVehicle;
+    String urlVideoVehicle;
 
-    String urlMile;
+    String urlVideoMile;
+
+    String urlImageVehicle;
+
+    String urlImageMile;
 
     int claimCount;
 

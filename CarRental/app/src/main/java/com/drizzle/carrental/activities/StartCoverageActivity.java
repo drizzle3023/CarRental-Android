@@ -34,6 +34,7 @@ import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.api.VolleyMultipartRequest;
 import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.AppHelper;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
@@ -83,6 +84,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.drizzle.carrental.activities.BaseCameraActivity.getImageFilePath;
+import static com.drizzle.carrental.activities.BaseCameraActivity.getVideoFilePath;
 
 public class StartCoverageActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, Callback<ResponseBody> {
 
@@ -532,24 +536,25 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         }) {
             @Override
             public Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> paramObject = new HashMap<>();
+                Map<String, String> params = new HashMap<>();
 
-                paramObject.put("access_token", SharedHelper.getKey(StartCoverageActivity.this, "access_token"));
-                paramObject.put("name", selectedCompany.getName());
-                paramObject.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
-                paramObject.put("longitude", String.format("%f", Globals.coverage.getLocation().getLongitude()));
-                paramObject.put("address", Globals.coverage.getLocationAddress());
-                paramObject.put("company_id", String.format("%d", selectedCompany.getId()));
-                paramObject.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
-                paramObject.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000));
-                paramObject.put("state", String.format("%d", CoverageState.UNCOVERED.getIntValue()));
+                params.put("access_token", SharedHelper.getKey(StartCoverageActivity.this, "access_token"));
+                params.put("name", selectedCompany.getName());
+                params.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
+                params.put("longitude", String.format("%f", Globals.coverage.getLocation().getLongitude()));
+                params.put("address", Globals.coverage.getLocationAddress());
+                params.put("company_id", String.format("%d", selectedCompany.getId()));
+                params.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
+                params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000));
+                params.put("state", String.format("%d", CoverageState.UNCOVERED.getIntValue()));
 
-                return paramObject;
+                return params;
             }
 
             @Override
             protected Map<String, VolleyMultipartRequest.DataPart> getByteData() throws AuthFailureError {
                 Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
+
 
 
                 return params;

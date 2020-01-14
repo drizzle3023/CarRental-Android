@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -26,6 +27,7 @@ import com.drizzle.carrental.adapters.CustomAdapterCompanySelect;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.globals.Utils;
@@ -46,11 +48,22 @@ import android.location.Location;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+
+import net.gotev.uploadservice.data.UploadInfo;
+import net.gotev.uploadservice.data.UploadNotificationConfig;
+import net.gotev.uploadservice.network.ServerResponse;
+import net.gotev.uploadservice.observer.request.RequestObserverDelegate;
+import net.gotev.uploadservice.observer.task.UploadTaskObserver;
+import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest;
+
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -100,6 +113,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private LocationCallback locationCallback;
 
     private boolean isGettingCompanyListOrSubmitAction = true;
+
     /**
      * Get UI Control Handlers and link events
      */
@@ -179,6 +193,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
 
     }
+
 
     private void fetchCompaniesFromServer() {
 
@@ -273,8 +288,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                         selectedCompany = companies.get(0);
                         Globals.coverage.setCompany(selectedCompany);
                     }
-                }
-                else { //case of submit action
+                } else { //case of submit action
 
                     Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
                     Globals.coverage.setId(data.getLong("coverage_id"));
@@ -347,37 +361,129 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         }
 
         isGettingCompanyListOrSubmitAction = false;
+//
+//        JSONObject paramObject = new JSONObject();
+//
+//        try {
+//
+//            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
+//            paramObject.put("name", selectedCompany.getName());
+//            paramObject.put("latitude", Globals.coverage.getLocation().getLatitude());
+//            paramObject.put("longitude", Globals.coverage.getLocation().getLongitude());
+//            paramObject.put("address", Globals.coverage.getLocationAddress());
+//            paramObject.put("company_id", selectedCompany.getId());
+//            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
+//            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
+//            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
+//
+//        } catch (JSONException e) {
+//
+//            e.printStackTrace();
+//            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+//        }
+//
+//        JsonParser jsonParser = new JsonParser();
+//        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+//
+//        //get apiInterface
+//        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+//        //display waiting dialog
+//        showWaitingScreen();
+//        //send request
+//
+//        apiInterface.addCoverage(gSonObject).enqueue(this);
 
-        JSONObject paramObject = new JSONObject();
+        MultipartUploadRequest multipartUploadRequest = null;
 
-        try {
+        multipartUploadRequest = new MultipartUploadRequest(this, Constants.SERVER_HTTP_URL + "/api/" + "add-coverage");
+        multipartUploadRequest.setMethod("POST");
 
-            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-            paramObject.put("name", selectedCompany.getName());
-            paramObject.put("latitude", Globals.coverage.getLocation().getLatitude());
-            paramObject.put("longitude", Globals.coverage.getLocation().getLongitude());
-            paramObject.put("address", Globals.coverage.getLocationAddress());
-            paramObject.put("company_id", selectedCompany.getId());
-            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
-            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
-            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
 
-        } catch (JSONException e) {
+        //multipartUploadRequest.addFileToUpload(BaseCameraActivity.getVideoFilePath(), "video-vehicle");
 
-            e.printStackTrace();
-            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-        }
+        multipartUploadRequest.addParameter("access_token", SharedHelper.getKey(this, "access_token"));
+        multipartUploadRequest.addParameter("name", selectedCompany.getName());
+        multipartUploadRequest.addParameter("latitude", Double.valueOf(Globals.coverage.getLocation().getLatitude()).toString());
+        multipartUploadRequest.addParameter("longitude", Double.valueOf(Globals.coverage.getLocation().getLongitude()).toString());
+        multipartUploadRequest.addParameter("address", Globals.coverage.getLocationAddress());
+        multipartUploadRequest.addParameter("company_id", Long.valueOf(selectedCompany.getId()).toString());
+        multipartUploadRequest.addParameter("start_at", Long.valueOf(Globals.coverage.getDateFrom().getTimeInMillis() / 1000).toString());
+        multipartUploadRequest.addParameter("end_at", Long.valueOf(Globals.coverage.getDateTo().getTimeInMillis() / 1000).toString());
+        multipartUploadRequest.addParameter("state", Integer.valueOf(CoverageState.UNCOVERED.getIntValue()).toString());
 
-        JsonParser jsonParser = new JsonParser();
-        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
 
-        //get apiInterface
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        //display waiting dialog
-        showWaitingScreen();
-        //send request
+        multipartUploadRequest.startUpload();
 
-        apiInterface.addCoverage(gSonObject).enqueue(this);
+        multipartUploadRequest.subscribe(this, new RequestObserverDelegate() {
+
+
+            @Override
+            public void onCompleted(@NotNull Context context, @NotNull UploadInfo uploadInfo) {
+
+            }
+
+            @Override
+            public void onCompletedWhileNotObserving() {
+
+            }
+
+            @Override
+            public void onError(@NotNull Context context, @NotNull UploadInfo uploadInfo, @NotNull Throwable throwable) {
+                Globals.coverage = new Coverage();
+                Toast.makeText(StartCoverageActivity.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onProgress(@NotNull Context context, @NotNull UploadInfo uploadInfo) {
+
+            }
+
+            @Override
+            public void onSuccess(@NotNull Context context, @NotNull UploadInfo uploadInfo, @NotNull ServerResponse serverResponse) {
+
+                String responseString = serverResponse.getBodyString();
+
+                JSONObject object = null;
+                if (responseString != null) {
+                    try {
+                        object = new JSONObject(responseString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
+                    Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (object == null) {
+
+                    Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                try {
+                    if (object.getString("success").equals("true")) {
+
+                        JSONObject data = object.getJSONObject("data");
+                        Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                        Globals.coverage.setId(data.getLong("coverage_id"));
+                        backToPreviousActivity();
+
+                    } else if (object.getString("success").equals("false")) {
+                        JSONObject data = object.getJSONObject("data");
+                        Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+
+                    Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
     }
 
@@ -446,8 +552,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                         textViewStartDate.setText("");
                         Toast.makeText(getBaseContext(), R.string.pickup_date_is_past, Toast.LENGTH_SHORT).show();
 
-                    }
-                    else {
+                    } else {
 
                         Globals.coverage.setDateFrom(new GregorianCalendar(year, month, dayOfMonth));
                         textViewStartDate.setText(Globals.coverage.getDateFromString());
@@ -460,8 +565,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                         Toast.makeText(getBaseContext(), R.string.pickup_date_is_null, Toast.LENGTH_SHORT).show();
                         textViewEndDate.setText("");
                         return;
-                    }
-                    else {
+                    } else {
 
                         GregorianCalendar pickupDate = Globals.coverage.getDateFrom();
                         GregorianCalendar selectedDate = new GregorianCalendar(year, month, dayOfMonth);
@@ -471,8 +575,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                             Globals.coverage.setDateTo(null);
                             textViewEndDate.setText("");
                             Toast.makeText(getBaseContext(), R.string.dropoff_date_is_past, Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             Globals.coverage.setDateTo(new GregorianCalendar(year, month, dayOfMonth));
                             textViewEndDate.setText(Globals.coverage.getDateToString());
 
@@ -518,7 +621,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     private void getAddress() {
 
 
-
 //        if (!Geocoder.isPresent()) {
 //            Toast.makeText(this,
 //                    "Can't find current address, ",
@@ -531,8 +633,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 //        intent.putExtra("add_location", currentLocation);
 //        startService(intent);
     }
-
-
 
 
     @Override
@@ -571,6 +671,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
 
     private class LocationAddressResultReceiver extends ResultReceiver {
         LocationAddressResultReceiver(Handler handler) {

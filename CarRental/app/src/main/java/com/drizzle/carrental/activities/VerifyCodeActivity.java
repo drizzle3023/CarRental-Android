@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.google.gson.JsonObject;
@@ -32,6 +34,10 @@ import java.io.IOException;
 
 import javax.net.ssl.HostnameVerifier;
 
+import io.habit.analytics.HabitStatusCodes;
+import io.habit.analytics.SDK;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -179,11 +185,50 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                 if (Globals.isSignUpOrLoginRequest) {
                     JSONObject dataObject = object.getJSONObject("data");
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
+                    SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
+
+                    //init habit analyatics sdk
+                    SDK.INSTANCE.init(this, "", SharedHelper.getKey(this, "payload"), new Function1<HabitStatusCodes, Unit>() {
+                        @Override
+                        public Unit invoke(HabitStatusCodes habitStatusCodes) {
+
+                            if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_INITIALIZATION_SUCCESS) {
+                                Constants.isHabitSDKReady = true;
+                            }
+                            else {
+                                Constants.isHabitSDKReady = false;
+                            }
+                            Log.d("tiny-debug", "invoke: " + habitStatusCodes);
+                            return Unit.INSTANCE;
+                        }
+
+                    });
+
                     navigateToPaymentActivity();
                 } else {
                     Globals.isLoggedIn = true;
                     JSONObject dataObject = object.getJSONObject("data");
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
+                    SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
+
+                    //init habit analyatics sdk
+                    SDK.INSTANCE.init(this, "", SharedHelper.getKey(this, "payload"), new Function1<HabitStatusCodes, Unit>() {
+                        @Override
+                        public Unit invoke(HabitStatusCodes habitStatusCodes) {
+
+                            if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_INITIALIZATION_SUCCESS) {
+                                Constants.isHabitSDKReady = true;
+                            }
+                            else {
+                                Constants.isHabitSDKReady = false;
+                            }
+
+                            Log.d("tiny-debug", "invoke: " + habitStatusCodes);
+
+                            return Unit.INSTANCE;
+                        }
+                    });
+
                     navigateToHomeActivity();
                 }
             } else if (object.getString("success").equals("false")) {

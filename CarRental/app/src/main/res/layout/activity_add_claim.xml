@@ -566,7 +566,7 @@
                         android:layout_height="100dp"
                         android:scaleType="fitXY"
                         android:layout_marginTop="10dp"
-                        app:srcCompat="@drawable/test">
+                        android:src="@drawable/image_damaged_zone">
 
                     </ImageView>
 

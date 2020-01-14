@@ -1,11 +1,14 @@
 package com.drizzle.carrental.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.globals.Constants;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -25,8 +29,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.google.android.libraries.places.widget.AutocompleteActivity.*;
 
 public class AddLocationActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMapClickListener {
+
+    final int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     /**
      * UI Control Handlers
@@ -48,6 +64,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
     private Location currentLocation;
     private LocationCallback locationCallback;
 
+    private EditText editTextSearch;
 
     /**
      * get control handlers by id and add listenres
@@ -65,6 +82,8 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
         mapView = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapview_location);
         mapView.getMapAsync(this);
 
+        editTextSearch = findViewById(R.id.edittext_search);
+        editTextSearch.setOnClickListener(this);
     }
 
     /**
@@ -77,7 +96,30 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 
         getControlHandlersAndLinkActions();
 
+
+
+
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                editTextSearch.setText(place.getName());
+
+            } else if (resultCode == RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
 
     /**
      * OnClick Handlers
@@ -93,11 +135,24 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
                 finish();
                 break;
 
+//            case R.id.button_submit:
+//                if (getLocation) {
+//                    setResult(RESULT_OK);
+//                    finish();
+//                }
+//                break;
+
             case R.id.button_submit:
-                if (getLocation) {
-                    setResult(RESULT_OK);
-                    finish();
-                }
+                // Set the fields to specify which types of place data to
+// return after the user has made a selection.
+                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+// Start the autocomplete intent.
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.OVERLAY, fields)
+                        .build(this);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+
                 break;
         }
     }

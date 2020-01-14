@@ -1,8 +1,9 @@
 package com.drizzle.carrental.adapters;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.activities.AddClaimActivity;
+import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
-import com.drizzle.carrental.enumerators.ClaimState;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.Claim;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,14 +37,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implements View.OnClickListener, Callback<ResponseBody> {
+public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implements Callback<ResponseBody> {
 
     private ArrayList<Claim> dataSet;
-    Context mContext;
+    Activity mActivity;
     private int lastPosition = -1;
     ProgressDialog progressDialog;
 
     private int indexToBeRemoved = -1;
+
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -118,38 +120,38 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
     }
 
-    public CustomAdapterForClaimListView(ArrayList<Claim> data, Context context) {
-        super(context, R.layout.claim_row_list_item, data);
+    public CustomAdapterForClaimListView(ArrayList<Claim> data, Activity activity) {
+        super(activity, R.layout.claim_row_list_item, data);
 
         this.dataSet = data;
-        this.mContext = context;
+        this.mActivity = activity;
 
     }
 
-    @Override
-    public void onClick(View v) {
-
-        int position = (Integer) v.getTag();
-        Object object = getItem(position);
-
-        Claim claim = (Claim) object;
-
-        switch (v.getId()) {
-            case R.id.imagebutton_remove_claim:
-
-//                if (claim != null) {
-//                    if (claim.getId() > 0) {
-//                        indexToBeRemoved = position;
-//                        removeClaimFromServer(claim.getId());
-//                    } else {
-//                        Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
-//                }
-                break;
-        }
-    }
+//    @Override
+//    public void onClick(View v) {
+//
+//        int position = (Integer) v.getTag();
+//        Object object = getItem(position);
+//
+//        Claim claim = (Claim) object;
+//
+//        switch (v.getId()) {
+//            case R.id.imagebutton_remove_claim:
+//
+////                if (claim != null) {
+////                    if (claim.getId() > 0) {
+////                        indexToBeRemoved = position;
+////                        removeClaimFromServer(claim.getId());
+////                    } else {
+////                        Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+////                    }
+////                } else {
+////                    Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
+////                }
+//                break;
+//        }
+//    }
 
     private void removeClaimFromServer(long claimId) {
 
@@ -214,7 +216,15 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             viewHolder.imageButtonRemoveClaim = convertView.findViewById(R.id.imagebutton_remove_claim);
             viewHolder.imageViewClaimStatus = convertView.findViewById(R.id.imageview_claim_state);
 
-            //viewHolder.imageButtonRemoveClaim.setOnClickListener(this);
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Globals.selectedClaim = claim;
+                    Intent intent = new Intent(mActivity, AddClaimActivity.class);
+                    mActivity.startActivityForResult(intent, ClaimsActivity.CLAIM_ADD_REQUEST);
+                }
+            });
             result = convertView;
             convertView.setTag(viewHolder);
 
@@ -225,7 +235,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        Animation animation = AnimationUtils.loadAnimation(mActivity, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
         lastPosition = position;
 

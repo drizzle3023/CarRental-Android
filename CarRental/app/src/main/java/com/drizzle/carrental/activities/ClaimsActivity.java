@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -43,7 +44,7 @@ import retrofit2.Response;
 
 public class ClaimsActivity extends Activity implements View.OnClickListener, Callback<ResponseBody> {
 
-    final int CLAIM_ADD_REQUEST = 1;
+    public static final int CLAIM_ADD_REQUEST = 1;
     /**
      * UI Control Handlers
      */
@@ -59,7 +60,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
     ArrayList<ParseClaim> parseDataModels;
 
     /**
-     * get control handlers by id and add listenres
+     * get control handlers by id and add listeners
      */
     private void getControlHandlersAndLinkActions() {
 
@@ -75,11 +76,6 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         adapter = new CustomAdapterForClaimListView(dataModels, this);
 
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-
-            Claim claim = dataModels.get(position);
-
-        });
 
         buttonFileAClaim.setOnClickListener(this);
         buttonBack.setOnClickListener(this);
@@ -137,6 +133,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         switch (view.getId()) {
 
             case R.id.button_file_a_claim:
+                Globals.selectedClaim = new Claim();
                 navigateToFileAClaimActivity();
                 break;
             case R.id.button_back:

@@ -3,6 +3,8 @@ package com.drizzle.carrental.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.globals.Utils;
@@ -31,6 +34,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import io.habit.analytics.SDK;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,18 +71,29 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         linkLogout = (TextView) view.findViewById(R.id.link_logout);
 
 
+        linkFeedback.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>Feedback</i></a>"));
+        linkFaqs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs</i></a>"));
+        linkAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About</i></a>"));
+
+        linkFeedback.setClickable(true);
+        linkFeedback.setMovementMethod(LinkMovementMethod.getInstance());
+
+        linkFaqs.setClickable(true);
+        linkFaqs.setMovementMethod(LinkMovementMethod.getInstance());
+
+        linkAbout.setClickable(true);
+        linkAbout.setMovementMethod(LinkMovementMethod.getInstance());
+
         textViewCardNo.setOnClickListener(this);
         linkAddEmail.setOnClickListener(this);
-        linkFeedback.setOnClickListener(this);
-        linkFaqs.setOnClickListener(this);
+//        1
         linkPermissions.setOnClickListener(this);
-        linkAbout.setOnClickListener(this);
+        //linkAbout.setOnClickListener(this);
         linkLogout.setOnClickListener(this);
 
         if (Globals.profile.getName() == null || Globals.profile.getName().isEmpty()) {
             fetchProfileFromServer();
-        }
-        else {
+        } else {
             updateFragment();
         }
 
@@ -100,8 +115,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
             try {
                 int cardNoLength = Globals.profile.getCreditCardNo().length();
                 textViewCardNo.setText("****" + Globals.profile.getCreditCardNo().substring(cardNoLength - 4));
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 textViewCardNo.setText("****");
             }
         }
@@ -146,22 +160,12 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
 
         }
-        if (view.getId() == R.id.link_feedback) {
-
-
-        }
-        if (view.getId() == R.id.link_faqs) {
-
-
-        }
         if (view.getId() == R.id.link_permissions) {
 
 
         }
-        if (view.getId() == R.id.link_about) {
 
 
-        }
         if (view.getId() == R.id.link_logout) {
 
             new AlertDialog.Builder(getActivity())
@@ -171,15 +175,18 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int whichButton) {
+                            if (Constants.isHabitSDKReady) {
+                                SDK.INSTANCE.logout();
+                            }
+
                             SharedHelper.clearSharedPreferences(getActivity());
                             Utils.resetAllGlobals();
                             Intent intent = new Intent(getActivity(), OnboardingActivity.class);
                             startActivity(intent);
                             getActivity().finish();
-                        }})
+                        }
+                    })
                     .setNegativeButton(android.R.string.no, null).show();
-
-
 
         }
 
@@ -223,7 +230,8 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
                 JSONObject data = object.getJSONObject("data");
                 JSONObject profileData = data.getJSONObject("profile");
-                MyProfile myProfile = new Gson().fromJson(profileData.toString(), new TypeToken<MyProfile>() {}.getType());
+                MyProfile myProfile = new Gson().fromJson(profileData.toString(), new TypeToken<MyProfile>() {
+                }.getType());
 
                 Globals.profile = myProfile;
 

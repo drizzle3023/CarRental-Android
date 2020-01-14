@@ -2,6 +2,7 @@ package com.drizzle.carrental.globals;
 
 
 import com.drizzle.carrental.enumerators.ServiceArea;
+import com.drizzle.carrental.models.Claim;
 import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.models.VehicleType;
@@ -25,5 +26,7 @@ public class Globals {
     public static String stringPhoneNumber = ""; //string phone number
 
     public static boolean isSignUpOrLoginRequest = true;
+
+    public static Claim selectedClaim = new Claim();
 
 }

@@ -1,10 +1,16 @@
+package com.drizzle.carrental;
+
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import com.drizzle.carrental.BuildConfig;
+import com.drizzle.carrental.activities.SplashActivity;
+import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.SharedHelper;
 
 import net.gotev.uploadservice.UploadServiceConfig;
 
@@ -15,7 +21,7 @@ import kotlin.jvm.JvmOverloads;
 import kotlin.jvm.functions.Function1;
 import lombok.val;
 
-public class App extends Application {
+public class MyApplication extends Application {
 
 
     final String notificationChannelId = "TestChannel";
@@ -32,23 +38,12 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //init habit analyatics sdk
-        SDK.INSTANCE.init(this, "", "", new Function1<HabitStatusCodes, Unit>() {
-            @Override
-            public Unit invoke(HabitStatusCodes habitStatusCodes) {
-                if (habitStatusCodes == HabitStatusCodes.SUCCESS) {
-                    SDK.INSTANCE.setAuthorization("");
-                }
-                return Unit.INSTANCE;
-            }
-        });
-
         //init upload service sdk
         createNotificationChannel();
 
         UploadServiceConfig.initialize(getPackageName(),
-                UploadServiceConfig.getDefaultNotificationChannel(),
-                false);
+                notificationChannelId,
+                BuildConfig.DEBUG);
 
     }
 }

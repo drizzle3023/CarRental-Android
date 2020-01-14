@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 public class Claim {
 
-    long id; //id of claim
+    long id = 0; //id of claim
 
     String whatHappened; //answer for "What happened"
 

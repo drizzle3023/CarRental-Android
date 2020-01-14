@@ -7,12 +7,14 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.globals.Globals;
@@ -25,8 +27,13 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.io.IOException;
 
+import io.habit.analytics.HabitStatusCodes;
+import io.habit.analytics.SDK;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +51,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         setContentView(R.layout.activity_splash);
 
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) &&
-                ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
@@ -52,21 +59,21 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
                             , Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.ACCESS_NETWORK_STATE
                             , Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     1);
 
-        } else{
+        } else {
 
             runMainProcess();
         }
 
     }
 
-    private void runMainProcess(){
+    private void runMainProcess() {
 
-//        Intent newIntent = new Intent(SplashActivity.this, AddLocationActivity.class);
+//        Intent newIntent = new Intent(SplashActivity.this, HomeActivity.class);
 //        startActivity(newIntent);
 //        finish();
 //
@@ -186,9 +193,28 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
                 JSONObject data = object.getJSONObject("data");
                 JSONObject profileData = data.getJSONObject("profile");
-                MyProfile myProfile = new Gson().fromJson(profileData.toString(), new TypeToken<MyProfile>() {}.getType());
+                MyProfile myProfile = new Gson().fromJson(profileData.toString(), new TypeToken<MyProfile>() {
+                }.getType());
 
                 Globals.profile = myProfile;
+
+                //init habit analyatics sdk
+                SDK.INSTANCE.init(this, "", SharedHelper.getKey(this, "payload"), new Function1<HabitStatusCodes, Unit>() {
+                    @Override
+                    public Unit invoke(HabitStatusCodes habitStatusCodes) {
+
+                        if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_INITIALIZATION_SUCCESS) {
+                            Constants.isHabitSDKReady = true;
+                        }
+                        else {
+                            Constants.isHabitSDKReady = false;
+                        }
+                        Log.d("tiny-debug", "invoke: " + habitStatusCodes);
+
+                        return Unit.INSTANCE;
+                    }
+                });
+
 
                 navigateToHomeActivity();
 

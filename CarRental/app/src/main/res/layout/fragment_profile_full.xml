@@ -98,6 +98,7 @@
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
+                android:textColorLink="@android:color/holo_blue_dark"
                 android:text="Feedback" />
 
             <TextView
@@ -107,6 +108,7 @@
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
+                android:textColorLink="@android:color/holo_blue_dark"
                 android:paddingTop="5dp"
                 android:text="FAQs" />
 
@@ -189,6 +191,7 @@
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
+                android:textColorLink="@android:color/holo_blue_dark"
                 android:text="About" />
 
             <TextView

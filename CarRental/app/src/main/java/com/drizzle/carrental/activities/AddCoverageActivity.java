@@ -376,7 +376,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
             if (resultCode == RESULT_OK) {
                 vehicleVideoURL = Globals.coverage.getUrlVehicle();
-                vehicleVideoURL = "aaa";
+                //vehicleVideoURL = "aaa";
                         coverageCurrentStep = CoverageCurrentStep.VIDEO_VEHICLE_ADDED;
                 updateView();
             }

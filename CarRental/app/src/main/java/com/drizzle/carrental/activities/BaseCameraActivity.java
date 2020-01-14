@@ -1,5 +1,6 @@
 package com.drizzle.carrental.activities;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -15,24 +16,42 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.daasuu.camerarecorder.CameraRecordListener;
 import com.daasuu.camerarecorder.CameraRecorder;
 import com.daasuu.camerarecorder.CameraRecorderBuilder;
 import com.daasuu.camerarecorder.LensFacing;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.api.ApiClient;
+import com.drizzle.carrental.api.VolleyMultipartRequest;
 import com.drizzle.carrental.cameracomponents.SampleGLView;
+import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.AppHelper;
 import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.models.Coverage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.IntBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
@@ -54,7 +73,12 @@ public class BaseCameraActivity extends AppCompatActivity {
 
     protected Button buttonCancel;
 
+    ProgressDialog progressDialog;
+
+
     protected void onCreateActivity() {
+
+        progressDialog = new ProgressDialog(this);
 
         recordBtn = findViewById(R.id.btn_record);
         recordBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,9 +99,10 @@ public class BaseCameraActivity extends AppCompatActivity {
                 }
                 else { //case of "Done"
 
-                    ApiClient.uploadFile(BaseCameraActivity.this, "add-coverage", getVideoFilePath());
-                    setResult(RESULT_OK);
-                    finish();
+                    //ApiClient.uploadFile(BaseCameraActivity.this, "add-coverage", getVideoFilePath());
+                    submitCoverageVehicleVideo();
+
+
                 }
             }
         });
@@ -97,9 +122,89 @@ public class BaseCameraActivity extends AppCompatActivity {
 
     }
 
+    private void showWaitingScreen() {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideWaitingScreen() {
+
+        progressDialog.dismiss();
+    }
+
+    private void backToPreviousActivity() {
+
+        setResult(RESULT_OK);
+        finish();
+    }
+
     private void submitCoverageVehicleVideo() {
 
+        showWaitingScreen();
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(
+                Request.Method.POST, Constants.SERVER_HTTP_URL + "/api/add-coverage",
+                new com.android.volley.Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        hideWaitingScreen();
 
+                        String res = new String(response.data);
+                        try {
+                            JSONObject jsonObject = new JSONObject(res);
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            if (jsonObject.getString("success").equals("true")) {
+
+                                Toast.makeText(BaseCameraActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                                backToPreviousActivity();
+                            } else {
+                                Toast.makeText(BaseCameraActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(BaseCameraActivity.this, getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideWaitingScreen();
+                Toast.makeText(BaseCameraActivity.this, getResources().getString(R.string.message_no_response), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> paramObject = new HashMap<>();
+
+                paramObject.put("access_token", SharedHelper.getKey(BaseCameraActivity.this, "access_token"));
+                //paramObject.put("coverage_id", Globals.coverage.getId().toString());
+                paramObject.put("state", Integer.valueOf(CoverageState.UNCOVERED.getIntValue()).toString());
+
+                return paramObject;
+            }
+
+            @Override
+            protected Map<String, VolleyMultipartRequest.DataPart> getByteData() throws AuthFailureError {
+                Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
+
+                if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
+
+                    params.put("video-vehile", new VolleyMultipartRequest.DataPart("video-vehile" + Globals.coverage.getId(), AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                }
+                else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
+
+                    params.put("video-mile", new VolleyMultipartRequest.DataPart("video-mile" + Globals.coverage.getId(), AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                }
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(volleyMultipartRequest);
     }
 
     @Override
@@ -320,11 +425,12 @@ public class BaseCameraActivity extends AppCompatActivity {
 
             filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.VEHICLE_IMAGE_FILE_NAME;
         }
-        else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
+        else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
             filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.MILE_IMAGE_FILE_NAME;
         }
         else {
+
             filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.DAMAGED_VIDEO_FILE_NAME;
         }
         return filePath;

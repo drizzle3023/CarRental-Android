@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">CarRental</string>
 
     <string name="splash_text">Excess Insurance for Rental Cars</string>

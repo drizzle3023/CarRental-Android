@@ -66,5 +66,9 @@ public interface ApiInterface {
     @POST("api/remove-claim")
     Call<ResponseBody> removeClaim(@Body JsonObject body);
 
+    @Headers("Content-Type: application/json")
+    @POST("api/cancel-coverage")
+    Call<ResponseBody> cancelCoverage(@Body JsonObject body);
+
 
 }

@@ -114,6 +114,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private ArrayList<Company> companies;
 
+    private boolean isCompanyListFetched = false;
+
     private Company selectedCompany;
 
     /**
@@ -162,6 +164,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void getCurrentAddress() {
 
+        isCompanyListFetched = false;
         addressResultReceiver = new LocationAddressResultReceiver(new Handler());
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -173,7 +176,11 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                 isGettingCompanyListOrSubmitAction = true;
 
-                fetchCompaniesFromServer();
+                if (!isCompanyListFetched) {
+                    fetchCompaniesFromServer();
+                }
+
+
 
                 Globals.coverage.setLocation(currentLocation);
                 String strAddress = Utils.getAddressFromLocation(getApplicationContext(), Globals.coverage.getLocation());
@@ -247,7 +254,9 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -288,6 +297,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         try {
             if (object.getString("success").equals("true")) {
 
+                isCompanyListFetched = true;
                 JSONObject data = object.getJSONObject("data");
 
                 if (isGettingCompanyListOrSubmitAction) {
@@ -374,37 +384,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         }
 
         isGettingCompanyListOrSubmitAction = false;
-//
-//        JSONObject paramObject = new JSONObject();
-//
-//        try {
-//
-//            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-//            paramObject.put("name", selectedCompany.getName());
-//            paramObject.put("latitude", Globals.coverage.getLocation().getLatitude());
-//            paramObject.put("longitude", Globals.coverage.getLocation().getLongitude());
-//            paramObject.put("address", Globals.coverage.getLocationAddress());
-//            paramObject.put("company_id", selectedCompany.getId());
-//            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
-//            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
-//            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
-//
-//        } catch (JSONException e) {
-//
-//            e.printStackTrace();
-//            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-//        }
-//
-//        JsonParser jsonParser = new JsonParser();
-//        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
-//
-//        //get apiInterface
-//        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-//        //display waiting dialog
-//        showWaitingScreen();
-//        //send request
-//
-//        apiInterface.addCoverage(gSonObject).enqueue(this);
 
         /*
         MultiPartUploadRequest
@@ -517,6 +496,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                             if (jsonObject.getString("success").equals("true")) {
 
                                 Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                                Globals.coverage.setId(data.getLong("coverage_id"));
                                 backToPreviousActivity();
                             } else {
                                 Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
@@ -556,10 +536,10 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
 
 
-
                 return params;
             }
         };
+
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(volleyMultipartRequest);

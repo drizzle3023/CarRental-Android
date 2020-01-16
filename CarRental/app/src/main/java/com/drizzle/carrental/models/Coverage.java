@@ -25,13 +25,15 @@ public class Coverage {
 
     boolean activeState;
 
-    CoverageState state;
+    CoverageState state = null;
 
     Company company;
 
     GregorianCalendar dateFrom;
 
     GregorianCalendar dateTo;
+
+    long remainingTime = 0;
 
     Location location;
 
@@ -51,6 +53,10 @@ public class Coverage {
     public String getPeriod() {
 
         String strPeriod = "";
+
+        if (dateFrom == null || dateTo == null) {
+            return strPeriod;
+        }
 
         DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
         strPeriod = df.format(dateFrom.getTime()) + " ~ " + df.format(dateTo.getTime());
@@ -85,9 +91,17 @@ public class Coverage {
     }
 
 
-    public String getRemainingTime() {
+    public String getRemainingTimeAsString() {
 
-        String strPeriod = getDateToString();
+        String strPeriod = "";
+
+        if (remainingTime != 0) {
+
+            strPeriod = String.format("%dd %dh %dm", remainingTime / 86400, (remainingTime % 86400) / 3600, (remainingTime % 3600) / 60);
+            return strPeriod;
+        }
+
+         strPeriod = getDateToString();
 
         if (dateFrom != null && dateTo != null) {
 

@@ -27,4 +27,14 @@ public enum DamagedPart {
     public String toString() {
         return stringValue;
     }
+
+    public static DamagedPart fromString(String text) {
+        for (DamagedPart b : DamagedPart.values()) {
+            if (b.stringValue.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
+
 }

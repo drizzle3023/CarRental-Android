@@ -22,8 +22,9 @@
                 android:id="@+id/imagebutton_left_fender_panel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:layout_weight="1"
+                android:padding="0dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_left_fender_panel">
 
             </ImageButton>
@@ -33,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_left_front_door">
 
@@ -43,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_left_quarter_panel">
 
@@ -59,8 +62,9 @@
                 android:id="@+id/imagebutton_left_hood"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:layout_weight="1"
+                android:padding="0dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_left_hood">
 
             </ImageButton>
@@ -70,6 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_left_roof">
 
@@ -80,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_left_back">
 
@@ -97,8 +103,9 @@
                 android:id="@+id/imagebutton_right_hood"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:layout_weight="1"
+                android:padding="0dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_right_hood">
 
             </ImageButton>
@@ -108,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_right_roof">
 
@@ -118,6 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_right_back">
 
@@ -135,8 +144,9 @@
                 android:id="@+id/imagebutton_right_fender_panel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:layout_weight="1"
+                android:padding="0dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_right_fender_panel">
 
             </ImageButton>
@@ -146,6 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_right_front_door">
 
@@ -156,6 +167,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/damaged_zone_right_quarter_panel">
 

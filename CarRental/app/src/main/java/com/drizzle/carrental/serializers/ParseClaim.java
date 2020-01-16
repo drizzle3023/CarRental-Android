@@ -49,6 +49,9 @@ public class ParseClaim {
     @SerializedName("video")
     String video;
 
+    @SerializedName("image")
+    String image;
+
     @SerializedName("note")
     String note;
 

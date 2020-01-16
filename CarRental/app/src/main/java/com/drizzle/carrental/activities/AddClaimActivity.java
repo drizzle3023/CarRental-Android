@@ -62,6 +62,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -835,8 +836,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewAnswerTakeVideo.setTypeface(null, Typeface.ITALIC);
             buttonEditTakeVideo.setText("");
             buttonEditTakeVideo.setBackgroundResource(R.drawable.icon_edit);
-            imageViewAnswerTakeVideo.setImageResource(R.drawable.image_damaged_zone);
+            Picasso.get().load(claim.getImageURL()).placeholder(R.drawable.image_damaged_zone).into(imageViewAnswerTakeVideo);
+            //Picasso.get().load("file:///storage/emulated/0/Pictures/DamagedPart.png").placeholder(R.drawable.image_damaged_zone).into(imageViewAnswerTakeVideo);
 
+            //Picasso.with(context).load(new File(path)).into(imageView);
 
 //            Bitmap bitmap = null;
 //            try {
@@ -1042,6 +1045,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                                 JSONObject data = object.getJSONObject("data");
                                 Toast.makeText(AddClaimActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                                claim.setId(data.getInt("claim_id"));
                                 if (!isSaveOrSubmit) {
                                     finish();
                                 }
@@ -1053,6 +1057,16 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                             } else {
 
                                 Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (object.getString("token_state").equals("valid") && object.get("refresh_token") != null) {
+
+                                String newPayload = object.get("refresh_token").toString();
+                                String newToken = object.getString("access_token");
+
+                                SharedHelper.putKey(AddClaimActivity.this, "access_token", newToken);
+                                SharedHelper.putKey(AddClaimActivity.this, "payload", newPayload);
+
                             }
                         } catch (JSONException e) {
 
@@ -1072,6 +1086,9 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 Map<String, String> paramObject = new HashMap<>();
 
                 //paramObject.put("name", Globals.coverage.getCompany().getName());
+                if (claim.getId() > 0) {
+                    paramObject.put("claim_id", Double.valueOf(claim.getId()).toString());
+                }
                 paramObject.put("latitude", Double.valueOf(claim.getWhereHappened().getLatitude()).toString());
                 paramObject.put("longitude", Double.valueOf(claim.getWhereHappened().getLongitude()).toString());
                 paramObject.put("address", claim.getAddressHappened());
@@ -1329,7 +1346,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     updateViewContent();
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(getParent(), R.string.message_select_damaged_zone, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddClaimActivity.this, R.string.message_select_damaged_zone, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -1607,7 +1624,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
             if (resultCode == RESULT_OK) {
                 claimCurrentStep = ClaimCurrentStep.ANSWERED_TAKE_VIDEO;
-                //
+                claim.setImageURL("file://" + BaseCameraActivity.getImageFilePath());
+                claim.setVideoURL("file://" + BaseCameraActivity.getVideoFilePath());
                 updateViewContent();
             }
         }

@@ -8,6 +8,7 @@ import com.drizzle.carrental.globals.Constants;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -68,7 +69,22 @@ public class Claim {
     }
 
     public void setDamagedPartsFromString(String strPartList) {
+        damagedParts = new ArrayList<DamagedPart>();
 
 
+        if(strPartList.isEmpty()) {
+            return;
+        }
+
+        String[] stringArrayList = strPartList.split(",");
+        if (stringArrayList.length == 0) {
+            return;
+        }
+        else {
+
+            for (int i = 0; i < stringArrayList.length; i ++) {
+                damagedParts.add(DamagedPart.fromString(stringArrayList[i]));
+            }
+        }
     }
 }

@@ -127,7 +127,7 @@ public class RecordMileActivity extends Activity implements View.OnClickListener
             else {
 
                 //remove recorded file
-                Utils.removeTemporaryFile(BaseCameraActivity.getVideoFilePath());
+                //Utils.removeTemporaryFile(BaseCameraActivity.getVideoFilePath());
             }
         }
     }

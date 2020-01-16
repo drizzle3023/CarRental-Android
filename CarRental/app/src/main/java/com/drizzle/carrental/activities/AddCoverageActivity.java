@@ -11,9 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.models.Claim;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
+import com.squareup.picasso.Picasso;
 
 import java.util.GregorianCalendar;
 
@@ -54,25 +58,18 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
     private LinearLayout layoutVideoMileContent;
     private LinearLayout layoutVideoMileLineHidden;
 
-    private ImageButton buttonDeleteCoverage;
-    private ImageButton buttonDeleteVideoVehicle;
-    private ImageButton buttonDeleteVideoMile;
+    private ImageButton imageButtonDeleteCoverage;
+    private ImageButton imageButtonDeleteVideoVehicle;
+    private ImageButton imageButtonDeleteVideoMile;
 
     private Button buttonLocation;
     private Button buttonCompany;
     private Button buttonPeriod;
 
-    private ImageButton buttonVideoVehicle;
-    private ImageButton buttonVideoMile;
+    private AppCompatImageView_Round_10 imageViewVideoVehicle;
+    private AppCompatImageView_Round_10 imageViewVideoMile;
 
-
-    /**
-     * Models
-     */
-    private Coverage coverage;
-    private String vehicleVideoURL;
-    private String vehicleMileURL;
-
+    private Coverage coverage = new Coverage();
     /**
      * Temporary variables for state
      */
@@ -122,9 +119,9 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
         buttonGotit = (Button) findViewById(R.id.button_got_it);
         buttonEdit = (ImageButton) findViewById((R.id.button_edit));
-        buttonDeleteCoverage = (ImageButton) findViewById(R.id.button_delete_coverage);
-        buttonDeleteVideoVehicle = (ImageButton) findViewById(R.id.button_delete_video);
-        buttonDeleteVideoMile = (ImageButton) findViewById((R.id.button_delete_miles));
+        imageButtonDeleteCoverage = (ImageButton) findViewById(R.id.button_delete_coverage);
+        imageButtonDeleteVideoVehicle = (ImageButton) findViewById(R.id.button_delete_video);
+        imageButtonDeleteVideoMile = (ImageButton) findViewById((R.id.button_delete_miles));
         layoutCoverage = (LinearLayout) findViewById(R.id.layout_coverage);
         layoutCoverageLine = findViewById(R.id.layout_coverage_line);
         layoutCoverageContent = findViewById(R.id.layout_coverage_content);
@@ -134,18 +131,18 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         layoutVideoVehicleLine = findViewById(R.id.layout_video_vehicle_line);
         layoutVideoVehicleContent = findViewById(R.id.layout_video_vehicle_content);
         layoutVideoVehicleLineHiden = findViewById(R.id.layout_video_vehicle_line_hidden);
+        imageViewVideoVehicle = findViewById(R.id.imageview_video_vehicle);
 
         layoutVideoMile = findViewById(R.id.layout_video_mile);
         layoutVideoMileLine = findViewById(R.id.layout_video_mile_line);
         layoutVideoMileContent = findViewById(R.id.layout_video_mile_content);
         layoutVideoMileLineHidden = findViewById(R.id.layout_video_mile_line_hidden);
+        imageViewVideoMile = findViewById(R.id.imageview_video_mile);
 
         buttonLocation = findViewById(R.id.button_location);
         buttonCompany = findViewById(R.id.button_company);
         buttonPeriod = findViewById(R.id.button_period);
 
-        buttonVideoVehicle = (ImageButton) findViewById(R.id.button_video_vehicle);
-        buttonVideoMile = (ImageButton) findViewById(R.id.button_video_mile);
 
         //bind listener
         captionStartCoverage.setOnClickListener(this);
@@ -156,9 +153,9 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         buttonRecordMile.setOnClickListener(this);
 
         buttonEdit.setOnClickListener(this);
-        buttonDeleteCoverage.setOnClickListener(this);
-        buttonDeleteVideoVehicle.setOnClickListener(this);
-        buttonDeleteVideoMile.setOnClickListener(this);
+        imageButtonDeleteCoverage.setOnClickListener(this);
+        imageButtonDeleteVideoVehicle.setOnClickListener(this);
+        imageButtonDeleteVideoMile.setOnClickListener(this);
 
         buttonGotit.setOnClickListener(this);
         buttonBack.setOnClickListener(this);
@@ -168,9 +165,9 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
     /**
      * Init and fetch data from server
      */
-    private void initVariables() {
+    private void prepareTestData() {
 
-        coverage = new Coverage();
+        Coverage coverage = new Coverage();
 
         //fetch data from server
         Location location = new Location("CoverageLocation");
@@ -188,9 +185,8 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         coverage.setDateFrom(new GregorianCalendar(2019, 1, 1));
         coverage.setDateTo(new GregorianCalendar(2020, 1, 1));
 
-        vehicleVideoURL = "http://i.imgur.com/DvpvklR.png";
-        vehicleMileURL = "http://i.imgur.com/DvpvklR.png";
 
+        Globals.coverage = coverage;
         isEditMode = false;
 
     }
@@ -200,54 +196,61 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
      */
     private void updateView() {
 
-        if (coverage == null) {
-            //layoutCoverageContent.setVisibility(View.GONE);
+        if (Globals.coverage == null) {
+
             layoutCoverage.setVisibility(View.GONE);
             layoutCoverageLineHidden.setVisibility(View.VISIBLE);
 
+            layoutVideoVehicle.setVisibility(View.GONE);
+            layoutVideoVehicleLineHiden.setVisibility(View.VISIBLE);
 
-        } else {
-            layoutCoverageLineHidden.setVisibility(View.GONE);
-            layoutCoverage.setVisibility(View.VISIBLE);
-
-            buttonLocation.setText(coverage.getLocationAddress());
-            buttonPeriod.setText(coverage.getPeriod());
-            if (coverage.getCompany() != null) {
-                buttonCompany.setText(coverage.getCompany().getName());
-            }
+            layoutVideoMile.setVisibility(View.GONE);
+            layoutVideoMileLineHidden.setVisibility(View.VISIBLE);
+            return;
         }
 
-        if (vehicleVideoURL == null || vehicleVideoURL.isEmpty()) {
+        layoutCoverageLineHidden.setVisibility(View.GONE);
+        layoutCoverage.setVisibility(View.VISIBLE);
+
+        buttonLocation.setText(Globals.coverage.getLocationAddress());
+        buttonPeriod.setText(Globals.coverage.getPeriod());
+        if (Globals.coverage.getCompany() != null) {
+            buttonCompany.setText(Globals.coverage.getCompany().getName());
+        }
+
+        if (Globals.coverage.getUrlImageVehicle() == null || Globals.coverage.getUrlImageVehicle().isEmpty()) {
             layoutVideoVehicleLineHiden.setVisibility(View.VISIBLE);
             layoutVideoVehicle.setVisibility(View.GONE);
-
         } else {
             layoutVideoVehicleLineHiden.setVisibility(View.GONE);
             layoutVideoVehicle.setVisibility(View.VISIBLE);
-            buttonVideoVehicle.setImageResource(R.drawable.video_vehicle);
+            Picasso.get().load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.video_vehicle).into(imageViewVideoVehicle);
         }
 
-        if (vehicleMileURL == null || vehicleMileURL.isEmpty()) {
+
+        if (Globals.coverage.getUrlImageMile() == null || Globals.coverage.getUrlImageMile().isEmpty()) {
+
             layoutVideoMileLineHidden.setVisibility(View.VISIBLE);
             layoutVideoMile.setVisibility(View.GONE);
-
         } else {
             layoutVideoMileLineHidden.setVisibility(View.GONE);
             layoutVideoMile.setVisibility(View.VISIBLE);
-            buttonVideoMile.setImageResource(R.drawable.video_mile);
+            Picasso.get().load(Globals.coverage.getUrlImageMile()).placeholder(R.drawable.video_mile).into(imageViewVideoMile);
         }
 
+
+        isEditMode = false;
         if (isEditMode) {
             buttonEdit.setVisibility(View.VISIBLE);
-            buttonDeleteCoverage.setVisibility(View.VISIBLE);
-            buttonDeleteVideoVehicle.setVisibility(View.VISIBLE);
-            buttonDeleteVideoMile.setVisibility(View.VISIBLE);
+            imageButtonDeleteCoverage.setVisibility(View.VISIBLE);
+            imageButtonDeleteVideoVehicle.setVisibility(View.VISIBLE);
+            imageButtonDeleteVideoMile.setVisibility(View.VISIBLE);
 
         } else {
             buttonEdit.setVisibility(View.GONE);
-            buttonDeleteCoverage.setVisibility(View.GONE);
-            buttonDeleteVideoVehicle.setVisibility(View.GONE);
-            buttonDeleteVideoMile.setVisibility(View.GONE);
+            imageButtonDeleteCoverage.setVisibility(View.GONE);
+            imageButtonDeleteVideoVehicle.setVisibility(View.GONE);
+            imageButtonDeleteVideoMile.setVisibility(View.GONE);
         }
 
         if (coverageCurrentStep.equals(CoverageCurrentStep.NEW)) {
@@ -255,20 +258,17 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
             captionStartCoverage.setBackgroundResource(R.drawable.coverage_add_button);
             captionRecordCar.setBackgroundResource(0);
             captionRecordMile.setBackgroundResource(0);
-        }
-        else if (coverageCurrentStep.equals(CoverageCurrentStep.COVERAGE_ADDED)) {
+        } else if (coverageCurrentStep.equals(CoverageCurrentStep.COVERAGE_ADDED)) {
 
             captionStartCoverage.setBackgroundResource(0);
             captionRecordCar.setBackgroundResource(R.drawable.coverage_add_button);
             captionRecordMile.setBackgroundResource(0);
-        }
-        else if (coverageCurrentStep.equals(CoverageCurrentStep.VIDEO_VEHICLE_ADDED)) {
+        } else if (coverageCurrentStep.equals(CoverageCurrentStep.VIDEO_VEHICLE_ADDED)) {
 
             captionStartCoverage.setBackgroundResource(0);
             captionRecordCar.setBackgroundResource(0);
             captionRecordMile.setBackgroundResource(R.drawable.coverage_add_button);
-        }
-        else {
+        } else {
             captionStartCoverage.setBackgroundResource(0);
             captionRecordCar.setBackgroundResource(0);
             captionRecordMile.setBackgroundResource(0);
@@ -285,11 +285,50 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
         getControlHandlersAndLinkActions();
 
-        //initVariables();
+        initVariables();
 
         updateView();
 
 
+    }
+
+    private void initVariables() {
+
+        if (Globals.coverage == null) {
+            coverageCurrentStep = CoverageCurrentStep.NEW;
+            isEditMode = false;
+        } else {
+            if (Globals.coverage.getState() == null) {
+                isEditMode = false;
+            } else {
+                if (Globals.coverage.getState() == CoverageState.UNCOVERED) {
+                    isEditMode = true;
+                } else {
+                    isEditMode = false;
+                }
+            }
+
+            if (Globals.coverage.getId() == null) {
+                coverageCurrentStep = CoverageCurrentStep.NEW;
+            } else if (Globals.coverage.getId() < 1) {
+                coverageCurrentStep = CoverageCurrentStep.NEW;
+            } else {
+
+                if (Globals.coverage.getTitle() == null) {
+
+                    coverageCurrentStep = CoverageCurrentStep.NEW;
+                } else {
+                    coverageCurrentStep = CoverageCurrentStep.COVERAGE_ADDED;
+                }
+
+                if (Globals.coverage.getUrlVideoVehicle() != null && !Globals.coverage.getUrlVideoVehicle().isEmpty()) {
+                    coverageCurrentStep = CoverageCurrentStep.VIDEO_VEHICLE_ADDED;
+                }
+                if (Globals.coverage.getUrlVideoMile() != null && !Globals.coverage.getUrlVideoMile().isEmpty()) {
+                    coverageCurrentStep = CoverageCurrentStep.COMPLETED;
+                }
+            }
+        }
     }
 
     /**
@@ -324,6 +363,14 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
             case R.id.button_got_it:
                 setResult(RESULT_OK);
                 super.onBackPressed();
+
+            case R.id.button_delete_coverage:
+
+                break;
+            case R.id.button_delete_miles:
+                break;
+            case R.id.button_delete_video:
+                break;
         }
     }
 
@@ -366,25 +413,21 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         if (requestCode == START_COVERAGE_ACTIVITY_REQUEST) {
 
             if (resultCode == RESULT_OK) {
-                coverage = Globals.coverage;
+
                 coverageCurrentStep = CoverageCurrentStep.COVERAGE_ADDED;
                 updateView();
             }
-        }
-        else if (requestCode == RECORD_VEHICLE_ACTIVITY_REQUEST) {
+        } else if (requestCode == RECORD_VEHICLE_ACTIVITY_REQUEST) {
 
             if (resultCode == RESULT_OK) {
-                vehicleVideoURL = Globals.coverage.getUrlVideoVehicle();
-                //vehicleVideoURL = "aaa";
-                        coverageCurrentStep = CoverageCurrentStep.VIDEO_VEHICLE_ADDED;
+
+                coverageCurrentStep = CoverageCurrentStep.VIDEO_VEHICLE_ADDED;
                 updateView();
             }
-        }
-        else if (requestCode == RECORD_MILE_ACTIVITY_REQUEST) {
+        } else if (requestCode == RECORD_MILE_ACTIVITY_REQUEST) {
 
             if (resultCode == RESULT_OK) {
-                vehicleMileURL = Globals.coverage.getUrlVideoMile();
-                vehicleMileURL  = "aaa";
+
                 coverageCurrentStep = CoverageCurrentStep.COMPLETED;
                 updateView();
             }

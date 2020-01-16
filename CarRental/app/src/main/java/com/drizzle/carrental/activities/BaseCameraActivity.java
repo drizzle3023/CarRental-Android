@@ -10,6 +10,7 @@ import android.opengl.GLException;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -109,8 +110,12 @@ public class BaseCameraActivity extends AppCompatActivity {
                 else { //case of "Done"
 
                     //ApiClient.uploadFile(BaseCameraActivity.this, "add-coverage", getVideoFilePath());
-                    submitCoverageVehicleVideo();
-
+                    if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1 || Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
+                        submitCoverageVehicleVideo();
+                    }
+                    else {
+                        backToPreviousActivity();
+                    }
 
                 }
             }
@@ -150,6 +155,8 @@ public class BaseCameraActivity extends AppCompatActivity {
         finish();
     }
 
+
+
     private void submitCoverageVehicleVideo() {
 
         showWaitingScreen();
@@ -168,6 +175,23 @@ public class BaseCameraActivity extends AppCompatActivity {
                             if (jsonObject.getString("success").equals("true")) {
 
                                 Toast.makeText(BaseCameraActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                                Globals.coverage.setId(data.getLong("coverage_id"));
+                                if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
+
+                                    Globals.coverage.setUrlVideoVehicle("file://" + getVideoFilePath());
+                                    Globals.coverage.setUrlImageVehicle("file://" + getImageFilePath());
+
+                                }
+                                else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
+
+                                    Globals.coverage.setUrlVideoMile("file://" + getVideoFilePath());
+                                    Globals.coverage.setUrlImageMile("file://" + getImageFilePath());
+                                }
+                                else {
+
+                                    Globals.selectedClaim.setVideoURL("file://" + getVideoFilePath());
+                                    Globals.selectedClaim.setImageURL("file://" + getImageFilePath());
+                                }
                                 backToPreviousActivity();
                             } else {
                                 Toast.makeText(BaseCameraActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
@@ -191,7 +215,13 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                 paramObject.put("access_token", SharedHelper.getKey(BaseCameraActivity.this, "access_token"));
                 //paramObject.put("coverage_id", Globals.coverage.getId().toString());
-                paramObject.put("state", Integer.valueOf(CoverageState.UNCOVERED.getIntValue()).toString());
+                if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
+                    paramObject.put("state", Integer.valueOf(CoverageState.UNCOVERED.getIntValue()).toString());
+                }
+                else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
+                    paramObject.put("state", Integer.valueOf(CoverageState.COVERED.getIntValue()).toString());
+                }
+
 
                 return paramObject;
             }
@@ -204,11 +234,17 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                     params.put("video-vehicle", new VolleyMultipartRequest.DataPart("video-vehicle" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
                     params.put("image-vehicle", new VolleyMultipartRequest.DataPart("image-vehicle" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+
+
                 }
                 else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
                     params.put("video-mile", new VolleyMultipartRequest.DataPart("video-mile" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
                     params.put("image-mile", new VolleyMultipartRequest.DataPart("image-mile" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                }
+                else {
+                    params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                    params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
                 }
                 return params;
             }
@@ -442,7 +478,7 @@ public class BaseCameraActivity extends AppCompatActivity {
         }
         else {
 
-            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.DAMAGED_VIDEO_FILE_NAME;
+            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.DAMAGED_IMAGE_FILE_NAME;
         }
         return filePath;
     }

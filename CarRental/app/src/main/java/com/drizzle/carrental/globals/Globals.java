@@ -21,7 +21,7 @@ public class Globals {
 
     public static int paymentId = 0;
 
-    public static Coverage coverage = new Coverage(); //current active coverage
+    public static Coverage coverage = null; //current active coverage
 
     public static String stringPhoneNumber = ""; //string phone number
 

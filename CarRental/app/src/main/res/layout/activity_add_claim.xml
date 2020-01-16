@@ -512,7 +512,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginLeft="100dp"
+                    android:layout_marginLeft="150dp"
                     android:layout_marginBottom="20dip"
                     android:background="@drawable/claim_answer_saved"
                     android:minWidth="180dp"
@@ -564,7 +564,7 @@
                         android:id="@+id/imageview_answer_take_video"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
-                        android:scaleType="fitXY"
+                        android:scaleType="fitCenter"
                         android:layout_marginTop="10dp"
                         android:src="@drawable/image_damaged_zone">
 

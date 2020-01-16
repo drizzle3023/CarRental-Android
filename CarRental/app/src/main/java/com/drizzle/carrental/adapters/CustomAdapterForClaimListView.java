@@ -3,6 +3,7 @@ package com.drizzle.carrental.adapters;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.AddClaimActivity;
@@ -216,6 +219,23 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             viewHolder.imageButtonRemoveClaim = convertView.findViewById(R.id.imagebutton_remove_claim);
             viewHolder.imageViewClaimStatus = convertView.findViewById(R.id.imageview_claim_state);
 
+            viewHolder.imageButtonRemoveClaim.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(mActivity)
+                            .setTitle("Remove Claim")
+                            .setMessage("Are you sure you want to remove this claim?")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null).show();
+                }
+            });
+
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -245,6 +265,11 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         viewHolder.imageButtonRemoveClaim.setVisibility(View.GONE);
 
         switch (claim.getClaimState()) {
+            case PENDING_REVIEW:
+                viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_expert_undergoing);
+                viewHolder.textViewClaimStatus.setText(R.string.text_claim_state_pending);
+                viewHolder.textViewClaimStatus.setTextColor(getContext().getResources().getColor(R.color.colorClaimListClaimStateExpertUndergoing, null));
+                break;
             case APPROVED:
                 viewHolder.imageViewClaimStatus.setImageResource(R.drawable.claim_state_approved);
                 viewHolder.textViewClaimStatus.setText(R.string.text_claim_state_approved);

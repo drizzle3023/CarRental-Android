@@ -1,21 +1,26 @@
 package com.drizzle.carrental.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.daasuu.camerarecorder.egl.filter.GlOverlayFilter;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.AddCoverageActivity;
 import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.activities.HomeActivity;
+import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55;
@@ -23,6 +28,7 @@ import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.serializers.ParseCoverage;
@@ -36,6 +42,7 @@ import org.json.JSONObject;
 
 import java.util.GregorianCalendar;
 
+import io.habit.analytics.SDK;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,6 +74,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private ImageView imageViewLocationIcon;
 
+    private ImageButton imageButtonRemoveCoverage;
+
+    private boolean firstFlag = true;
+
     private void getControlHandlersAndLinkActions(View view) {
 
         imageButtonStartCoverage = view.findViewById(R.id.imageview_start_coverage);
@@ -96,121 +107,184 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         imageViewLocationIcon = view.findViewById(R.id.imageview_location_icon);
 
+        imageButtonRemoveCoverage = view.findViewById(R.id.imagebutton_remove_coverage);
+        imageButtonRemoveCoverage.setOnClickListener(this);
+
         imageButtonStartCoverage.setOnClickListener(this);
         buttonClaims.setOnClickListener(this);
         buttonGotIt.setOnClickListener(this);
 
     }
 
+    private void resetView() {
+
+        buttonClaims.setVisibility(View.GONE);
+        imageButtonRemoveCoverage.setVisibility(View.GONE);
+        textViewCoverageTitle.setVisibility(View.VISIBLE);
+        imageViewLocationIcon.setVisibility(View.GONE);
+        textViewCoverageLocation.setVisibility(View.VISIBLE);
+        layoutPeriod.setVisibility(View.GONE);
+        buttonGotIt.setVisibility(View.GONE);
+        layoutLocation.setVisibility(View.VISIBLE);
+        imageButtonStartCoverage.setAlpha(1f);
+
+        imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+        textViewCoverageTitle.setText(getResources().getString(R.string.start_coverage_title));
+        textViewCoverageLocation.setText(getResources().getString(R.string.have_unlimited_coverage));
+
+    }
+
     private void updateView() {
 
-        if (Globals.coverage != null && Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
 
-            buttonClaims.setVisibility(View.VISIBLE);
+        if (Globals.coverage != null) { //coverage does exist
 
-            Picasso.get().load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
+            if (Globals.coverage.getState() != null) { //coverage state exist
 
-            textViewCoverageTitle.setText(Globals.coverage.getTitle());
-            textViewCoverageLocation.setText(Globals.coverage.getLocationAddress());
-            textViewCoveragePeriod.setText(Globals.coverage.getRemainingTime());
-            buttonGotIt.setVisibility(View.GONE);
-            imageViewLocationIcon.setVisibility(View.VISIBLE);
-            layoutPeriod.setVisibility(View.VISIBLE);
+                switch (Globals.coverage.getState()) {
 
-            textViewAssistence.setTextColor(getResources().getColor(R.color.colorNormalText, null));
-            textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-            textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-            textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                    case UNCOVERED:
 
-        } else {
-            buttonClaims.setVisibility(View.INVISIBLE);
-            buttonGotIt.setVisibility(View.GONE);
-            layoutPeriod.setVisibility(View.GONE);
-            imageViewLocationIcon.setVisibility(View.GONE);
+                        buttonClaims.setVisibility(View.GONE);
+                        imageButtonRemoveCoverage.setVisibility(View.VISIBLE);
+                        textViewCoverageTitle.setVisibility(View.VISIBLE);
+                        imageViewLocationIcon.setVisibility(View.VISIBLE);
+                        textViewCoverageLocation.setVisibility(View.VISIBLE);
+                        layoutPeriod.setVisibility(View.VISIBLE);
+                        buttonGotIt.setVisibility(View.GONE);
+                        layoutLocation.setVisibility(View.VISIBLE);
+                        imageButtonStartCoverage.setAlpha(1f);
 
-            if (Globals.coverage.getState() == CoverageState.CANCELLED) {
+                        if (Globals.coverage.getUrlImageVehicle() != null && !Globals.coverage.getUrlImageVehicle().isEmpty()) {
+                            Picasso.get().load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.icon_add_coverage).into(imageButtonStartCoverage);
+                        }
+                        if (Globals.coverage.getTitle() != null && !Globals.coverage.getTitle().isEmpty()) {
+                            textViewCoverageTitle.setText(Globals.coverage.getTitle());
+                        }
+                        if (Globals.coverage.getLocationAddress() != null && !Globals.coverage.getLocationAddress().isEmpty()) {
+                            textViewCoverageLocation.setText(Globals.coverage.getLocationAddress());
+                        }
+                        if (Globals.coverage.getRemainingTimeAsString() != null && !Globals.coverage.getRemainingTimeAsString().isEmpty()) {
+                            textViewCoveragePeriod.setText(Globals.coverage.getRemainingTimeAsString());
+                        }
 
-                imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
-            } else if (Globals.coverage.getState() == CoverageState.EXPIRED) {
+                        break;
+                    case COVERED:
 
-                imageButtonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
-                Picasso.get().load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
-                imageButtonStartCoverage.setAlpha(	0.25f);
+                        buttonClaims.setVisibility(View.VISIBLE);
+                        imageButtonRemoveCoverage.setVisibility(View.GONE);
+                        textViewCoverageTitle.setVisibility(View.VISIBLE);
+                        imageViewLocationIcon.setVisibility(View.VISIBLE);
+                        textViewCoverageLocation.setVisibility(View.VISIBLE);
+                        layoutPeriod.setVisibility(View.VISIBLE);
+                        buttonGotIt.setVisibility(View.GONE);
+                        layoutLocation.setVisibility(View.VISIBLE);
+                        imageButtonStartCoverage.setAlpha(1f);
 
-                buttonGotIt.setVisibility(View.VISIBLE);
-                textViewCoverageTitle.setText(R.string.coverage_expired_title);
-                layoutLocation.setVisibility(View.GONE);
-                imageViewLocationIcon.setVisibility(View.GONE);
-                layoutPeriod.setVisibility(View.VISIBLE);
-                textViewCoveragePeriod.setText(R.string.no_remainingtime);
+                        if (Globals.coverage.getUrlImageVehicle() != null && !Globals.coverage.getUrlImageVehicle().isEmpty()) {
+                            Picasso.get().load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.icon_add_coverage).into(imageButtonStartCoverage);
+                        }
+                        if (Globals.coverage.getTitle() != null && !Globals.coverage.getTitle().isEmpty()) {
+                            textViewCoverageTitle.setText(Globals.coverage.getTitle());
+                        }
+                        if (Globals.coverage.getLocationAddress() != null && !Globals.coverage.getLocationAddress().isEmpty()) {
+                            textViewCoverageLocation.setText(Globals.coverage.getLocationAddress());
+                        }
+                        if (Globals.coverage.getRemainingTimeAsString() != null && !Globals.coverage.getRemainingTimeAsString().isEmpty()) {
+                            textViewCoveragePeriod.setText(Globals.coverage.getRemainingTimeAsString());
+                        }
 
+                        break;
 
-                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
-                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+                    case EXPIRED:
 
-                textViewAssistence.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-                textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-                textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-                textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                        buttonClaims.setVisibility(View.GONE);
+                        imageButtonRemoveCoverage.setVisibility(View.GONE);
+                        textViewCoverageTitle.setVisibility(View.VISIBLE);
+                        imageViewLocationIcon.setVisibility(View.GONE);
+                        textViewCoverageLocation.setVisibility(View.VISIBLE);
+                        layoutPeriod.setVisibility(View.VISIBLE);
+                        buttonGotIt.setVisibility(View.VISIBLE);
+                        layoutLocation.setVisibility(View.GONE);
 
-            } else {
+                        imageButtonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
+                        Picasso.get().load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
+                        imageButtonStartCoverage.setAlpha(0.25f);
+                        textViewCoverageTitle.setText(R.string.coverage_expired_title);
+                        textViewCoveragePeriod.setText(R.string.no_remainingtime);
 
-                imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+                        break;
+                    case CANCELLED:
+                    default:
 
-                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
-                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+                        resetView();
+
+                        break;
+
+                }
+
+            } else { //coverage state doesn't exist
+                resetView();
 
             }
+        } else { //coverage doesn't exist
+            resetView();
         }
 
         updateBottomBar();
     }
 
+    private void resetBottomBar() {
+
+        imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
+        imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
+        imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
+        imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+
+        textViewAssistence.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+        textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+        textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+        textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+    }
+
     private void updateBottomBar() {
 
-        if (Globals.coverage != null && Globals.coverage.getId() != null && Globals.coverage.getId() > 0) {
+        if (Globals.coverage != null) { //coverage does exist
 
-            imageButtonAssistence.setImageResource(R.drawable.assitence_active);
-            imageButtonLostKeys.setImageResource(R.drawable.lost_keys_enabled);
-            imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_enabled);
-            imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_enabled);
+            if (Globals.coverage.getState() != null) { //coverage state exist
 
-            textViewAssistence.setTextColor(getResources().getColor(R.color.colorNormalText, null));
-            textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-            textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-            textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-
-        } else {
-
-            if (Globals.coverage.getState() == CoverageState.EXPIRED) {
+                switch (Globals.coverage.getState()) {
 
 
+                    case COVERED:
 
+                        imageButtonAssistence.setImageResource(R.drawable.assitence_active);
+                        imageButtonLostKeys.setImageResource(R.drawable.lost_keys_enabled);
+                        imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_enabled);
+                        imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_enabled);
 
-                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
-                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+                        textViewAssistence.setTextColor(getResources().getColor(R.color.colorValid, null));
+                        textViewLostKeys.setTextColor(getResources().getColor(R.color.colorValid, null));
+                        textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorValid, null));
+                        textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorValid, null));
 
-                textViewAssistence.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-                textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-                textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-                textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                        break;
+                    case UNCOVERED:
+                    case EXPIRED:
+                    case CANCELLED:
+                    default:
+                        resetBottomBar();
+                        break;
+                }
 
-            } else {
-
-                imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
-                imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
-                imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
-                imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+            } else { //coverage state doesn't exist
+                resetBottomBar();
 
             }
+        } else { //coverage doesn't exist
+            resetBottomBar();
         }
+
     }
 
     private void initVariables() {
@@ -227,8 +301,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         initVariables();
 
-
-        getActiveCoverage();
+        if (firstFlag) {
+            getActiveCoverage();
+            firstFlag = false;
+        }
 
         return view;
     }
@@ -276,6 +352,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                             JSONObject companyObject = parseCoverage.getCompany();
                             Company company = new Company();
+                            company.setName(parseCoverage.getName());
 //                            company.setId(companyObject.getLong("id"));
 //                            company.setName(companyObject.getString("name"));
 //                            company.setType(companyObject.getString("type"));
@@ -297,10 +374,23 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                             location.setLongitude(parseCoverage.getLongitude());
 
                             coverage.setLocationAddress(parseCoverage.getAddress());
-                            coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + parseCoverage.getVideoVehicle());
-                            coverage.setUrlVideoMile(Constants.MEDIA_PATH_URL + parseCoverage.getVideoMile());
-                            coverage.setUrlImageVehicle(Constants.MEDIA_PATH_URL + parseCoverage.getImageVehicle());
-                            coverage.setUrlImageMile(Constants.MEDIA_PATH_URL + parseCoverage.getImageMile());
+
+                            if (!parseCoverage.getVideoVehicle().isEmpty()) {
+                                coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + parseCoverage.getVideoVehicle());
+
+                            }
+
+                            if (!parseCoverage.getImageVehicle().isEmpty()) {
+                                coverage.setUrlImageVehicle(Constants.MEDIA_PATH_URL + parseCoverage.getImageVehicle());
+                            }
+
+                            if (!parseCoverage.getVideoMile().isEmpty()) {
+                                coverage.setUrlVideoMile(Constants.MEDIA_PATH_URL + parseCoverage.getVideoMile());
+                            }
+
+                            if (!parseCoverage.getImageMile().isEmpty()) {
+                                coverage.setUrlImageMile(Constants.MEDIA_PATH_URL + parseCoverage.getImageMile());
+                            }
 
                             coverage.setClaimCount(parseCoverage.getClaimCount());
 
@@ -311,6 +401,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                                 coverage.setActiveState(false);
                             }
 
+                            coverage.setRemainingTime(parseCoverage.getRemainingTime());
 
                             Globals.coverage = coverage;
 
@@ -318,7 +409,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                             JSONObject data = object.getJSONObject("data");
                             //Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
                         }
-                    } catch (Exception e) {
+                    } catch (
+                            Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                     }
@@ -336,7 +428,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 }
             });
 
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
 
@@ -373,6 +466,21 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
             case R.id.button_claims:
                 navigateToClaimsActivity();
                 break;
+
+            case R.id.imagebutton_remove_coverage:
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Cancel Coverage")
+                        .setMessage("Are you sure you want to cancel current coverage?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                cancelCoverage();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
+
+                break;
         }
     }
 
@@ -397,6 +505,85 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         Intent intent = new Intent(getActivity(), ClaimsActivity.class);
         startActivity(intent);
         getActivity().finish();
+    }
+
+    private void cancelCoverage() {
+
+        if (Globals.coverage == null) {
+            Globals.coverage = new Coverage();
+            updateView();
+            return;
+        }
+        if (Globals.coverage.getId() == null) {
+            Globals.coverage = new Coverage();
+            updateView();
+            return;
+        }
+        if (Globals.coverage.getId() < 1) {
+            Globals.coverage = new Coverage();
+            updateView();
+            return;
+        }
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+
+        JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject paramObject = new JSONObject();
+
+            paramObject.put("access_token", SharedHelper.getKey(getActivity(), "access_token"));
+            paramObject.put("coverage_id", Globals.coverage.getId());
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+            apiInterface.cancelCoverage(gsonObject).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    progressDialog.dismiss();
+
+                    try {
+                        JSONObject object = new JSONObject(response.body().string());
+
+                        if (object.getString("success").equals("true")) {
+
+                            Globals.coverage = new Coverage();
+                            updateView();
+
+                        } else {
+
+                            JSONObject data = object.getJSONObject("data");
+                            Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (
+                            Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
+                    }
+
+                    updateView();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    progressDialog.dismiss();
+                    t.printStackTrace();
+                    Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
+
+                    updateView();
+                }
+            });
+
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

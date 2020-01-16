@@ -90,8 +90,8 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
         mapView = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapview_location);
         mapView.getMapAsync(this);
 
-//        editTextSearch = findViewById(R.id.edittext_search);
-//        editTextSearch.setOnClickListener(this);
+        editTextSearch = findViewById(R.id.edittext_search);
+        editTextSearch.setOnClickListener(this);
 
     }
 
@@ -103,42 +103,18 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
 
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-// Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-
-// Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-
-                Log.i("tiny-debug", "Place: " + place.getName() + ", " + place.getId());
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.i("tiny-debug", "An error occurred: " + status);
-            }
-        });
-
-
-        //String apiKey = getString(R.string.google_api_key);
+        String apiKey = getString(R.string.google_api_key);
 
         /**
          * Initialize Places. For simplicity, the API key is hard-coded. In a production
          * environment we recommend using a secure mechanism to manage API keys.
          */
-//        if (!Places.isInitialized()) {
-//            Places.initialize(getApplicationContext(), apiKey);
-//        }
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
 
-// Create a new Places client instance.
+        // Create a new Places client instance.
         //PlacesClient placesClient = Places.createClient(this);
-
 
 
         getControlHandlersAndLinkActions();
@@ -153,10 +129,16 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
-                marker.setPosition(place.getLatLng());
+                if (place.getLatLng() != null) {
+                    marker.setPosition(place.getLatLng());
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), Constants.DEFAULT_MAP_ZOOM_LEVEL));
+                    currentLocation.setLatitude(place.getLatLng().latitude);
+                    currentLocation.setLongitude(place.getLatLng().longitude);
+                }
                 marker.setTitle(place.getName());
 
                 editTextSearch.setText(place.getName());
+
 
             } else if (resultCode == RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -181,6 +163,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
         switch (view.getId()) {
 
             case R.id.button_back:
+
                 finish();
                 break;
 
@@ -191,15 +174,16 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
 
-//            case R.id.edittext_search:
-//                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
-//
-//                // Start the autocomplete intent.
-//                Intent intent = new Autocomplete.IntentBuilder(
-//                        AutocompleteActivityMode.OVERLAY, fields)
-//                        .build(AddLocationActivity.this);
-//                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-//                break;
+            case R.id.edittext_search:
+                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+                // Start the autocomplete intent.
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.OVERLAY, fields)
+                        .build(AddLocationActivity.this);
+
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                break;
         }
     }
 
@@ -262,9 +246,14 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onMapClick(LatLng point) {
 
-        Location location = new Location("addedLocation");
+        Location location = new Location("Marker");
         location.setLatitude(point.latitude);
         location.setLongitude(point.longitude);
+
+        marker.setPosition(point);
+        marker.setTitle("Marker");
+
+        editTextSearch.setText("");
 
         Constants.selectedLocation = location;
     }

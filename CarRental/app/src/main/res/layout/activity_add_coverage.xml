@@ -315,8 +315,8 @@
                     android:orientation="vertical">
 
 
-                    <ImageButton
-                        android:id="@+id/button_video_vehicle"
+                    <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
+                        android:id="@+id/imageview_video_vehicle"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"
@@ -423,8 +423,8 @@
                     android:orientation="vertical">
 
 
-                    <ImageButton
-                        android:id="@+id/button_video_mile"
+                    <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
+                        android:id="@+id/imageview_video_mile"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"

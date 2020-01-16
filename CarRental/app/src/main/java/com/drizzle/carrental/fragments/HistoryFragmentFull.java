@@ -3,6 +3,7 @@ package com.drizzle.carrental.fragments;
 import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -61,7 +63,6 @@ public class HistoryFragmentFull extends Fragment {
         dataModels = new ArrayList<>();
 
         fetchHistoryFromServer();
-
 
 
         return view;
@@ -99,10 +100,11 @@ public class HistoryFragmentFull extends Fragment {
                             JSONObject data = object.getJSONObject("data");
                             JSONArray jsonHistory = data.getJSONArray("historyList");
 
-                            for (int i = 0; i < jsonHistory.length(); i ++) {
+                            for (int i = 0; i < jsonHistory.length(); i++) {
 
                                 JSONObject item = jsonHistory.getJSONObject(i);
 
+                                Log.d("tiny-debug", "onResponse: " + item.getInt("id"));
                                 ParseHistory history = new ParseHistory();
 
                                 history.setType(item.getString("type"));
@@ -116,74 +118,154 @@ public class HistoryFragmentFull extends Fragment {
 
                                     JSONObject content = history.getContent();
 
-                                    int state = content.getInt("state");
-                                    CoverageState coverageState = CoverageState.values()[state];
+                                    int state = 1;
+                                    try {
+                                        state = content.getInt("state");
+                                    } catch (Exception e) {
+
+                                    }
+
+                                    CoverageState coverageState = CoverageState.values()[state - 1];
+
 
                                     coverage.setActiveState(true);
                                     coverage.setState(coverageState);
 
-                                    coverage.setTitle(content.getString("name"));
 
-                                    coverage.setLocationAddress(content.getString("address"));
+                                    try {
+                                        coverage.setTitle(content.getString("name"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    try {
+                                        coverage.setLocationAddress(content.getString("address"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     Location loc = new Location("location");
-                                    loc.setLatitude(content.getDouble("latitude"));
-                                    loc.setLongitude(content.getDouble("longitude"));
+
+
+                                    try {
+                                        loc.setLatitude(content.getDouble("latitude"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        loc.setLongitude(content.getDouble("longitude"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     coverage.setLocation(loc);
 
                                     //set company
                                     Company company = new Company();
-                                    company.setId(content.getLong("company_id"));
+                                    try {
+                                        company.setId(content.getLong("company_id"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     GregorianCalendar calFrom = new GregorianCalendar();
-                                    calFrom.setTimeInMillis(content.getLong("start_at") * 1000);
+                                    try {
+                                        calFrom.setTimeInMillis(content.getLong("start_at") * 1000);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     coverage.setDateFrom(calFrom);
 
                                     GregorianCalendar calTo = new GregorianCalendar();
-                                    calTo.setTimeInMillis(content.getLong("end_at") * 1000);
+                                    try {
+                                        calTo.setTimeInMillis(content.getLong("end_at") * 1000);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     coverage.setDateTo(calTo);
 
-                                    coverage.setUrlVideoVehicle(content.getString("video_vehicle"));
 
-                                    coverage.setUrlVideoMile(content.getString("video_mile"));
+                                    try {
+                                        coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + content.getString("video_vehicle"));
+                                    }
+                                    catch (Exception e) {
+
+                                    }
+
+                                    try {
+                                        coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + content.getString("image_vehicle"));
+                                    }
+                                    catch (Exception e) {
+
+                                    }
+
+                                    try {
+                                        coverage.setUrlVideoMile(Constants.MEDIA_PATH_URL + content.getString("video_mile"));
+                                    }
+                                    catch (Exception e) {
+
+                                    }
+
+                                    try {
+                                        coverage.setUrlImageMile(Constants.MEDIA_PATH_URL + content.getString("image_mile"));
+                                    }
+                                    catch (Exception e) {
+
+                                    }
 
                                     historyModel.setCoverage(coverage);
                                     historyModel.setPaymentOrCoverage(false);
 
-                                } else if (history.getType().equals(Constants.HISTORY_TYPE_PAYMENT)){
+                                } else if (history.getType().equals(Constants.HISTORY_TYPE_PAYMENT)) {
 
                                     Payment payment = new Payment();
 
                                     JSONObject content = history.getContent();
 
-                                    int state = content.getInt("state");
+                                    int state = 1;
+                                    try {
+                                        state = content.getInt("state");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     PaymentState paymentState = PaymentState.values()[state - 1];
 
                                     payment.setState(paymentState);
                                     payment.setTitle(paymentState.name());
 
-                                    double amount = content.getDouble("amount");
-                                    String currency = content.getString("currency");
+                                    double amount = 0;
+                                    try {
+                                        amount = content.getDouble("amount");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String currency = null;
+                                    try {
+                                        currency = content.getString("currency");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 
-                                    String strAmount = String.format(Locale.getDefault(),  "%.2f", amount);
+                                    String strAmount = String.format(Locale.getDefault(), "%.2f", amount);
                                     if (currency.equals("EUR")) {
                                         currency = getResources().getString(R.string.euro_character);
-                                    }
-                                    else if (currency.equals("USD")) {
+                                    } else if (currency.equals("USD")) {
                                         currency = getResources().getString(R.string.usd_character);
                                     }
                                     String paymentInformation = strAmount + " " + currency + "/ per year";
                                     payment.setInformation(paymentInformation);
 
                                     GregorianCalendar calendar = new GregorianCalendar();
-                                    calendar.setTimeInMillis(content.getLong("date") * 1000);
+                                    try {
+                                        calendar.setTimeInMillis(content.getLong("date") * 1000);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     payment.setPaymentDate(calendar);
 
                                     historyModel.setPayment(payment);
                                     historyModel.setPaymentOrCoverage(true);
 
-                                }
-                                else {
+                                } else {
 
                                     Claim claim = new Claim();
 

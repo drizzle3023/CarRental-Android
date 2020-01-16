@@ -25,6 +25,8 @@ public class ParseCoverage implements Serializable {
 
     JSONObject company;
 
+    int state;
+
     @SerializedName("claim_count")
     int claimCount;
 
@@ -47,5 +49,6 @@ public class ParseCoverage implements Serializable {
     @SerializedName("image_mile")
     String imageMile;
 
-    int state;
+    @SerializedName("remaining_time")
+    long remainingTime;
 }

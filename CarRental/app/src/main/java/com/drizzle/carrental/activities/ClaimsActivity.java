@@ -18,6 +18,7 @@ import com.drizzle.carrental.adapters.CustomAdapterForHistoryListView;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.Claim;
@@ -250,7 +251,13 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                     claim.setAddressHappened(parseClaim.getAddress());
 
                     claim.setDamagedPartsFromString(parseClaim.getDamagedPart());
-                    claim.setVideoURL(parseClaim.getVideo());
+                    if (parseClaim.getVideo() != null && !parseClaim.getVideo().isEmpty()) {
+                        claim.setVideoURL(Constants.MEDIA_PATH_URL + parseClaim.getVideo());
+                    }
+                    if (parseClaim.getImage() != null && !parseClaim.getImage().isEmpty()) {
+                        claim.setImageURL(Constants.MEDIA_PATH_URL + parseClaim.getImage());
+                    }
+
                     claim.setExtraDescription(parseClaim.getNote());
 
                     claim.setClaimState(ClaimState.values()[parseClaim.getState() - 1]);

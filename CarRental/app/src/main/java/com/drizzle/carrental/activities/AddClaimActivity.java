@@ -55,6 +55,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
@@ -1601,13 +1602,19 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         pickerDialog.show();
     }
 
+    private Marker marker = null;
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMapWhereHappened = googleMap;
 
         if (claim.getWhatHappened() != null) {
-            googleMapWhereHappened.addMarker(new MarkerOptions().position(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude())).title("Marker"));
-
+            if (marker == null) {
+                marker = googleMapWhereHappened.addMarker(new MarkerOptions().position(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude())).title("Marker"));
+            }
+            else {
+                marker.setPosition(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude()));
+            }
             googleMapWhereHappened.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude()), Constants.DEFAULT_MAP_ZOOM_LEVEL));
 
         }
@@ -1624,7 +1631,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 if (googleMapWhereHappened != null && claim.getWhereHappened() != null) {
 
-                    String address = Utils.getAddressFromLocation(this, Constants.selectedLocation);
+                    String address = Constants.selectedLocation.getProvider();
+                    if (address.equals("Marker")) {
+                        address = Utils.getAddressFromLocation(this, Constants.selectedLocation);
+                    }
+
                     claim.setAddressHappened(address);
 
                     googleMapWhereHappened.addMarker(new MarkerOptions().position(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude())).title("Marker"));

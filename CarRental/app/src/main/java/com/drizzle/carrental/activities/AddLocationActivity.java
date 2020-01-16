@@ -50,9 +50,9 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 
     private Button buttonAddLocation;
 
-    private GoogleMap map;
+    private GoogleMap map = null;
 
-    private Marker marker;
+    private Marker marker = null;
 
     SupportMapFragment mapView;
 
@@ -62,10 +62,12 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
      */
     private FusedLocationProviderClient fusedLocationClient;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
-    private Location currentLocation;
+    private Location currentLocation = null;
     private LocationCallback locationCallback;
 
     private EditText editTextSearch;
+
+    private ImageButton imageButtonCenterLocation;
 
     /**
      * get control handlers by id and add listenres
@@ -85,6 +87,9 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 
         editTextSearch = findViewById(R.id.edittext_search);
         editTextSearch.setOnClickListener(this);
+
+        imageButtonCenterLocation = findViewById(R.id.imagebutton_center_location);
+        imageButtonCenterLocation.setOnClickListener(this);
 
     }
 
@@ -127,6 +132,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), Constants.DEFAULT_MAP_ZOOM_LEVEL));
                     currentLocation.setLatitude(place.getLatLng().latitude);
                     currentLocation.setLongitude(place.getLatLng().longitude);
+                    currentLocation.setProvider(place.getAddress());
                 }
                 marker.setTitle(place.getName());
 
@@ -161,10 +167,11 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.button_submit:
-                if (getLocation) {
-                    setResult(RESULT_OK);
-                    finish();
+                if (currentLocation == null){
+                    return;
                 }
+                setResult(RESULT_OK);
+                finish();
                 break;
 
             case R.id.edittext_search:
@@ -177,8 +184,14 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 
                 startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
                 break;
+            case R.id.imagebutton_center_location:
+                if (map != null && currentLocation != null) {
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), Constants.DEFAULT_MAP_ZOOM_LEVEL));
+                }
+                break;
         }
     }
+
 
 
     @Override
@@ -200,11 +213,12 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
             public void onLocationResult(LocationResult locationResult) {
                 currentLocation = locationResult.getLocations().get(0);
 
-                marker = map.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Marker"));
+                marker = map.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title(""));
 
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), Constants.DEFAULT_MAP_ZOOM_LEVEL));
 
                 getLocation = true;
+                currentLocation.setProvider("Marker");
                 Constants.selectedLocation = currentLocation;
 
                 fusedLocationClient.removeLocationUpdates(locationCallback);
@@ -239,9 +253,13 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onMapClick(LatLng point) {
 
-        Location location = new Location("Marker");
+        if (marker == null) {
+            return;
+        }
+        Location location = new Location("");
         location.setLatitude(point.latitude);
         location.setLongitude(point.longitude);
+        location.setProvider("Marker");
 
         marker.setPosition(point);
         marker.setTitle("Marker");

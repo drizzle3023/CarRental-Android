@@ -58,6 +58,7 @@ public class Constants {
 
     public static Location selectedLocation = new Location("selectedLocation"); //selected location when adding a new claim
 
+
     public static boolean isHabitSDKReady = false;
 
 }

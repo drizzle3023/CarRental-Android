@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.models.History;
 import com.squareup.picasso.Picasso;
 
@@ -107,7 +108,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
 
         } else {
 
-            if (historyModel.getCoverage().isActiveState()) {
+            if (historyModel.getCoverage().getState() == CoverageState.COVERED) {
                 int claimCount = 0;
                 String claimDescription = "";
                 try {

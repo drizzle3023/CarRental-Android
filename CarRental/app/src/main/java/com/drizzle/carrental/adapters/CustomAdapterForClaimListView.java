@@ -43,15 +43,16 @@ import retrofit2.Response;
 public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implements Callback<ResponseBody> {
 
     private ArrayList<Claim> dataSet;
-    Activity mActivity;
+    ClaimsActivity mActivity;
     private int lastPosition = -1;
     ProgressDialog progressDialog;
 
-    private int indexToBeRemoved = -1;
-
+    private long idToBeRemoved = -1;
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+
         hideWaitingScreen();
 
         String responseString = null;
@@ -88,8 +89,11 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
                 JSONObject data = object.getJSONObject("data");
                 Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
-                dataSet.remove(indexToBeRemoved);
-                notifyDataSetChanged();
+
+                mActivity.removeClaimFromModelList(idToBeRemoved);
+                mActivity.updateView();
+                idToBeRemoved = -1;
+
 
             } else if (object.getString("success").equals("false")) {
 
@@ -104,10 +108,12 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+        idToBeRemoved = -1;
     }
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
+        idToBeRemoved = -1;
         hideWaitingScreen();
         Toast.makeText(getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
     }
@@ -123,7 +129,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
     }
 
-    public CustomAdapterForClaimListView(ArrayList<Claim> data, Activity activity) {
+    public CustomAdapterForClaimListView(ArrayList<Claim> data, ClaimsActivity activity) {
         super(activity, R.layout.claim_row_list_item, data);
 
         this.dataSet = data;
@@ -131,33 +137,11 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
     }
 
-//    @Override
-//    public void onClick(View v) {
-//
-//        int position = (Integer) v.getTag();
-//        Object object = getItem(position);
-//
-//        Claim claim = (Claim) object;
-//
-//        switch (v.getId()) {
-//            case R.id.imagebutton_remove_claim:
-//
-////                if (claim != null) {
-////                    if (claim.getId() > 0) {
-////                        indexToBeRemoved = position;
-////                        removeClaimFromServer(claim.getId());
-////                    } else {
-////                        Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
-////                    }
-////                } else {
-////                    Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
-////                }
-//                break;
-//        }
-//    }
-
     private void removeClaimFromServer(long claimId) {
 
+        if (claimId == -1) {
+            return;
+        }
         JSONObject paramObject = new JSONObject();
 
         try {
@@ -180,7 +164,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         showWaitingScreen();
         //send request
 
-        apiInterface.addClaim(gSonObject).enqueue(this);
+        apiInterface.removeClaim(gSonObject).enqueue(this);
     }
 
     private void showWaitingScreen() {
@@ -230,6 +214,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
 
+                                    idToBeRemoved = getItem(position).getId();
+                                    removeClaimFromServer(idToBeRemoved);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null).show();

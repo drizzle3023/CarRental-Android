@@ -397,7 +397,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             claimCurrentStep = ClaimCurrentStep.ANSWERED_ELSE;
         }
 
-        if (claim.getClaimState() == ClaimState.INCOMPLETE) {
+        if (claim.getClaimState() == null || claim.getClaimState() == ClaimState.INCOMPLETE) {
             isEditable = true;
         } else {
 
@@ -418,8 +418,6 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         claim = Globals.selectedClaim;
 
         setCurrentClaimStep();
-
-        isEditable = true;
 
         getControlHandlersAndLinkActions();
 
@@ -454,12 +452,13 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private void updateSaveButton() {
 
-        if (!isEditable) {
+        if (isEditable) {
 
-            buttonSave.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-            buttonSave.setBackground(getResources().getDrawable(R.drawable.file_a_claim_save_button_inactived, null));
+//            buttonSave.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+//            buttonSave.setBackground(getResources().getDrawable(R.drawable.file_a_claim_save_button_inactived, null));
+            buttonSave.setVisibility(View.VISIBLE);
         } else {
-
+            buttonSave.setVisibility(View.GONE);
             buttonSave.setTextColor(getResources().getColor(R.color.colorValid, null));
             buttonSave.setBackground(getResources().getDrawable(R.drawable.file_a_claim_save_button_actived, null));
         }
@@ -933,6 +932,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
         claim.setClaimState(claimState);
 
+        claim.setExtraDescription(editTextAnswerElse.getText().toString());
+
 //        try {
 //
 //            if (claim.getId() > 0) {
@@ -1080,17 +1081,35 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 //paramObject.put("name", Globals.coverage.getCompany().getName());
                 if (claim.getId() > 0) {
-                    paramObject.put("claim_id", Double.valueOf(claim.getId()).toString());
+                    paramObject.put("claim_id", Long.valueOf(claim.getId()).toString());
                 }
-                paramObject.put("latitude", Double.valueOf(claim.getWhereHappened().getLatitude()).toString());
-                paramObject.put("longitude", Double.valueOf(claim.getWhereHappened().getLongitude()).toString());
-                paramObject.put("address", claim.getAddressHappened());
+                if (claim.getWhatHappened() != null) {
+                    paramObject.put("latitude", Double.valueOf(claim.getWhereHappened().getLatitude()).toString());
+                    paramObject.put("longitude", Double.valueOf(claim.getWhereHappened().getLongitude()).toString());
+                }
+                if (claim.getAddressHappened() != null) {
+
+                    paramObject.put("address", claim.getAddressHappened());
+                }
+
                 paramObject.put("access_token", SharedHelper.getKey(AddClaimActivity.this, "access_token"));
-                paramObject.put("coverage_id", Long.valueOf(Globals.coverage.getId()).toString());
-                paramObject.put("what_happened", claim.getWhatHappened());
-                paramObject.put("time_happened", Long.valueOf(claim.getWhenHappened().getTimeInMillis() / 1000).toString());
-                paramObject.put("damaged_part", claim.getDamagedPartsString());
-                paramObject.put("note", claim.getExtraDescription());
+                if (Globals.coverage.getId() != null) {
+                    paramObject.put("coverage_id", Long.valueOf(Globals.coverage.getId()).toString());
+                }
+                if (claim.getWhatHappened() != null) {
+                    paramObject.put("what_happened", claim.getWhatHappened());
+                }
+                if (claim.getWhatHappened() != null) {
+                    paramObject.put("time_happened", Long.valueOf(claim.getWhenHappened().getTimeInMillis() / 1000).toString());
+                }
+
+                if (claim.getDamagedParts() != null) {
+                    paramObject.put("damaged_part", claim.getDamagedPartsString());
+                }
+                if (claim.getExtraDescription() != null) {
+                    paramObject.put("note", claim.getExtraDescription());
+                }
+
                 paramObject.put("state", Integer.valueOf(claimState.getIntValue()).toString());
 
                 return paramObject;
@@ -1100,8 +1119,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             protected Map<String, VolleyMultipartRequest.DataPart> getByteData() throws AuthFailureError {
                 Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
 
-                params.put("video", new VolleyMultipartRequest.DataPart("video-claim"  + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
-                params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                if (Constants.isRecordingVehicleOrMileOrDamagedPart == 3) {
+                    params.put("video", new VolleyMultipartRequest.DataPart("video-claim"  + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                    params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                }
 
                 return params;
             }
@@ -1146,10 +1167,12 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.button_done_answer_else:
                 Utils.hideKeyboard(this);
+                claim.setExtraDescription(editTextAnswerElse.getText().toString());
                 break;
 
             case R.id.button_submit:
                 isSaveOrSubmit = false;
+
                 saveClaimToDb(ClaimState.PENDING_REVIEW);
                 break;
 

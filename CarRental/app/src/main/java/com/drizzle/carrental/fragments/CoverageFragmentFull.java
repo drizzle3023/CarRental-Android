@@ -301,16 +301,16 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         initVariables();
 
-        if (firstFlag) {
-            getActiveCoverage();
-            firstFlag = false;
-        }
+
+            //getActiveCoverage();
+
 
         return view;
     }
 
     private void getActiveCoverage() {
 
+        firstFlag = false;
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
@@ -331,6 +331,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
+                    firstFlag = true;
                     progressDialog.dismiss();
 
                     try {
@@ -420,6 +421,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    firstFlag = true;
                     progressDialog.dismiss();
                     t.printStackTrace();
                     Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
@@ -440,9 +442,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
     public void onResume() {
 
         getActiveCoverage();
-
         super.onResume();
-
 
     }
 
@@ -452,7 +452,9 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         switch (view.getId()) {
 
             case R.id.imageview_start_coverage:
-                if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0 && Globals.coverage.isActiveState()) {
+                if (Globals.coverage == null) {
+                    navigateToAddCoverageActivity();
+                } else if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0 && Globals.coverage.getState() == CoverageState.COVERED) {
                     Toast.makeText(getActivity(), "Coverage already exists.", Toast.LENGTH_SHORT).show();
                 } else {
                     navigateToAddCoverageActivity();

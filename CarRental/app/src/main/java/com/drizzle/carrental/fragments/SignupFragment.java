@@ -4,13 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,36 +17,28 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.drizzle.carrental.R;
-import com.drizzle.carrental.activities.HomeActivity;
-import com.drizzle.carrental.activities.SplashActivity;
 import com.drizzle.carrental.activities.VerifyCodeActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.Utils;
-import com.drizzle.carrental.models.VehicleType;
-import com.google.gson.Gson;
+import com.drizzle.carrental.models.MyProfile;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.icu.lang.UProperty.INT_START;
 
 //import com.mukesh.countrypicker.Country;
 //import com.mukesh.countrypicker.CountryPicker;
@@ -75,7 +62,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
     private EditText editTextCountryNumber;
     private EditText editTextPhoneNumber;
     private EditText editTextEmailAddress;
-    private EditText editTextSignUp;
+    private EditText editTextSignUpName;
 
     private Context context;
 
@@ -86,7 +73,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         editTextCountryNumber = view.findViewById(R.id.text_country_prefix);
         editTextPhoneNumber = view.findViewById(R.id.edittext_phonenumber);
         editTextEmailAddress = view.findViewById(R.id.edittext_email_address);
-        editTextSignUp = view.findViewById(R.id.edittext_signup_name);
+        editTextSignUpName = view.findViewById(R.id.edittext_signup_name);
 
         int code = Utils.getCurrentCountryCode(getActivity());
         String countryCode = "+" + code;
@@ -157,7 +144,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
             editTextPhoneNumber.requestFocus();
         } else if (resourceId == R.id.edittext_signup_name) {
 
-            editTextSignUp.requestFocus();
+            editTextSignUpName.requestFocus();
         }
     }
 
@@ -166,7 +153,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         String strEmail = editTextEmailAddress.getText().toString();
 
         String strPhone = editTextCountryNumber.getText() + editTextPhoneNumber.getText().toString();
-        String strName = editTextSignUp.getText().toString();
+        String strName = editTextSignUpName.getText().toString();
 
         strPhone = strPhone.trim();
         strName = strName.trim();
@@ -180,13 +167,13 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
 
         if (strEmail.isEmpty()) {
 
-            showToast(getString(R.string.validation_email_empty), R.id.edittext_signup_name);
+            showToast(getString(R.string.validation_email_empty), R.id.edittext_email_address);
             return;
         }
 
         if (editTextPhoneNumber.getText().toString().isEmpty()) {
 
-            showToast(getString(R.string.validation_mobile_empty), R.id.edittext_signup_name);
+            showToast(getString(R.string.validation_mobile_empty), R.id.edittext_phonenumber);
             return;
         }
 
@@ -327,7 +314,12 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
 
                 String strPhone = editTextCountryNumber.getText().toString();
                 strPhone = strPhone + editTextPhoneNumber.getText();
-                Globals.stringPhoneNumber = strPhone;
+
+                Globals.mobileNumber = strPhone.trim();
+                Globals.userName = editTextSignUpName.getText().toString().trim();
+                Globals.emailAddress = editTextEmailAddress.getText().toString().trim();
+
+
 
                 Globals.isSignUpOrLoginRequest = true;
 

@@ -208,12 +208,31 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
             return;
         }
 
-        layoutCoverageLineHidden.setVisibility(View.GONE);
         layoutCoverage.setVisibility(View.VISIBLE);
+        layoutCoverageLineHidden.setVisibility(View.GONE);
 
-        buttonLocation.setText(Globals.coverage.getLocationAddress());
-        buttonPeriod.setText(Globals.coverage.getPeriod());
-        if (Globals.coverage.getCompany() != null) {
+        if (Globals.coverage.getLocationAddress() == null || Globals.coverage.getLocationAddress().isEmpty()) {
+            layoutCoverage.setVisibility(View.GONE);
+            layoutCoverageLineHidden.setVisibility(View.VISIBLE);
+        }
+        else {
+            buttonLocation.setText(Globals.coverage.getLocationAddress());
+        }
+
+        if (Globals.coverage.getPeriod().isEmpty()) {
+            layoutCoverage.setVisibility(View.GONE);
+            layoutCoverageLineHidden.setVisibility(View.VISIBLE);
+        }
+        else {
+            buttonPeriod.setText(Globals.coverage.getPeriod());
+        }
+
+        if (Globals.coverage.getCompany() == null) {
+
+            layoutCoverage.setVisibility(View.GONE);
+            layoutCoverageLineHidden.setVisibility(View.VISIBLE);
+        }
+        else {
             buttonCompany.setText(Globals.coverage.getCompany().getName());
         }
 

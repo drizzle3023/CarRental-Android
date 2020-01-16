@@ -162,7 +162,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 }
 
 
-
+                Globals.coverage = new Coverage();
                 Globals.coverage.setLocation(currentLocation);
                 String strAddress = Utils.getAddressFromLocation(getApplicationContext(), Globals.coverage.getLocation());
                 Globals.coverage.setLocationAddress(strAddress);
@@ -235,9 +235,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void hideWaitingScreen() {
 
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        progressDialog.dismiss();
+
     }
 
     @Override

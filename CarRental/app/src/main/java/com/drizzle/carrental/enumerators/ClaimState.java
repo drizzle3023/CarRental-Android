@@ -2,8 +2,8 @@ package com.drizzle.carrental.enumerators;
 
 public enum ClaimState {
 
-    PENDING_REVIEW("Pending review", 1),
-    INCOMPLETE("Incomplete", 2),
+    INCOMPLETE("Incomplete", 1),
+    PENDING_REVIEW("Pending review", 2),
     NOT_APPROVED ("Not Approved", 3),
     EXPERT_UNDERGOING("Expert Undergoing...", 4),
     APPROVED ("Approved", 5);

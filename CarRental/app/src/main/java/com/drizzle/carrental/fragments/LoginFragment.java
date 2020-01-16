@@ -21,24 +21,16 @@ import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
-import com.drizzle.carrental.activities.HomeActivity;
 import com.drizzle.carrental.globals.Utils;
-import com.drizzle.carrental.serializers.ParseHistory;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
-
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,7 +97,7 @@ public class LoginFragment extends Fragment {
 
                                     if (object.getString("success").equals("true")){
 
-                                        Globals.stringPhoneNumber = strPhoneNumber;
+                                        Globals.mobileNumber = strPhoneNumber;
                                         Globals.isSignUpOrLoginRequest = false;
                                         Intent newIntent = new Intent(getActivity(), VerifyCodeActivity.class);
                                         startActivity(newIntent);

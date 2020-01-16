@@ -146,6 +146,25 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         startActivityForResult(intent, CLAIM_ADD_REQUEST);
     }
 
+    public void updateView() {
+
+        if (dataModels != null) {
+            adapter = new CustomAdapterForClaimListView(dataModels, this);
+            listView.setAdapter(adapter);
+        }
+    }
+
+    public void removeClaimFromModelList(Long claimId) {
+
+        for (int i = 0; i < dataModels.size(); i ++) {
+            if (dataModels.get(i).getId() == claimId) {
+
+                dataModels.remove(i);
+                return;
+            }
+        }
+    }
+
     private void fetchClaimListFromServer() {
 
         //prepare restrofit2 request parameters

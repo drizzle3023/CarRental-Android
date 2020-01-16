@@ -58,8 +58,8 @@
     <string name="file_a_claim_answer_take_video">Take video</string>
 
     <string name="validation_user_name_empty">User name is empty.</string>
-    <string name="validation_email_empty">User name is empty.</string>
-    <string name="validation_mobile_empty">User name is empty.</string>
+    <string name="validation_email_empty">Email address is empty.</string>
+    <string name="validation_mobile_empty">Mobile number is empty.</string>
     <string name="validation_wrong_email">Email address is incorrect.</string>
     <string name="validation_wrong_phonenumber">Phone number is incorrect.</string>
 

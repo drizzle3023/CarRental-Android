@@ -23,7 +23,11 @@ public class Globals {
 
     public static Coverage coverage = null; //current active coverage
 
-    public static String stringPhoneNumber = ""; //string phone number
+    public static String mobileNumber = ""; //phone number input in signup fragment
+
+    public static String userName = ""; //user name input in signup fragment
+
+    public static String emailAddress = ""; //email address input in signup fragment
 
     public static boolean isSignUpOrLoginRequest = true;
 

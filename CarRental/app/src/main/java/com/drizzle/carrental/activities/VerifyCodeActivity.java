@@ -20,6 +20,7 @@ import com.drizzle.carrental.R;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.models.MyProfile;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mukesh.OnOtpCompletionListener;
@@ -119,7 +120,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         try {
 
-            paramObject.put("mobile", Globals.stringPhoneNumber);
+            paramObject.put("mobile", Globals.mobileNumber);
             paramObject.put("code", stringOtp);
 
         } catch (JSONException e) {
@@ -177,6 +178,13 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
             if (object.getString("success").equals("true")) {
 
                 if (Globals.isSignUpOrLoginRequest) {
+
+                    MyProfile myProfile = new MyProfile();
+                    myProfile.setName(Globals.userName);
+                    myProfile.setMobile(Globals.mobileNumber);
+                    myProfile.setEmail(Globals.emailAddress);
+                    Globals.profile = myProfile;
+
                     JSONObject dataObject = object.getJSONObject("data");
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());

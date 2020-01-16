@@ -14,7 +14,6 @@ import com.drizzle.carrental.enumerators.ServiceArea;
 import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.models.VehicleType;
-import com.google.android.gms.location.LocationCallback;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import java.io.File;
@@ -79,12 +78,18 @@ public class Utils {
             e.printStackTrace();
         }
 
-        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-        String city = addresses.get(0).getLocality();
-        String state = addresses.get(0).getAdminArea();
-        String country = addresses.get(0).getCountryName();
-        String postalCode = addresses.get(0).getPostalCode();
-        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+        String address = "";
+        try {
+            addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return address;
     }
@@ -108,7 +113,7 @@ public class Utils {
         Globals.selectedServiceArea  = new ServiceArea();
         Globals.paymentId  = 0;
         Globals.coverage  = new Coverage(); //current active coverage
-        Globals.stringPhoneNumber  = ""; //string phone number
+        Globals.mobileNumber = ""; //string phone number
         Globals.isSignUpOrLoginRequest  = true;
     }
 

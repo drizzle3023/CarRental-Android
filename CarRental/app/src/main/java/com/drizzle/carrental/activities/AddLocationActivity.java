@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -33,16 +31,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.android.libraries.places.widget.AutocompleteActivity.*;
 
@@ -79,7 +72,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
      */
     private void getControlHandlersAndLinkActions() {
 
-        buttonBack = findViewById(R.id.button_back);
+        buttonBack = findViewById(R.id.button_back_to_onboarding);
 
         buttonAddLocation = findViewById(R.id.button_submit);
 
@@ -162,7 +155,7 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
 
         switch (view.getId()) {
 
-            case R.id.button_back:
+            case R.id.button_back_to_onboarding:
 
                 finish();
                 break;

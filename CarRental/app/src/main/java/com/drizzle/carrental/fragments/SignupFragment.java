@@ -168,6 +168,10 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         String strPhone = editTextCountryNumber.getText() + editTextPhoneNumber.getText().toString();
         String strName = editTextSignUp.getText().toString();
 
+        strPhone = strPhone.trim();
+        strName = strName.trim();
+        strEmail = strEmail.trim();
+
         if (strName.isEmpty()) {
 
             showToast(getString(R.string.validation_user_name_empty), R.id.edittext_signup_name);

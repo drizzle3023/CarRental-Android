@@ -3,10 +3,8 @@ package com.drizzle.carrental.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,8 +30,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import javax.net.ssl.HostnameVerifier;
-
 import io.habit.analytics.HabitStatusCodes;
 import io.habit.analytics.SDK;
 import kotlin.Unit;
@@ -42,8 +38,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.drizzle.carrental.globals.Globals.stringPhoneNumber;
 
 public class VerifyCodeActivity extends Activity implements View.OnClickListener, OnOtpCompletionListener, Callback<ResponseBody> {
 
@@ -63,7 +57,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         progressDialog = new ProgressDialog(this);
 
-        buttonBack = findViewById(R.id.button_back);
+        buttonBack = findViewById(R.id.button_back_to_onboarding);
 
         verifyButton = findViewById(R.id.button_verify);
         otpView = findViewById(R.id.otp_view);
@@ -266,7 +260,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
         if (v.getId() == R.id.button_verify) {
             submitVerifyRequestToServer();
         }
-        if (v.getId() == R.id.button_back) {
+        if (v.getId() == R.id.button_back_to_onboarding) {
             finish();
         }
     }

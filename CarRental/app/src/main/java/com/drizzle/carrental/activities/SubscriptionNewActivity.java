@@ -15,11 +15,8 @@ import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ServiceArea;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
-import com.drizzle.carrental.globals.SharedHelper;
-import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.models.SubscriptionModel;
 import com.drizzle.carrental.models.VehicleType;
-import com.drizzle.carrental.serializers.ParseHistory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -76,7 +73,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         spinner = (Spinner) findViewById(R.id.subscriptionCarTypeSpinner);
         spinner.setOnItemSelectedListener(this);
 
-        buttonBack = (ImageButton) findViewById(R.id.button_back);
+        buttonBack = (ImageButton) findViewById(R.id.button_back_to_onboarding);
         buttonBack.setOnClickListener(this);
 
         buttonSubscribe = (Button) findViewById(R.id.button_subscribe);
@@ -159,12 +156,21 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     public void onClick(View view) {
 
         if (view.getId() == R.id.button_subscribe) {
+
+            if (Globals.selectedVehicleType == null) {
+                Toast.makeText(this, getResources().getString(R.string.no_vehicle_types), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (Globals.selectedServiceArea == null) {
+                Toast.makeText(this, getResources().getString(R.string.no_service_area), Toast.LENGTH_SHORT).show();
+                return;
+            }
             Constants.isNavigateToSignupOrLogin = true;
             Intent intent = new Intent(SubscriptionNewActivity.this, SignUpLoginActivity.class);
             startActivity(intent);
         }
 
-        if (view.getId() == R.id.button_back) {
+        if (view.getId() == R.id.button_back_to_onboarding) {
             finish();
         }
 

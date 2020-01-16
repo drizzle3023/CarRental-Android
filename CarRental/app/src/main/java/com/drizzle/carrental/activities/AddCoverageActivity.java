@@ -14,7 +14,6 @@ import com.drizzle.carrental.R;
 import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10;
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Globals;
-import com.drizzle.carrental.models.Claim;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
 import com.squareup.picasso.Picasso;
@@ -107,7 +106,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
      */
     private void getControlHandlersAndLinkActions() {
 
-        buttonBack = findViewById(R.id.button_back);
+        buttonBack = findViewById(R.id.button_back_to_onboarding);
         captionStartCoverage = (TextView) findViewById(R.id.caption_start_coverage);
         buttonStartCoverage = (ImageButton) findViewById(R.id.imagebutton_start_coverage);
 
@@ -359,7 +358,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
                 navigateToRecordMileActivity();
                 break;
 
-            case R.id.button_back:
+            case R.id.button_back_to_onboarding:
             case R.id.button_got_it:
                 setResult(RESULT_OK);
                 super.onBackPressed();

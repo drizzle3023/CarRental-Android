@@ -11,7 +11,7 @@
         android:layout_height="85dp">
 
         <ImageButton
-            android:id="@+id/button_back"
+            android:id="@+id/button_back_to_onboarding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="9dp"
@@ -59,7 +59,7 @@
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:fontFamily="@font/sf_pro_display_semibold"
-            android:text="47.99 € / per year"
+            android:text="@string/no_vehicle_types"
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="22sp" />

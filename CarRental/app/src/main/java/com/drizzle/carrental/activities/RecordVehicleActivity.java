@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.globals.Constants;
-import com.drizzle.carrental.globals.Utils;
 
 public class RecordVehicleActivity extends Activity implements View.OnClickListener {
 
@@ -33,7 +32,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
     private void getControlHandlersAndLinkActions() {
 
         buttonStart = (Button) findViewById(R.id.button_start);
-        buttonBack = (ImageButton) findViewById(R.id.button_back);
+        buttonBack = (ImageButton) findViewById(R.id.button_back_to_onboarding);
 
         buttonStart.setOnClickListener(this);
         buttonBack.setOnClickListener(this);
@@ -61,7 +60,7 @@ public class RecordVehicleActivity extends Activity implements View.OnClickListe
                 startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
             }
         }
-        if (view.getId() == R.id.button_back) {
+        if (view.getId() == R.id.button_back_to_onboarding) {
 
             finish();
         }

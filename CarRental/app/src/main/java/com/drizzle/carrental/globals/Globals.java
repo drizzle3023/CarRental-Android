@@ -16,8 +16,8 @@ public class Globals {
 
     public static MyProfile profile = new MyProfile();
 
-    public static VehicleType  selectedVehicleType = new VehicleType();
-    public static ServiceArea selectedServiceArea = new ServiceArea();
+    public static VehicleType  selectedVehicleType = null;
+    public static ServiceArea selectedServiceArea = null;
 
     public static int paymentId = 0;
 

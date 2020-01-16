@@ -41,7 +41,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/button_back"
+            android:id="@+id/button_back_to_onboarding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

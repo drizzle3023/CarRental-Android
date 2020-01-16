@@ -16,7 +16,7 @@ import com.drizzle.carrental.activities.SubscriptionNewActivity;
 
 public class CoverageFragmentEmpty extends Fragment implements View.OnClickListener {
 
-    private ImageButton buttonBack;
+    private ImageButton buttonBackToOnboarding;
     private ImageButton buttonContact;
     private ImageButton buttonInformation;
     private Button buttonLearnMore;
@@ -30,8 +30,8 @@ public class CoverageFragmentEmpty extends Fragment implements View.OnClickListe
 
         View view = inflater.inflate(R.layout.fragment_coverage_empty, container, false);
 
-        buttonBack = view.findViewById(R.id.button_back);
-        buttonBack.setOnClickListener(this);
+        buttonBackToOnboarding = view.findViewById(R.id.button_back_to_onboarding);
+        buttonBackToOnboarding.setOnClickListener(this);
 
         buttonLearnMore = view.findViewById(R.id.button_learn_more);
         buttonLearnMore.setOnClickListener(this);
@@ -45,30 +45,27 @@ public class CoverageFragmentEmpty extends Fragment implements View.OnClickListe
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.button_back:
-
-                getActivity().finish();
+            case R.id.button_back_to_onboarding:
+            case R.id.button_information:
+                navigateToOnBoardingActivity();
                 break;
             case R.id.button_learn_more:
 
                 navigateToSubscriptionNewActivity();
                 break;
-            case R.id.button_information:
 
-                navigateToOnBoardingActivity();
-                break;
         }
     }
 
     private void navigateToSubscriptionNewActivity() {
 
-        Intent intent=new Intent(getActivity(), SubscriptionNewActivity.class);
+        Intent intent = new Intent(getActivity(), SubscriptionNewActivity.class);
         startActivity(intent);
     }
 
     private void navigateToOnBoardingActivity() {
 
-        Intent intent=new Intent(getActivity(), OnboardingActivity.class);
+        Intent intent = new Intent(getActivity(), OnboardingActivity.class);
         startActivity(intent);
         getActivity().finish();
     }

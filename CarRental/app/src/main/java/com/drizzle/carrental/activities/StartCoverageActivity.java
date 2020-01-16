@@ -6,12 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -34,7 +30,6 @@ import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.api.VolleyMultipartRequest;
 import com.drizzle.carrental.enumerators.CoverageState;
-import com.drizzle.carrental.globals.AppHelper;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
@@ -57,36 +52,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
-import net.gotev.uploadservice.data.UploadInfo;
-import net.gotev.uploadservice.data.UploadNotificationConfig;
-import net.gotev.uploadservice.network.ServerResponse;
-import net.gotev.uploadservice.observer.request.RequestObserverDelegate;
-import net.gotev.uploadservice.observer.task.UploadTaskObserver;
-import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest;
-
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.drizzle.carrental.activities.BaseCameraActivity.getImageFilePath;
-import static com.drizzle.carrental.activities.BaseCameraActivity.getVideoFilePath;
 
 public class StartCoverageActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, Callback<ResponseBody> {
 
@@ -134,7 +115,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
      */
     private void getControlHandlersAndLinkActions() {
 
-        buttonBack = (ImageButton) findViewById(R.id.button_back);
+        buttonBack = (ImageButton) findViewById(R.id.button_back_to_onboarding);
 
         layoutPickUpLocation = (FrameLayout) findViewById(R.id.layout_pickup_location);
         layoutRentalCompany = findViewById(R.id.layout_rental_company);
@@ -556,7 +537,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
         switch (view.getId()) {
 
-            case R.id.button_back:
+            case R.id.button_back_to_onboarding:
                 setResult(RESULT_CANCELED);
                 finish();
                 break;

@@ -1,6 +1,5 @@
 package com.drizzle.carrental.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -45,7 +44,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        imageButtonBack = findViewById(R.id.button_back);
+        imageButtonBack = findViewById(R.id.button_back_to_onboarding);
         imageButtonBack.setOnClickListener(this);
     }
 
@@ -93,7 +92,7 @@ public class SignUpLoginActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.button_back:
+            case R.id.button_back_to_onboarding:
                 finish();
                 break;
         }

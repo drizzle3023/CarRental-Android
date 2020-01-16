@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.adapters.CustomAdapterForClaimListView;
-import com.drizzle.carrental.adapters.CustomAdapterForHistoryListView;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ClaimState;
@@ -22,7 +20,6 @@ import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.models.Claim;
-import com.drizzle.carrental.models.VehicleType;
 import com.drizzle.carrental.serializers.ParseClaim;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -66,7 +63,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
     private void getControlHandlersAndLinkActions() {
 
         buttonFileAClaim = findViewById(R.id.button_file_a_claim);
-        buttonBack = findViewById(R.id.button_back);
+        buttonBack = findViewById(R.id.button_back_to_onboarding);
 
         listView = findViewById(R.id.list_claims);
 
@@ -137,7 +134,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                 Globals.selectedClaim = new Claim();
                 navigateToFileAClaimActivity();
                 break;
-            case R.id.button_back:
+            case R.id.button_back_to_onboarding:
                 finish();
                 break;
         }

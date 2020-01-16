@@ -15,7 +15,6 @@ import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.gsm.GsmCellLocation;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
@@ -42,11 +41,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.drizzle.carrental.R;
-import com.drizzle.carrental.api.ApiClient;
-import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.api.VolleyMultipartRequest;
 import com.drizzle.carrental.enumerators.ClaimState;
-import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.enumerators.DamagedPart;
 import com.drizzle.carrental.globals.AppHelper;
 import com.drizzle.carrental.globals.Constants;
@@ -60,14 +56,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -210,7 +203,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
      */
     private void getControlHandlersAndLinkActions() {
 
-        buttonBack = findViewById(R.id.button_back);
+        buttonBack = findViewById(R.id.button_back_to_onboarding);
         buttonSave = findViewById(R.id.button_save);
 
         layoutQuestionWhatHappened = findViewById(R.id.layout_question_what_happened);
@@ -1147,7 +1140,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 saveClaimToDb(ClaimState.INCOMPLETE);
                 break;
 
-            case R.id.button_back:
+            case R.id.button_back_to_onboarding:
 
                 finish();
                 break;

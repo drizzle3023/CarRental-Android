@@ -76,6 +76,7 @@
         android:gravity="center_vertical"
         style="@style/AppTheme.ProfileButton"
         android:layout_marginLeft="23dp"
+        android:textColorLink="@color/colorNormalBlue"
         android:text="FAQs" />
 
     <View
@@ -103,6 +104,7 @@
         android:gravity="center_vertical"
         style="@style/AppTheme.ProfileButton"
         android:layout_marginLeft="23dp"
+        android:textColorLink="@color/colorNormalBlue"
         android:text="About" />
 
 </LinearLayout>

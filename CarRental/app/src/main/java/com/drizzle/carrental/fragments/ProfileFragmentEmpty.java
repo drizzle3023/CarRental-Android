@@ -2,6 +2,7 @@ package com.drizzle.carrental.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,8 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
         textViewFAQs.setOnClickListener(this);
         textViewAbout.setOnClickListener(this);
 
+        textViewFAQs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs</i></a>"));
+        textViewAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About</i></a>"));
 
         return view;
 

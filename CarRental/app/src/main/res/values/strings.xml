@@ -110,5 +110,6 @@
     <string name="have_unlimited_coverage">You have unlimited coverages</string>
     <string name="powered_by">Powered by</string>
     <string name="habit_analyatics">Habit analyatics</string>
+    <string name="press_back_again">Please click BACK again to exit</string>
 
 </resources>

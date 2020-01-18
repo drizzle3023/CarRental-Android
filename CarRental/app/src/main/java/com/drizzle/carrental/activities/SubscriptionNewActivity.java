@@ -133,16 +133,14 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
          */
 
 
-        if (!serviceAreas.isEmpty()) {
-            Globals.selectedServiceArea = serviceAreas.get(0);
-        }
+
     }
 
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
 
-        Globals.selectedVehicleType = vehicleTypes.get(position);
+        //Globals.selectedVehicleType = vehicleTypes.get(position);
 
         updateView();
     }
@@ -155,6 +153,21 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
     @Override
     public void onClick(View view) {
 
+        if (!serviceAreas.isEmpty()) {
+            if (checkBoxEurope.isChecked()) {
+                Globals.selectedServiceArea = serviceAreas.get(0);
+            }
+            else if (checkBoxUs.isChecked()) {
+                Globals.selectedServiceArea = serviceAreas.get(1);
+            }
+            else {
+                Globals.selectedServiceArea = null;
+            }
+        }
+        if (!vehicleTypes.isEmpty()) {
+            VehicleType vehicleType = (VehicleType) spinner.getSelectedItem();
+            Globals.selectedVehicleType = vehicleType;
+        }
         if (view.getId() == R.id.button_subscribe) {
 
             if (Globals.selectedVehicleType == null) {
@@ -178,15 +191,16 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (compoundButton.getId() == R.id.checkbox_us) {
 
-            Globals.selectedServiceArea = serviceAreas.get(1);
-
-        } else if (compoundButton.getId() == R.id.checkbox_europe) {
-
-            Globals.selectedServiceArea= serviceAreas.get(0);
-
-        }
+//        if (compoundButton.getId() == R.id.checkbox_us) {
+//
+//            Globals.selectedServiceArea = serviceAreas.get(1);
+//
+//        } else if (compoundButton.getId() == R.id.checkbox_europe) {
+//
+//            Globals.selectedServiceArea= serviceAreas.get(0);
+//
+//        }
     }
 
     private void fetchCarTypeListFromServer() {

@@ -1,5 +1,6 @@
 package com.drizzle.carrental.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -13,6 +14,7 @@ import com.drizzle.carrental.fragments.LoginFragment;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.fragments.SignupFragment;
 import com.drizzle.carrental.globals.Constants;
+import com.drizzle.carrental.globals.Globals;
 
 public class SignUpLoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,7 +39,14 @@ public class SignUpLoginActivity extends AppCompatActivity implements View.OnCli
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
                 if (checkedId == R.id.radio_signup) {
-                    showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
+                    if (Globals.selectedServiceArea == null || Globals.selectedVehicleType == null) {
+                        Intent intent = new Intent(SignUpLoginActivity.this, SubscriptionNewActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
+                    }
                 } else {
                     showFragment(R.id.frame_login_frag_container, LoginFragment.class);
                 }

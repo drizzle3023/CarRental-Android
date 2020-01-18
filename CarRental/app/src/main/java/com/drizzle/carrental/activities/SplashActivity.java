@@ -50,18 +50,23 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
         setContentView(R.layout.activity_splash);
 
+
+
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) &&
                 (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
-                            , Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.ACCESS_NETWORK_STATE
-                            , Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.INTERNET, Manifest.permission.CAMERA,
+                            Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_NETWORK_STATE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     1);
 
         } else {
@@ -73,10 +78,10 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
     private void runMainProcess() {
 //
-//        Intent newIntent = new Intent(SplashActivity.this, AddClaimActivity.class);
+//        Intent newIntent = new Intent(SplashActivity.this, RecordMileActivity.class);
 //        startActivity(newIntent);
 //        finish();
-//
+////
 //        return;
 //        load saved api token
 //        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");

@@ -10,6 +10,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Require OpenGL ES >= 2.0. -->
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -29,33 +30,51 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity"/>
-        <activity android:name=".fragments.CoverageFragmentEmpty" />
-        <activity android:name=".activities.SubscriptionNewActivity" />
-        <activity android:name=".activities.SignUpLoginActivity" />
-        <activity android:name=".activities.VerifyCodeActivity" />
-        <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.SubscribeSuccessActivity" />
+        <activity android:name=".activities.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".fragments.CoverageFragmentEmpty"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.SubscriptionNewActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.SignUpLoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.VerifyCodeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.HomeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.SubscribeSuccessActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.PaymentActivity"/>
-        <activity android:name=".activities.AddCoverageActivity" />
+        <activity android:name=".activities.PaymentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AddCoverageActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.StartCoverageActivity" />
-        <activity android:name=".activities.RecordMileActivity" />
-        <activity android:name=".activities.RecordVehicleActivity" />
-        <activity android:name=".activities.BaseCameraActivity" />
-        <activity android:name=".activities.MyCameraActivity" />
-        <activity android:name=".activities.ClaimsActivity" />
-        <activity android:name=".activities.AddClaimActivity" />
-        <activity android:name=".activities.AddLocationActivity" />
-        <activity android:name=".activities.OnboardingActivity" />
+        <activity android:name=".activities.StartCoverageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.RecordMileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.RecordVehicleActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.BaseCameraActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.MyCameraActivity"/>
+        <activity android:name=".activities.ClaimsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AddClaimActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AddLocationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.OnboardingActivity"
+            android:screenOrientation="portrait"/>
 
 
         <service

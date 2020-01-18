@@ -14,7 +14,7 @@ import com.drizzle.carrental.customcomponents.VerticalTextView;
 
 public class OnboardingSlideFragment1 extends Fragment {
 
-    private VerticalTextView textViewCompanyName;
+    private TextView textViewCompanyName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -20,6 +20,7 @@
         android:imeOptions="actionNext"
         android:nextFocusForward="@+id/edittext_email_address"
         android:singleLine="true"
+        android:inputType="textPersonName"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 
@@ -37,6 +38,7 @@
         android:imeOptions="actionNext"
         android:nextFocusForward="@+id/edittext_phonenumber"
         android:singleLine="true"
+        android:inputType="textEmailAddress"
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 

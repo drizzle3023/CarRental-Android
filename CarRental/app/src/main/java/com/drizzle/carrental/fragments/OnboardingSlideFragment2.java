@@ -5,6 +5,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -13,7 +14,7 @@ import com.drizzle.carrental.customcomponents.VerticalTextView;
 
 public class OnboardingSlideFragment2 extends Fragment {
 
-    private VerticalTextView textViewCompanyName;
+    private TextView textViewCompanyName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

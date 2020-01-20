@@ -20,6 +20,7 @@ import com.drizzle.carrental.R;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.MyProfile;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -189,22 +190,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
 
-                    //init habit analyatics sdk
-                    SDK.INSTANCE.init(this, "", SharedHelper.getKey(this, "payload"), new Function1<HabitStatusCodes, Unit>() {
-                        @Override
-                        public Unit invoke(HabitStatusCodes habitStatusCodes) {
 
-                            if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_INITIALIZATION_SUCCESS) {
-                                Constants.isHabitSDKReady = true;
-                            }
-                            else {
-                                Constants.isHabitSDKReady = false;
-                            }
-                            Log.d("tiny-debug", "invoke: " + habitStatusCodes);
-                            return Unit.INSTANCE;
-                        }
-
-                    });
 
                     navigateToPaymentActivity();
                 } else {
@@ -213,26 +199,14 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
 
-                    //init habit analyatics sdk
-                    SDK.INSTANCE.init(this, "", SharedHelper.getKey(this, "payload"), new Function1<HabitStatusCodes, Unit>() {
-                        @Override
-                        public Unit invoke(HabitStatusCodes habitStatusCodes) {
-
-                            if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_INITIALIZATION_SUCCESS) {
-                                Constants.isHabitSDKReady = true;
-                            }
-                            else {
-                                Constants.isHabitSDKReady = false;
-                            }
-
-                            Log.d("tiny-debug", "invoke: " + habitStatusCodes);
-
-                            return Unit.INSTANCE;
-                        }
-                    });
 
                     navigateToHomeActivity();
+
+
                 }
+
+                Utils.initHabitSDK(this);
+
             } else if (object.getString("success").equals("false")) {
 
                 enableVerifyButton(false);

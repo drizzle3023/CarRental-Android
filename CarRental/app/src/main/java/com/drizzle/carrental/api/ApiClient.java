@@ -10,6 +10,7 @@ import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -24,8 +25,11 @@ public class ApiClient {
     public static Retrofit getClient() {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        interceptor.level(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
 
         String server_api_url =
                 Constants.SERVER_HTTP_URL + "/";

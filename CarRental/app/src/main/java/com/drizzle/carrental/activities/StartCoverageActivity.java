@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.*;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -61,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -145,7 +147,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void getCurrentAddress() {
 
-        isCompanyListFetched = false;
+        //isCompanyListFetched = false;
         addressResultReceiver = new LocationAddressResultReceiver(new Handler());
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -187,6 +189,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         companies = new ArrayList<>();
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
         getControlHandlersAndLinkActions();
 
@@ -219,6 +223,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
         //get apiInterface
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+
         //display waiting dialog
         showWaitingScreen();
         //send request
@@ -227,9 +232,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void showWaitingScreen() {
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
         progressDialog.show();
     }
 
@@ -296,7 +298,28 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                     Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
                     Globals.coverage.setId(data.getLong("coverage_id"));
                     backToPreviousActivity();
+
+                    if (data.getString("token_state").equals("valid")) {
+
+                        Iterator<String> keys = object.getJSONObject("data").keys();
+
+                        for (Iterator i = keys; i.hasNext(); ) {
+
+                            if (i.next().equals("refresh_token")) {
+                                String newPayload = data.get("refresh_token").toString();
+                                String newToken = data.getString("access_token");
+
+                                SharedHelper.putKey(StartCoverageActivity.this, "access_token", newToken);
+                                SharedHelper.putKey(StartCoverageActivity.this, "payload", newPayload);
+
+                                Utils.initHabitSDK(StartCoverageActivity.this);
+                            }
+                        }
+                    }
+
                 }
+
+
 
             } else if (object.getString("success").equals("false")) {
 
@@ -305,6 +328,14 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                     Globals.coverage = new Coverage();
                 }
                 Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
+                if (!isGettingCompanyListOrSubmitAction) {
+                    if (data.getString("token_state").equals("invalid")) {
+
+                        Utils.logout(StartCoverageActivity.this, StartCoverageActivity.this);
+                    }
+                }
+
             } else {
                 if (isGettingCompanyListOrSubmitAction) {
                     Globals.coverage = new Coverage();
@@ -364,101 +395,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         }
 
         isGettingCompanyListOrSubmitAction = false;
-
-        /*
-        MultiPartUploadRequest
-         */
-//
-//        MultipartUploadRequest multipartUploadRequest = null;
-//
-//        multipartUploadRequest = new MultipartUploadRequest(this, Constants.SERVER_HTTP_URL + "/api/" + "add-coverage");
-//        multipartUploadRequest.setMethod("POST");
-//
-//
-//        //multipartUploadRequest.addFileToUpload(BaseCameraActivity.getVideoFilePath(), "video-vehicle");
-//
-//        multipartUploadRequest.addParameter("access_token", SharedHelper.getKey(this, "access_token"));
-//        multipartUploadRequest.addParameter("name", selectedCompany.getName());
-//        multipartUploadRequest.addParameter("latitude", Double.valueOf(Globals.coverage.getLocation().getLatitude()).toString());
-//        multipartUploadRequest.addParameter("longitude", Double.valueOf(Globals.coverage.getLocation().getLongitude()).toString());
-//        multipartUploadRequest.addParameter("address", Globals.coverage.getLocationAddress());
-//        multipartUploadRequest.addParameter("company_id", Long.valueOf(selectedCompany.getId()).toString());
-//        multipartUploadRequest.addParameter("start_at", Long.valueOf(Globals.coverage.getDateFrom().getTimeInMillis() / 1000).toString());
-//        multipartUploadRequest.addParameter("end_at", Long.valueOf(Globals.coverage.getDateTo().getTimeInMillis() / 1000).toString());
-//        multipartUploadRequest.addParameter("state", Integer.valueOf(CoverageState.UNCOVERED.getIntValue()).toString());
-//
-//
-//        multipartUploadRequest.startUpload();
-//
-//        multipartUploadRequest.subscribe(this, new RequestObserverDelegate() {
-//
-//
-//            @Override
-//            public void onCompleted(@NotNull Context context, @NotNull UploadInfo uploadInfo) {
-//
-//            }
-//
-//            @Override
-//            public void onCompletedWhileNotObserving() {
-//
-//            }
-//
-//            @Override
-//            public void onError(@NotNull Context context, @NotNull UploadInfo uploadInfo, @NotNull Throwable throwable) {
-//                Globals.coverage = new Coverage();
-//                Toast.makeText(StartCoverageActivity.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onProgress(@NotNull Context context, @NotNull UploadInfo uploadInfo) {
-//
-//            }
-//
-//            @Override
-//            public void onSuccess(@NotNull Context context, @NotNull UploadInfo uploadInfo, @NotNull ServerResponse serverResponse) {
-//
-//                String responseString = serverResponse.getBodyString();
-//
-//                JSONObject object = null;
-//                if (responseString != null) {
-//                    try {
-//                        object = new JSONObject(responseString);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//
-//                    Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                if (object == null) {
-//
-//                    Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                try {
-//                    if (object.getString("success").equals("true")) {
-//
-//                        JSONObject data = object.getJSONObject("data");
-//                        Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
-//                        Globals.coverage.setId(data.getLong("coverage_id"));
-//                        backToPreviousActivity();
-//
-//                    } else if (object.getString("success").equals("false")) {
-//                        JSONObject data = object.getJSONObject("data");
-//                        Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-//                    }
-//                } catch (JSONException e) {
-//
-//                    Toast.makeText(StartCoverageActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
 
         showWaitingScreen();
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(
@@ -520,10 +456,11 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             }
         };
 
-
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(Constants.CONNECTION_TIMEOUT * 1000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(volleyMultipartRequest);
     }
+
 
     private void navigateToRecordVehicleActivity() {
 

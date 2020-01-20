@@ -114,4 +114,7 @@
 
     <string name="no_vehicle_types">Select your vehicle type.</string>
     <string name="no_service_area">Select your location.</string>
+
+    <string name="video_play">▶</string>
+
 </resources>

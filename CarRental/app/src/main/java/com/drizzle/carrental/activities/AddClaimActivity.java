@@ -35,6 +35,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -66,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -357,7 +359,6 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
     public Bitmap retriveVideoThumbnailFromURL(String videoPath) {
 
 
-
         FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
         mmr.setDataSource(videoPath);
         mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM);
@@ -369,8 +370,6 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
         return b;
     }
-
-
 
 
     private void setCurrentClaimStep() {
@@ -415,6 +414,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_add_claim);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
         claim = Globals.selectedClaim;
 
@@ -1045,24 +1046,40 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                                     finish();
                                 }
 
+                                if (data.getString("token_state").equals("valid")) {
+
+                                    Iterator<String> keys = object.getJSONObject("data").keys();
+
+                                    for (Iterator i = keys; i.hasNext(); ) {
+
+                                        if (i.next().equals("refresh_token")) {
+                                            String newPayload = data.get("refresh_token").toString();
+                                            String newToken = data.getString("access_token");
+
+                                            SharedHelper.putKey(AddClaimActivity.this, "access_token", newToken);
+                                            SharedHelper.putKey(AddClaimActivity.this, "payload", newPayload);
+
+                                            Utils.initHabitSDK(AddClaimActivity.this);
+                                        }
+                                    }
+                                }
+
                             } else if (object.getString("success").equals("false")) {
 
                                 JSONObject data = object.getJSONObject("data");
                                 Toast.makeText(AddClaimActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                if (data.getString("token_state").equals("invalid")) {
+
+                                    Utils.logout(AddClaimActivity.this, AddClaimActivity.this);
+                                }
+
                             } else {
 
                                 Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
                             }
 
-                            if (object.getString("token_state").equals("valid") && object.get("refresh_token") != null) {
 
-                                String newPayload = object.get("refresh_token").toString();
-                                String newToken = object.getString("access_token");
-
-                                SharedHelper.putKey(AddClaimActivity.this, "access_token", newToken);
-                                SharedHelper.putKey(AddClaimActivity.this, "payload", newPayload);
-
-                            }
                         } catch (JSONException e) {
 
                             Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
@@ -1084,7 +1101,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 if (claim.getId() > 0) {
                     paramObject.put("claim_id", Long.valueOf(claim.getId()).toString());
                 }
-                if (claim.getWhatHappened() != null) {
+                if (claim.getWhereHappened() != null) {
                     paramObject.put("latitude", Double.valueOf(claim.getWhereHappened().getLatitude()).toString());
                     paramObject.put("longitude", Double.valueOf(claim.getWhereHappened().getLongitude()).toString());
                 }
@@ -1121,7 +1138,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
 
                 if (Constants.isRecordingVehicleOrMileOrDamagedPart == 3) {
-                    params.put("video", new VolleyMultipartRequest.DataPart("video-claim"  + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                    params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
                     params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
                 }
 
@@ -1129,6 +1146,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             }
         };
 
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(Constants.CONNECTION_TIMEOUT * 1000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(volleyMultipartRequest);
     }
@@ -1136,8 +1154,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private void showWaitingScreen() {
 
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
+
         progressDialog.show();
     }
 
@@ -1155,6 +1172,14 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
 
+        if (view.getId() == R.id.button_back_to_onboarding) {
+            finish();
+        }
+
+        if (!isEditable) {
+            return;
+        }
+
         switch (view.getId()) {
 
             case R.id.button_save:
@@ -1162,10 +1187,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 saveClaimToDb(ClaimState.INCOMPLETE);
                 break;
 
-            case R.id.button_back_to_onboarding:
 
-                finish();
-                break;
             case R.id.button_done_answer_else:
                 Utils.hideKeyboard(this);
                 claim.setExtraDescription(editTextAnswerElse.getText().toString());
@@ -1611,8 +1633,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         if (claim.getWhatHappened() != null) {
             if (marker == null) {
                 marker = googleMapWhereHappened.addMarker(new MarkerOptions().position(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude())).title("Marker"));
-            }
-            else {
+            } else {
                 marker.setPosition(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude()));
             }
             googleMapWhereHappened.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(claim.getWhereHappened().getLatitude(), claim.getWhereHappened().getLongitude()), Constants.DEFAULT_MAP_ZOOM_LEVEL));

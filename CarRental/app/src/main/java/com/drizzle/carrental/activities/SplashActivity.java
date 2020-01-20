@@ -16,6 +16,7 @@ import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.Console;
 import java.io.IOException;
+import java.util.Iterator;
 
 import io.habit.analytics.HabitStatusCodes;
 import io.habit.analytics.SDK;
@@ -203,22 +205,28 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
                 Globals.profile = myProfile;
 
-                //init habit analyatics sdk
-                SDK.INSTANCE.init(this, "", SharedHelper.getKey(this, "payload"), new Function1<HabitStatusCodes, Unit>() {
-                    @Override
-                    public Unit invoke(HabitStatusCodes habitStatusCodes) {
 
-                        if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_INITIALIZATION_SUCCESS) {
-                            Constants.isHabitSDKReady = true;
-                        }
-                        else {
-                            Constants.isHabitSDKReady = false;
-                        }
-                        Log.d("tiny-debug", "invoke: " + habitStatusCodes);
 
-                        return Unit.INSTANCE;
+
+                if (data.getString("token_state").equals("valid")) {
+
+                    Iterator<String> keys = object.getJSONObject("data").keys();
+
+                    for (Iterator i = keys; i.hasNext(); ) {
+
+                        if (i.next().equals("refresh_token")) {
+                            String newPayload = data.get("refresh_token").toString();
+                            String newToken = data.getString("access_token");
+
+                            SharedHelper.putKey(SplashActivity.this, "access_token", newToken);
+                            SharedHelper.putKey(SplashActivity.this, "payload", newPayload);
+
+                            Utils.initHabitSDK(SplashActivity.this);
+                        }
                     }
-                });
+                }
+
+                Utils.initHabitSDK(SplashActivity.this);
 
 
                 navigateToHomeActivity();

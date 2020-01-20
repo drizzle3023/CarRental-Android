@@ -28,11 +28,11 @@ public class Constants {
 
     public static final  String MILE_IMAGE_FILE_NAME = "CarRentalMile.png";
 
-    public static final String SERVER_HTTP_URL = "http://192.168.1.160";
+    //public static final String SERVER_HTTP_URL = "http://192.168.1.160";
 
     public static final String CONTACT_URL = "https://www.habit.io/contact-us.html";
 
-    //public static final String SERVER_HTTP_URL = "https://sandbox-zone02.netherlands.region.habit.io";
+    public static final String SERVER_HTTP_URL = "https://sandbox-zone02.netherlands.region.habit.io";
 
     public static final String MEDIA_PATH_URL = SERVER_HTTP_URL + "/site-media/";
 
@@ -47,6 +47,9 @@ public class Constants {
     public static final String CURRENCY_EURO = "EUR";
 
     public static final String CURRENCY_USD = "USD";
+
+    public static final int CONNECTION_TIMEOUT = 60;
+
     /**
      * Temporary variables
      */

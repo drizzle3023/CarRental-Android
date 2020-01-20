@@ -58,7 +58,7 @@ public class CustomAdapterSubscriptionCarTypeSelect extends BaseAdapter {
             TextView names = (TextView) view.findViewById(R.id.textView);
 
             String strImageURL = Constants.MEDIA_PATH_URL + vehicleTypes.get(i).getIconURL();
-            Picasso.get().load(strImageURL).placeholder(R.drawable.icon_company).into(icon);
+            Picasso.get().load(strImageURL).placeholder(null).into(icon);
             names.setText(vehicleTypes.get(i).getName());
         }
         catch (Exception e) {

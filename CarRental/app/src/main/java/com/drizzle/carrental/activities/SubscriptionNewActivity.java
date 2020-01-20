@@ -287,6 +287,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                 spinner.setAdapter(customAdapter);
 
 
+
             } else if (object.getString("success").equals("false")) {
 
                 JSONObject data = object.getJSONObject("data");

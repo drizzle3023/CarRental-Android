@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- camera permissions -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -30,7 +31,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".activities.SplashActivity"
+        <activity
+            android:name=".activities.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,43 +40,68 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".fragments.CoverageFragmentEmpty"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SubscriptionNewActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SignUpLoginActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.VerifyCodeActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.HomeActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SubscribeSuccessActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragments.CoverageFragmentEmpty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SubscriptionNewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SignUpLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.VerifyCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SubscribeSuccessActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.PaymentActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.AddCoverageActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.PaymentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddCoverageActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.StartCoverageActivity"
+        <activity
+            android:name=".activities.StartCoverageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.RecordMileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.RecordVehicleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.BaseCameraActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+
+                <action android:name="android.intent.action.ACTION_MEDIA_SCANNER_SCAN_FILE" />
+
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.MyCameraActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.RecordMileActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.RecordVehicleActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.BaseCameraActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.MyCameraActivity"/>
-        <activity android:name=".activities.ClaimsActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.AddClaimActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.AddLocationActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.OnboardingActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ClaimsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddClaimActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddLocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.OnboardingActivity"
+            android:screenOrientation="portrait" />
 
 
         <service

@@ -30,6 +30,8 @@ import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
+import com.drizzle.carrental.models.Payment;
 import com.drizzle.carrental.services.YourDropService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -41,6 +43,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -179,9 +182,33 @@ public class PaymentActivity extends FragmentActivity {
 
                             DropIn.startPayment(PaymentActivity.this, paymentMethodsApiResponse, dropInConfiguration);
 
-                        } else{
+                            if (data.getString("token_state").equals("valid")) {
+
+                                Iterator<String> keys = object.getJSONObject("data").keys();
+
+                                for (Iterator i = keys; i.hasNext(); ) {
+
+                                    if (i.next().equals("refresh_token")) {
+                                        String newPayload = data.get("refresh_token").toString();
+                                        String newToken = data.getString("access_token");
+
+                                        SharedHelper.putKey(PaymentActivity.this, "access_token", newToken);
+                                        SharedHelper.putKey(PaymentActivity.this, "payload", newPayload);
+
+                                        Utils.initHabitSDK(PaymentActivity.this);
+                                    }
+                                }
+                            }
+                        } else {
+
                             JSONObject data = object.getJSONObject("data");
                             Toast.makeText(PaymentActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
+                            if (object.getString("token_state").equals("invalid")) {
+
+                                Utils.logout(PaymentActivity.this, PaymentActivity.this);
+                            }
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

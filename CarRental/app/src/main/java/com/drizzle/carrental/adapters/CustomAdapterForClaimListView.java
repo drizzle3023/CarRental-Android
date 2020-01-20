@@ -135,6 +135,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         this.dataSet = data;
         this.mActivity = activity;
 
+        progressDialog = new ProgressDialog(getContext());
+
     }
 
     private void removeClaimFromServer(long claimId) {
@@ -169,7 +171,6 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
     private void showWaitingScreen() {
 
-        progressDialog = new ProgressDialog(getContext());
 
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);

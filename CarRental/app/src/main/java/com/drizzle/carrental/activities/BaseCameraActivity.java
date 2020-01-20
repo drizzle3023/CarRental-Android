@@ -2,9 +2,12 @@ package com.drizzle.carrental.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -26,8 +29,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.ListenableWorker;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,12 +45,14 @@ import com.daasuu.camerarecorder.LensFacing;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.VolleyMultipartRequest;
+import com.drizzle.carrental.cameracomponents.PortraitFrameLayout;
 import com.drizzle.carrental.cameracomponents.SampleGLView;
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.AppHelper;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Coverage;
 
 import org.json.JSONException;
@@ -57,18 +64,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.opengles.GL10;
 
+
+import bg.devlabs.fullscreenvideoview.FullscreenVideoView;
+import bg.devlabs.fullscreenvideoview.listener.OnVideoCompletedListener;
+
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+
 public class BaseCameraActivity extends AppCompatActivity {
 
     private SampleGLView sampleGLView;
     protected CameraRecorder cameraRecorder;
     private String filepath;
-    private TextView recordBtn;
+    private Button recordBtn;
     protected LensFacing lensFacing = LensFacing.BACK;
     protected int cameraWidth = 1280;
     protected int cameraHeight = 720;
@@ -79,16 +93,25 @@ public class BaseCameraActivity extends AppCompatActivity {
 
     protected Button buttonCancel;
 
+    private BroadcastReceiver mReceiver;
+
+    private Button buttonPlay;
+
     private ViewGroup.LayoutParams layoutParams = null;
 
     ProgressDialog progressDialog;
 
+    FullscreenVideoView fullscreenVideoView = null;
+
+    BroadcastReceiver broadcastReceiver;
 
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreateActivity() {
 
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
         recordBtn = findViewById(R.id.btn_record);
         layoutParams = recordBtn.getLayoutParams();
@@ -110,6 +133,12 @@ public class BaseCameraActivity extends AppCompatActivity {
                             recordBtn.setText(getString(R.string.app_record_stop));
                             recordBtn.setLayoutParams(layoutParams);
                             recordBtn.setBackgroundResource(R.drawable.record_start_button);
+                            buttonPlay.setVisibility(View.GONE);
+                            fullscreenVideoView.setVisibility(View.GONE);
+                            FrameLayout frameLayout = findViewById(R.id.wrap_view);
+                            frameLayout.setVisibility(View.VISIBLE);
+                            sampleGLView.setVisibility(View.VISIBLE);
+
                         } else if (recordBtn.getText().toString().equals(getString(R.string.app_record_done))) {
 
                             saveFirstFrameOfVideoAsPng();
@@ -125,15 +154,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
 
-                        DisplayMetrics metrics = getResources().getDisplayMetrics();
-                        ViewGroup.LayoutParams buttonLayoutParams = recordBtn.getLayoutParams();
-                        buttonLayoutParams.width = (int) (metrics.density * 120);
-                        buttonLayoutParams.height = (int) (metrics.density * 40);
                         cameraRecorder.stop();
-
-                        recordBtn.setText(getString(R.string.app_record_done));
-                        recordBtn.setLayoutParams(buttonLayoutParams);
-                        recordBtn.setBackgroundResource(R.drawable.active_button);
 
 
                         break;
@@ -147,28 +168,16 @@ public class BaseCameraActivity extends AppCompatActivity {
         });
 
 
-//        recordBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                String recState = recordBtn.getText().toString();
-//                if (recState.equals(getString(R.string.app_record_done))) { //case of "Done"
-//
-//                    recordBtn.setLayoutParams(layoutParams);
-//                    recordBtn.setBackgroundResource(R.drawable.record_start_button);
-//
-//                    saveFirstFrameOfVideoAsPng();
-//
-//                    //ApiClient.uploadFile(BaseCameraActivity.this, "add-coverage", getVideoFilePath());
-//                    if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1 || Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
-//                        submitCoverageVehicleVideo();
-//                    } else {
-//                        backToPreviousActivity();
-//                    }
-//
-//                }
-//            }
-//        });
+        buttonPlay = findViewById(R.id.button_play);
+        buttonPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonPlay.setVisibility(View.GONE);
+                if (fullscreenVideoView != null) {
+                    fullscreenVideoView.play();
+                }
+            }
+        });
 
 
         buttonCancel = findViewById(R.id.button_cancel);
@@ -182,42 +191,50 @@ public class BaseCameraActivity extends AppCompatActivity {
             }
         });
 
+        fullscreenVideoView = findViewById(R.id.fullscreenVideoView);
+        fullscreenVideoView.setVisibility(View.GONE);
+        //fullscreenVideoView.portraitOrientation(PortraitOrientation.DEFAULT);
+
+
+        setUpCamera();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
 
     private void saveFirstFrameOfVideoAsPng() {
 
-        MediaMetadataRetriever retriever = null;
+        File file = new File(getVideoFilePath());
+        if (!file.exists() || !file.canRead() || !file.isFile()) {
+            return;
+        }
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
-            retriever = new MediaMetadataRetriever();
             retriever.setDataSource(getVideoFilePath());
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return;
         }
 
-        if (retriever != null) {
-            Bitmap bitmap = retriever.getFrameAtTime();
 
-            File file = new File(getImageFilePath());
-            if (file.exists()) file.delete();
-            try {
-                FileOutputStream out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                out.flush();
-                out.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        Bitmap bitmap = retriever.getFrameAtTime();
+
+        File file1 = new File(getImageFilePath());
+        if (file1.exists()) file1.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file1);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     private void showWaitingScreen() {
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
+
         progressDialog.show();
     }
 
@@ -266,10 +283,40 @@ public class BaseCameraActivity extends AppCompatActivity {
                                     Globals.selectedClaim.setVideoURL("file://" + getVideoFilePath());
                                     Globals.selectedClaim.setImageURL("file://" + getImageFilePath());
                                 }
+
+                                if (data.getString("token_state").equals("valid")) {
+
+                                    Iterator<String> keys = jsonObject.getJSONObject("data").keys();
+
+                                    for (Iterator i = keys; i.hasNext(); ) {
+
+                                        if (i.next().equals("refresh_token")) {
+                                            String newPayload = data.get("refresh_token").toString();
+                                            String newToken = data.getString("access_token");
+
+                                            SharedHelper.putKey(BaseCameraActivity.this, "access_token", newToken);
+                                            SharedHelper.putKey(BaseCameraActivity.this, "payload", newPayload);
+
+                                            Utils.initHabitSDK(BaseCameraActivity.this);
+                                        }
+                                    }
+                                }
+
                                 backToPreviousActivity();
-                            } else {
+                            } else if (jsonObject.getString("success").equals("false")){
+
                                 Toast.makeText(BaseCameraActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                if (data.getString("token_state").equals("invalid")) {
+
+                                    Utils.logout(BaseCameraActivity.this, BaseCameraActivity.this);
+                                }
+
+
                             }
+
+
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -321,6 +368,7 @@ public class BaseCameraActivity extends AppCompatActivity {
             }
         };
 
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(Constants.CONNECTION_TIMEOUT * 1000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(volleyMultipartRequest);
     }
@@ -332,10 +380,33 @@ public class BaseCameraActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+
     @Override
     protected void onResume() {
+
         super.onResume();
-        setUpCamera();
+
+//        IntentFilter intentFilter = new IntentFilter(
+//                "android.intent.action.ACTION_MEDIA_SCANNER_SCAN_FILE");
+//
+//        mReceiver = new BroadcastReceiver() {
+//
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                //extract our message from intent
+//                Toast.makeText(BaseCameraActivity.this, "Apple", Toast.LENGTH_SHORT).show();
+//                String msg_for_me = intent.getStringExtra("some_msg");
+//                //log our message value
+//                Log.i("InchooTutorial", msg_for_me);
+//
+//            }
+//        };
+//        //registering our receiver
+//        this.registerReceiver(mReceiver, intentFilter);
+
+        if (buttonPlay.getVisibility() != View.VISIBLE) {
+            setUpCamera();
+        }
     }
 
     @Override
@@ -396,6 +467,50 @@ public class BaseCameraActivity extends AppCompatActivity {
                     public void onRecordComplete() {
                         exportMp4ToGallery(getApplicationContext(), filepath);
 
+                        ProgressDialog progressDialog = new ProgressDialog(BaseCameraActivity.this);
+                        progressDialog.setMessage("Please wait...");
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+
+                        DisplayMetrics metrics = getResources().getDisplayMetrics();
+                        ViewGroup.LayoutParams buttonLayoutParams = recordBtn.getLayoutParams();
+                        buttonLayoutParams.width = (int) (metrics.density * 120);
+                        buttonLayoutParams.height = (int) (metrics.density * 40);
+
+
+                        recordBtn.setText(getString(R.string.app_record_done));
+                        recordBtn.setLayoutParams(buttonLayoutParams);
+                        recordBtn.setBackgroundResource(R.drawable.active_button);
+                        buttonPlay.setVisibility(View.VISIBLE);
+
+                        fullscreenVideoView.setVisibility(View.VISIBLE);
+
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                progressDialog.hide();
+
+                                File file = new File(getVideoFilePath());
+                                if (!file.exists() || !file.canRead() || !file.isFile()) {
+                                    return;
+                                }
+
+                                fullscreenVideoView.videoUrl("file://" + getVideoFilePath()).addOnVideoCompletedListener(new OnVideoCompletedListener() {
+                                    @Override
+                                    public void onFinished() {
+
+                                        sampleGLView.setVisibility(View.GONE);
+
+                                        buttonPlay.setVisibility(View.VISIBLE);
+
+                                    }
+                                });
+
+                            }
+                        }, 1000);
                     }
 
                     @Override
@@ -505,6 +620,7 @@ public class BaseCameraActivity extends AppCompatActivity {
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                 Uri.parse("file://" + filePath)));
     }
+
 
     public static String getVideoFilePath() {
 

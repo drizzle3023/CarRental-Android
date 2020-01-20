@@ -19,6 +19,7 @@ import com.drizzle.carrental.enumerators.ClaimState;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Claim;
 import com.drizzle.carrental.serializers.ParseClaim;
 import com.google.gson.Gson;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -156,7 +158,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
     public void removeClaimFromModelList(Long claimId) {
 
-        for (int i = 0; i < dataModels.size(); i ++) {
+        for (int i = 0; i < dataModels.size(); i++) {
             if (dataModels.get(i).getId() == claimId) {
 
                 dataModels.remove(i);
@@ -244,15 +246,19 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                 JSONArray listObject = data.getJSONArray("claimList");
 
                 dataModels.clear();
-                parseDataModels = new Gson().fromJson(listObject.toString(), new TypeToken<List<ParseClaim>>() {}.getType());
+                parseDataModels = new Gson().fromJson(listObject.toString(), new TypeToken<List<ParseClaim>>() {
+                }.getType());
 
-                for (int i = 0; i < parseDataModels.size(); i ++) {
+                for (int i = 0; i < parseDataModels.size(); i++) {
 
                     ParseClaim parseClaim = parseDataModels.get(i);
                     Claim claim = new Claim();
 
                     claim.setId(parseClaim.getId());
-                    claim.setWhatHappened(parseClaim.getWhatHappened());
+
+                    if (parseClaim.getWhatHappened() != null) {
+                        claim.setWhatHappened(parseClaim.getWhatHappened());
+                    }
 
                     GregorianCalendar calendar = new GregorianCalendar();
                     calendar.setTimeInMillis(parseClaim.getTimeHappened() * 1000);
@@ -264,9 +270,13 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                     location.setLongitude(parseClaim.getLongitude());
                     claim.setWhereHappened(location);
 
-                    claim.setAddressHappened(parseClaim.getAddress());
+                    if (parseClaim.getAddress() != null) {
+                        claim.setAddressHappened(parseClaim.getAddress());
+                    }
 
-                    claim.setDamagedPartsFromString(parseClaim.getDamagedPart());
+                    if (parseClaim.getDamagedPart() != null) {
+                        claim.setDamagedPartsFromString(parseClaim.getDamagedPart());
+                    }
                     if (parseClaim.getVideo() != null && !parseClaim.getVideo().isEmpty()) {
                         claim.setVideoURL(Constants.MEDIA_PATH_URL + parseClaim.getVideo());
                     }
@@ -283,16 +293,43 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                 adapter = new CustomAdapterForClaimListView(dataModels, this);
 
                 listView.setAdapter(adapter);
-                
+
+                if (data.getString("token_state").equals("valid")) {
+
+                    Iterator<String> keys = object.getJSONObject("data").keys();
+
+                    for (Iterator i = keys; i.hasNext(); ) {
+
+                        if (i.next().equals("refresh_token")) {
+                            String newPayload = data.get("refresh_token").toString();
+                            String newToken = data.getString("access_token");
+
+                            SharedHelper.putKey(ClaimsActivity.this, "access_token", newToken);
+                            SharedHelper.putKey(ClaimsActivity.this, "payload", newPayload);
+
+                            Utils.initHabitSDK(ClaimsActivity.this);
+                        }
+                    }
+                }
+
 
             } else if (object.getString("success").equals("false")) {
 
                 JSONObject data = object.getJSONObject("data");
                 Toast.makeText(this, data.getString("message"), Toast.LENGTH_SHORT).show();
+
+                if (object.getString("token_state").equals("invalid")) {
+
+                    Utils.logout(ClaimsActivity.this, ClaimsActivity.this);
+                }
+
+
             } else {
 
                 Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             }
+
+
         } catch (JSONException e) {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
@@ -311,7 +348,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
         if (requestCode == CLAIM_ADD_REQUEST) {
             //if (resultCode == RESULT_OK) {
-                fetchClaimListFromServer();
+            fetchClaimListFromServer();
             //}
         }
     }

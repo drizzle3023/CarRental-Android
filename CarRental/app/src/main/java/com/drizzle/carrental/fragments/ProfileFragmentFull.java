@@ -36,6 +36,7 @@ import java.io.IOException;
 
 import io.habit.analytics.SDK;
 import okhttp3.ResponseBody;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -175,15 +176,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            if (Constants.isHabitSDKReady) {
-                                SDK.INSTANCE.logout();
-                            }
-
-                            SharedHelper.clearSharedPreferences(getActivity());
-                            Utils.resetAllGlobals();
-                            Intent intent = new Intent(getActivity(), OnboardingActivity.class);
-                            startActivity(intent);
-                            getActivity().finish();
+                            Utils.logout(getActivity(), getActivity());
                         }
                     })
                     .setNegativeButton(android.R.string.no, null).show();

@@ -32,10 +32,10 @@ public class MyCameraActivity extends BaseCameraActivity {
         int width = size.x;
         int height = size.y;
 
-        videoWidth = 720;
-        videoHeight = 1280;
-        cameraWidth = 1280;
-        cameraHeight = 720;
+        videoWidth = width;
+        videoHeight = height;
+        cameraWidth = height;
+        cameraHeight = width;
     }
 
 }

@@ -2,14 +2,17 @@ package com.drizzle.carrental.globals;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.enumerators.ServiceArea;
 import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.models.MyProfile;
@@ -22,6 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import io.habit.analytics.HabitStatusCodes;
+import io.habit.analytics.SDK;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class Utils {
 
@@ -115,6 +123,39 @@ public class Utils {
         Globals.coverage  = new Coverage(); //current active coverage
         Globals.mobileNumber = ""; //string phone number
         Globals.isSignUpOrLoginRequest  = true;
+    }
+
+    public static void initHabitSDK(Context context) {
+
+        //init habit analyatics sdk
+        SDK.INSTANCE.init(context, "", SharedHelper.getKey(context, "payload"), new Function1<HabitStatusCodes, Unit>() {
+            @Override
+            public Unit invoke(HabitStatusCodes habitStatusCodes) {
+
+                if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_INITIALIZATION_SUCCESS) {
+                    Constants.isHabitSDKReady = true;
+                }
+                else {
+                    Constants.isHabitSDKReady = false;
+                }
+                Log.d("tiny-debug", "invoke: " + habitStatusCodes);
+
+                return Unit.INSTANCE;
+            }
+        });
+
+    }
+
+    public static void logout(Context context, Activity activity) {
+
+        if (Constants.isHabitSDKReady) {
+            SDK.INSTANCE.logout();
+        }
+
+        SharedHelper.clearSharedPreferences(context);
+        Utils.resetAllGlobals();
+        Intent intent = new Intent(activity, OnboardingActivity.class);
+        activity.finish();
     }
 
 }

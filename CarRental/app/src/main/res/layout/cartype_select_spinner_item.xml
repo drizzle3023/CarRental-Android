@@ -6,10 +6,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:padding="3dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="10dp"
+        android:padding="3dp"
         android:scaleType="fitXY"
         android:src="@drawable/icon_profile" /><!--Make sure image is present in Drawable folder-->
 

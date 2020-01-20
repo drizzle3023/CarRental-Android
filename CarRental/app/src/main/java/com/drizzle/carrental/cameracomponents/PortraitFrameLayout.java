@@ -1,7 +1,9 @@
 package com.drizzle.carrental.cameracomponents;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ public class PortraitFrameLayout extends FrameLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
+
         setMeasuredDimension(width, width / 9 * 16);
     }
 }

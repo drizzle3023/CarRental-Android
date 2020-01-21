@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,8 @@ public class PaymentActivity extends FragmentActivity {
 
     private TextView textViewExpireDate;
 
+    private ImageButton buttonBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,11 +91,23 @@ public class PaymentActivity extends FragmentActivity {
             }
         });
 
+        buttonBack = findViewById(R.id.imagebutton_back);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        });
         initView();
     }
 
 
     private void initView() {
+
+        if (Globals.selectedVehicleType == null || Globals.selectedServiceArea == null) {
+            return;
+        }
 
         double amount = Globals.selectedVehicleType.getPricePerYear();
         String currency = Globals.selectedVehicleType.getCurrency();

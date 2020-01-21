@@ -14,12 +14,14 @@ import androidx.core.app.ActivityCompat;
 
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.enumerators.ServiceArea;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.models.VehicleType;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -51,7 +53,6 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
-
 
 
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) &&
@@ -200,14 +201,67 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
                 JSONObject data = object.getJSONObject("data");
                 JSONObject profileData = data.getJSONObject("profile");
+
                 MyProfile myProfile = new Gson().fromJson(profileData.toString(), new TypeToken<MyProfile>() {
                 }.getType());
 
                 Globals.profile = myProfile;
 
+                JSONObject vehicleTypeJSON = null;
+                try {
+                    vehicleTypeJSON = profileData.getJSONObject("car_type");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (vehicleTypeJSON != null) {
+
+                    VehicleType vehicleType = new VehicleType();
+                    try {
+                        vehicleType.setId(vehicleTypeJSON.getLong("id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        vehicleType.setName(vehicleTypeJSON.getString("name"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        vehicleType.setCurrency(vehicleTypeJSON.getString("currency"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        vehicleType.setPricePerYear(vehicleTypeJSON.getDouble("price_per_year"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        vehicleType.setIconURL(Constants.MEDIA_PATH_URL + vehicleTypeJSON.getString("icon_url"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Globals.profile.setVehicleType(vehicleType);
+                    Globals.selectedVehicleType = vehicleType;
+
+                    ServiceArea serviceArea = new ServiceArea();
+                    serviceArea.setAreaName(myProfile.getWorldZone());
+                    if (myProfile.getWorldZone().equals("Europe")) {
+                        serviceArea.setId(1);
+                    }
+                    else {
+                        serviceArea.setId(2);
+                    }
+                    Globals.selectedServiceArea = serviceArea;
 
 
-
+                }
                 if (data.getString("token_state").equals("valid")) {
 
                     Iterator<String> keys = object.getJSONObject("data").keys();
@@ -270,8 +324,6 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         startActivity(newIntent);
         finish();
     }
-
-
 
 
 }

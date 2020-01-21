@@ -1,5 +1,6 @@
 package com.drizzle.carrental.models;
 
+import com.adyen.checkout.card.data.CardType;
 import com.google.gson.annotations.SerializedName;
 
 import org.intellij.lang.annotations.JdkConstants;
@@ -36,4 +37,8 @@ public class MyProfile implements Serializable {
     @SerializedName("card_no")
     private String creditCardNo;
 
+    @SerializedName("world_zone")
+    private String worldZone = "";
+
+    VehicleType vehicleType = null;
 }

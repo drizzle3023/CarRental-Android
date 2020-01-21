@@ -192,7 +192,7 @@ public class HistoryFragmentFull extends Fragment {
                                     }
 
                                     try {
-                                        coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + content.getString("image_vehicle"));
+                                        coverage.setUrlImageVehicle(Constants.MEDIA_PATH_URL + content.getString("image_vehicle"));
                                     }
                                     catch (Exception e) {
 

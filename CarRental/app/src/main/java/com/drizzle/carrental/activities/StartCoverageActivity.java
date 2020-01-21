@@ -438,7 +438,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 params.put("name", selectedCompany.getName());
                 params.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
                 params.put("longitude", String.format("%f", Globals.coverage.getLocation().getLongitude()));
-                params.put("address", Globals.coverage.getLocationAddress());
+                params.put("address", "和联合了");
                 params.put("company_id", String.format("%d", selectedCompany.getId()));
                 params.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
                 params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000));

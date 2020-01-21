@@ -21,6 +21,7 @@ import com.drizzle.carrental.activities.AddCoverageActivity;
 import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.activities.HomeActivity;
 import com.drizzle.carrental.activities.OnboardingActivity;
+import com.drizzle.carrental.activities.PaymentActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55;
@@ -31,6 +32,7 @@ import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
+import com.drizzle.carrental.models.Payment;
 import com.drizzle.carrental.serializers.ParseCoverage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -38,6 +40,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.GregorianCalendar;
@@ -337,6 +340,20 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     try {
                         JSONObject object = new JSONObject(response.body().string());
 
+                        int pay_state = 0;
+                        try {
+                            pay_state = Integer.parseInt(object.getJSONObject("data").getString("pay_state"));
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            pay_state = 0;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            pay_state = 0;
+                        }
+
+                        if (pay_state == 0) {
+                            navigateToPaymentActivity();
+                        }
                         if (object.getString("success").equals("true")) {
 
                             JSONObject data = object.getJSONObject("data");
@@ -504,7 +521,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void navigateToPaymentActivity() {
 
-        Intent intent = new Intent(getActivity(), ClaimsActivity.class);
+        Intent intent = new Intent(getActivity(), PaymentActivity.class);
         startActivity(intent);
         getActivity().finish();
     }

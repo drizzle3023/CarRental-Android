@@ -17,13 +17,16 @@ import android.widget.Toast;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.enumerators.ServiceArea;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.MyProfile;
+import com.drizzle.carrental.models.VehicleType;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.annotations.SerializedName;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
 
@@ -193,16 +196,109 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
 
                     navigateToPaymentActivity();
+
                 } else {
                     Globals.isLoggedIn = true;
                     JSONObject dataObject = object.getJSONObject("data");
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
 
-
                     navigateToHomeActivity();
 
 
+                }
+
+                MyProfile myProfile = new MyProfile();
+
+                JSONObject profileObject = null;
+                try {
+                    profileObject = object.getJSONObject("data").getJSONObject("user_profile");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (profileObject != null) {
+
+                    try {
+                        myProfile.setName(profileObject.getString("name"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        myProfile.setEmail(profileObject.getString("email"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        myProfile.setMobile(profileObject.getString("mobile"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        myProfile.setAddress(profileObject.getString("address"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        myProfile.setWorldZone(profileObject.getString("world_zone"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                    JSONObject vehicleTypeJSON = null;
+                    try {
+                        vehicleTypeJSON = profileObject.getJSONObject("car_type");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (vehicleTypeJSON != null) {
+
+                        VehicleType vehicleType = new VehicleType();
+                        try {
+                            vehicleType.setId(vehicleTypeJSON.getLong("id"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            vehicleType.setName(vehicleTypeJSON.getString("name"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            vehicleType.setCurrency(vehicleTypeJSON.getString("currency"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            vehicleType.setPricePerYear(vehicleTypeJSON.getDouble("price_per_year"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            vehicleType.setIconURL(Constants.MEDIA_PATH_URL + vehicleTypeJSON.getString("icon_url"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        Globals.profile.setVehicleType(vehicleType);
+                        Globals.selectedVehicleType = vehicleType;
+
+                        ServiceArea serviceArea = new ServiceArea();
+                        serviceArea.setAreaName(myProfile.getWorldZone());
+                        if (myProfile.getWorldZone().equals("Europe")) {
+                            serviceArea.setId(1);
+                        } else {
+                            serviceArea.setId(2);
+                        }
+                        Globals.selectedServiceArea = serviceArea;
+
+                    }
                 }
 
                 Utils.initHabitSDK(this);
@@ -222,7 +318,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
                 Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             e.printStackTrace();

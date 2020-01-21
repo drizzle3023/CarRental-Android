@@ -58,6 +58,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -438,7 +440,12 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 params.put("name", selectedCompany.getName());
                 params.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
                 params.put("longitude", String.format("%f", Globals.coverage.getLocation().getLongitude()));
-                params.put("address", "和联合了");
+                try {
+                    params.put("address", URLEncoder.encode("aaaaaaaaa","UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    params.put("address", "");
+                }
                 params.put("company_id", String.format("%d", selectedCompany.getId()));
                 params.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
                 params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000));

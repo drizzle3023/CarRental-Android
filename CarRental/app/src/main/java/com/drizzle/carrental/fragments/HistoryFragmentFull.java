@@ -183,6 +183,11 @@ public class HistoryFragmentFull extends Fragment {
                                     }
                                     coverage.setDateTo(calTo);
 
+                                    try {
+                                        coverage.setClaimCount(content.getInt("claim_count"));
+                                    } catch (JSONException e) {
+                                        coverage.setClaimCount(0);
+                                    }
 
                                     try {
                                         coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + content.getString("video_vehicle"));
@@ -276,16 +281,18 @@ public class HistoryFragmentFull extends Fragment {
 
                                 dataModels.add(historyModel);
 
-                                adapter = new CustomAdapterForHistoryListView(dataModels, getActivity().getApplicationContext());
 
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        History historyModel = dataModels.get(position);
-                                    }
-                                });
                             }
+
+                            adapter = new CustomAdapterForHistoryListView(dataModels, getActivity().getApplicationContext());
+
+                            listView.setAdapter(adapter);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    History historyModel = dataModels.get(position);
+                                }
+                            });
 
                         } else {
                             JSONObject data = object.getJSONObject("data");

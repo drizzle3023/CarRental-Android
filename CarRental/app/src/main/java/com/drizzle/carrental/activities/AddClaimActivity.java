@@ -63,6 +63,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -1107,7 +1109,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 }
                 if (claim.getAddressHappened() != null) {
 
-                    paramObject.put("address", claim.getAddressHappened());
+                    try {
+                        paramObject.put("address", URLEncoder.encode(claim.getAddressHappened(),"UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        paramObject.put("address", "");
+                    }
                 }
 
                 paramObject.put("access_token", SharedHelper.getKey(AddClaimActivity.this, "access_token"));
@@ -1116,6 +1122,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 }
                 if (claim.getWhatHappened() != null) {
                     paramObject.put("what_happened", claim.getWhatHappened());
+                    try {
+                        paramObject.put("what_happened", URLEncoder.encode(claim.getWhatHappened(),"UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        paramObject.put("what_happened", "");
+                    }
                 }
                 if (claim.getWhatHappened() != null) {
                     paramObject.put("time_happened", Long.valueOf(claim.getWhenHappened().getTimeInMillis() / 1000).toString());
@@ -1125,7 +1136,13 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     paramObject.put("damaged_part", claim.getDamagedPartsString());
                 }
                 if (claim.getExtraDescription() != null) {
-                    paramObject.put("note", claim.getExtraDescription());
+
+                    try {
+                        paramObject.put("note", URLEncoder.encode(claim.getExtraDescription(), "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        paramObject.put("note", "");
+                    }
+
                 }
 
                 paramObject.put("state", Integer.valueOf(claimState.getIntValue()).toString());

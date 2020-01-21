@@ -437,11 +437,15 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 Map<String, String> params = new HashMap<>();
 
                 params.put("access_token", SharedHelper.getKey(StartCoverageActivity.this, "access_token"));
-                params.put("name", selectedCompany.getName());
+                try {
+                    params.put("name", URLEncoder.encode(selectedCompany.getName(),"UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    params.put("name", "");
+                }
                 params.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
                 params.put("longitude", String.format("%f", Globals.coverage.getLocation().getLongitude()));
                 try {
-                    params.put("address", URLEncoder.encode("aaaaaaaaa","UTF-8"));
+                    params.put("address", URLEncoder.encode(Globals.coverage.getLocationAddress(),"UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     params.put("address", "");

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.drizzle.carrental.BuildConfig;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.api.ApiClient;
@@ -74,7 +75,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
         linkFeedback.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>Feedback</i></a>"));
         linkFaqs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs</i></a>"));
-        linkAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About</i></a>"));
+        linkAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About " + BuildConfig.VERSION_NAME + "</i></a>"));
 
         linkFeedback.setClickable(true);
         linkFeedback.setMovementMethod(LinkMovementMethod.getInstance());
@@ -98,6 +99,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
             updateFragment();
         }
 
+
         return view;
 
     }
@@ -111,6 +113,10 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
             }
             if (Globals.profile.getMobile() != null) {
                 textViewPhoneNumber.setText(Globals.profile.getMobile());
+            }
+            if (Globals.profile.getEmail() != null) {
+                linkAddEmail.setText(Globals.profile.getEmail());
+                linkAddEmail.setTextColor(getResources().getColor(R.color.colorNormalText, null));
             }
 
             try {
@@ -135,7 +141,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         try {
 
             paramObject.put("access_token", SharedHelper.getKey(getActivity(), "access_token"));
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -193,7 +199,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
             if (body != null) {
                 responseString = body.string();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -201,7 +207,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         if (responseString != null) {
             try {
                 object = new JSONObject(responseString);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -238,7 +244,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
                 Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
 

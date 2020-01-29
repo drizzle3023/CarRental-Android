@@ -3,9 +3,9 @@ package com.drizzle.carrental.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.daasuu.camerarecorder.egl.filter.GlOverlayFilter;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.AddCoverageActivity;
 import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.activities.HomeActivity;
-import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.activities.PaymentActivity;
+import com.drizzle.carrental.activities.SubscriptionNewActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55;
@@ -29,10 +28,8 @@ import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
-import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
-import com.drizzle.carrental.models.Payment;
 import com.drizzle.carrental.serializers.ParseCoverage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -45,7 +42,6 @@ import org.json.JSONObject;
 
 import java.util.GregorianCalendar;
 
-import io.habit.analytics.SDK;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -131,7 +127,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         layoutLocation.setVisibility(View.VISIBLE);
         imageButtonStartCoverage.setAlpha(1f);
 
-        imageButtonStartCoverage.setImageResource(R.drawable.icon_add_coverage);
+        imageButtonStartCoverage.setImageResource(R.drawable.ic_icon_add_coverage);
         textViewCoverageTitle.setText(getResources().getString(R.string.start_coverage_title));
         textViewCoverageLocation.setText(getResources().getString(R.string.have_unlimited_coverage));
 
@@ -159,7 +155,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         imageButtonStartCoverage.setAlpha(1f);
 
                         if (Globals.coverage.getUrlImageVehicle() != null && !Globals.coverage.getUrlImageVehicle().isEmpty()) {
-                            Picasso.get().load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.icon_add_coverage).into(imageButtonStartCoverage);
+
+                            Picasso picasso = Picasso.get();
+                            picasso.invalidate(Globals.coverage.getUrlImageVehicle());
+                            picasso.load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.ic_icon_add_coverage).into(imageButtonStartCoverage);
                         }
                         if (Globals.coverage.getTitle() != null && !Globals.coverage.getTitle().isEmpty()) {
                             textViewCoverageTitle.setText(Globals.coverage.getTitle());
@@ -175,7 +174,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     case COVERED:
 
                         buttonClaims.setVisibility(View.VISIBLE);
-                        imageButtonRemoveCoverage.setVisibility(View.GONE);
+                        imageButtonRemoveCoverage.setVisibility(View.VISIBLE);
                         textViewCoverageTitle.setVisibility(View.VISIBLE);
                         imageViewLocationIcon.setVisibility(View.VISIBLE);
                         textViewCoverageLocation.setVisibility(View.VISIBLE);
@@ -185,7 +184,9 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         imageButtonStartCoverage.setAlpha(1f);
 
                         if (Globals.coverage.getUrlImageVehicle() != null && !Globals.coverage.getUrlImageVehicle().isEmpty()) {
-                            Picasso.get().load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.icon_add_coverage).into(imageButtonStartCoverage);
+                            Picasso picasso = Picasso.get();
+                            picasso.invalidate(Globals.coverage.getUrlImageVehicle());
+                            picasso.load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.ic_icon_add_coverage).into(imageButtonStartCoverage);
                         }
                         if (Globals.coverage.getTitle() != null && !Globals.coverage.getTitle().isEmpty()) {
                             textViewCoverageTitle.setText(Globals.coverage.getTitle());
@@ -211,7 +212,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         layoutLocation.setVisibility(View.GONE);
 
                         imageButtonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
-                        Picasso.get().load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
+
+                        Picasso picasso = Picasso.get();
+                        picasso.invalidate(Globals.coverage.getUrlImageVehicle());
+                        picasso.load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
                         imageButtonStartCoverage.setAlpha(0.25f);
                         textViewCoverageTitle.setText(R.string.coverage_expired_title);
                         textViewCoveragePeriod.setText(R.string.no_remainingtime);
@@ -239,10 +243,17 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void resetBottomBar() {
 
-        imageButtonAssistence.setImageResource(R.drawable.assitence_disabled);
+        imageButtonAssistence.setColorFilter(getResources().getColor(R.color.colorBottombarIconDisabled, null));
+        imageButtonAssistence.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
+
         imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
+        imageButtonLostKeys.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
+
         imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
+        imageButtonBrokenGlasses.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
+
         imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
+        imageButtonCoverTheft.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
 
         textViewAssistence.setTextColor(getResources().getColor(R.color.colorInvalid, null));
         textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
@@ -261,15 +272,21 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                     case COVERED:
 
-                        imageButtonAssistence.setImageResource(R.drawable.assitence_active);
-                        imageButtonLostKeys.setImageResource(R.drawable.lost_keys_enabled);
-                        imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_enabled);
-                        imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_enabled);
 
-                        textViewAssistence.setTextColor(getResources().getColor(R.color.colorValid, null));
-                        textViewLostKeys.setTextColor(getResources().getColor(R.color.colorValid, null));
-                        textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorValid, null));
-                        textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorValid, null));
+                        imageButtonAssistence.setColorFilter(Color.WHITE);
+                        imageButtonAssistence.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_active);
+
+                        imageButtonLostKeys.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
+
+                        imageButtonBrokenGlasses.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
+
+                        imageButtonCoverTheft.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
+
+
+                        textViewAssistence.setTextColor(getResources().getColor(R.color.colorNormalText, null));
+                        textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                        textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                        textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
 
                         break;
                     case UNCOVERED:
@@ -340,19 +357,16 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     try {
                         JSONObject object = new JSONObject(response.body().string());
 
-                        int pay_state = 0;
+                        int payState= 0;
                         try {
-                            pay_state = Integer.parseInt(object.getJSONObject("data").getString("pay_state"));
-                        } catch (NumberFormatException e) {
+                            payState = Integer.parseInt(object.getJSONObject("data").getString("pay_state"));
+                        } catch (Exception e) {
                             e.printStackTrace();
-                            pay_state = 0;
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            pay_state = 0;
+                            payState = 0;
                         }
 
-                        if (pay_state == 0) {
-                            navigateToPaymentActivity();
+                        if (payState == 0) {
+                            navigateToSubscribeActivity();
                         }
                         if (object.getString("success").equals("true")) {
 
@@ -490,7 +504,6 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 new AlertDialog.Builder(getActivity())
                         .setTitle("Cancel Coverage")
                         .setMessage("Are you sure you want to cancel current coverage?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -519,11 +532,21 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         startActivity(intent);
     }
 
-    private void navigateToPaymentActivity() {
+    private void navigateToSubscribeActivity() {
 
-        Intent intent = new Intent(getActivity(), PaymentActivity.class);
-        startActivity(intent);
-        getActivity().finish();
+        if (Globals.profile.getVehicleType() != null && Globals.profile.getWorldZone() != null && !Globals.profile.getWorldZone().isEmpty()) {
+            Intent intent = new Intent(getActivity(), PaymentActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+        else {
+            Intent intent = new Intent(getActivity(), SubscriptionNewActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+
+
+
     }
 
     private void cancelCoverage() {

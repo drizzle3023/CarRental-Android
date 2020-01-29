@@ -121,19 +121,19 @@
             android:textColor="@android:color/white"
             android:textSize="17sp" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/imagebutton_center_location"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@null"
+            android:background="@drawable/center_location_button_back"
             android:elevation="2dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerInside"
             android:layout_marginTop="30dp"
             android:layout_marginRight="30dp"
             android:layout_gravity="right"
-            android:src="@drawable/center_my_location">
+            android:src="@drawable/ic_icon_your_location">
 
-        </ImageButton>
+        </ImageView>
     </FrameLayout>
 
 

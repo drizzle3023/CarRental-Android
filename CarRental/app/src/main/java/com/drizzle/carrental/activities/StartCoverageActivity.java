@@ -196,6 +196,9 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
         getControlHandlersAndLinkActions();
 
+        buttonDone.setBackgroundResource(R.drawable.inactive_button);
+        buttonDone.setEnabled(false);
+
         getCurrentAddress();
 
 
@@ -215,7 +218,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             paramObject.put("latitude", currentLocation.getLatitude());
             paramObject.put("longitude", currentLocation.getLongitude());
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -254,7 +257,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             if (body != null) {
                 responseString = body.string();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -262,7 +265,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         if (responseString != null) {
             try {
                 object = new JSONObject(responseString);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -322,7 +325,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 }
 
 
-
             } else if (object.getString("success").equals("false")) {
 
                 JSONObject data = object.getJSONObject("data");
@@ -344,7 +346,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 }
                 Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             if (isGettingCompanyListOrSubmitAction) {
                 Globals.coverage = new Coverage();
@@ -359,7 +361,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     public void onFailure(Call<ResponseBody> call, Throwable t) {
 
         hideWaitingScreen();
-        Globals.coverage = new Coverage();
+        //Globals.coverage = new Coverage();
         Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
     }
 
@@ -420,7 +422,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                                 Toast.makeText(StartCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
                             }
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(StartCoverageActivity.this, getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                         }
@@ -437,19 +439,14 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 Map<String, String> params = new HashMap<>();
 
                 params.put("access_token", SharedHelper.getKey(StartCoverageActivity.this, "access_token"));
-                try {
-                    params.put("name", URLEncoder.encode(selectedCompany.getName(),"UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    params.put("name", "");
-                }
+
+
+                params.put("name", Utils.encodeAsUTF8(selectedCompany.getName()));
+
                 params.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
                 params.put("longitude", String.format("%f", Globals.coverage.getLocation().getLongitude()));
-                try {
-                    params.put("address", URLEncoder.encode(Globals.coverage.getLocationAddress(),"UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    params.put("address", "");
-                }
+                params.put("address", Utils.encodeAsUTF8(Globals.coverage.getLocationAddress()));
+
                 params.put("company_id", String.format("%d", selectedCompany.getId()));
                 params.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
                 params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000));
@@ -500,11 +497,23 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.layout_start_date:
-                showDatePicker(R.id.layout_start_date);
+                if (spinnerCompanySelector.getSelectedItem() != null) {
+                    showDatePicker(R.id.layout_start_date);
+                } else {
+                    Toast.makeText(this, getString(R.string.message_company_id_is_missing), Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
             case R.id.layout_dropoff_date:
-                showDatePicker(R.id.layout_dropoff_date);
+                if (Globals.coverage != null) {
+                    if (Globals.coverage.getDateFrom() != null) {
+                        showDatePicker(R.id.layout_dropoff_date);
+                    } else {
+                        Toast.makeText(this, getString(R.string.pickup_date_is_null), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
                 break;
 
         }
@@ -540,8 +549,13 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                     } else {
 
-                        Globals.coverage.setDateFrom(new GregorianCalendar(year, month, dayOfMonth));
-                        textViewStartDate.setText(Globals.coverage.getDateFromString());
+                        try {
+                            Globals.coverage.setDateFrom(new GregorianCalendar(year, month, dayOfMonth));
+                            textViewStartDate.setText(Globals.coverage.getDateFromString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                 } else if (resourceId == R.id.layout_dropoff_date) {
@@ -558,12 +572,25 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                         if (selectedDate.before(pickupDate)) {
 
-                            Globals.coverage.setDateTo(null);
+                            try {
+                                Globals.coverage.setDateTo(null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                             textViewEndDate.setText("");
                             Toast.makeText(getBaseContext(), R.string.dropoff_date_is_past, Toast.LENGTH_SHORT).show();
                         } else {
-                            Globals.coverage.setDateTo(new GregorianCalendar(year, month, dayOfMonth));
-                            textViewEndDate.setText(Globals.coverage.getDateToString());
+
+                            try {
+                                Globals.coverage.setDateTo(new GregorianCalendar(year, month, dayOfMonth));
+                                textViewEndDate.setText(Globals.coverage.getDateToString());
+                                buttonDone.setBackgroundResource(R.drawable.active_button);
+                                buttonDone.setEnabled(true);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
 
                         }
                     }
@@ -650,6 +677,9 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+        if (textViewPickUpLocation.getText().toString().isEmpty()) {
+            Toast.makeText(this, getString(R.string.message_address_is_missing), Toast.LENGTH_SHORT).show();
+        }
         selectedCompany = companies.get(position);
     }
 

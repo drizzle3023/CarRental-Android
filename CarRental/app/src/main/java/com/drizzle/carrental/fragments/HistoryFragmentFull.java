@@ -134,13 +134,13 @@ public class HistoryFragmentFull extends Fragment {
 
                                     try {
                                         coverage.setTitle(content.getString("name"));
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
                                     try {
                                         coverage.setLocationAddress(content.getString("address"));
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
@@ -149,12 +149,12 @@ public class HistoryFragmentFull extends Fragment {
 
                                     try {
                                         loc.setLatitude(content.getDouble("latitude"));
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     try {
                                         loc.setLongitude(content.getDouble("longitude"));
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     coverage.setLocation(loc);
@@ -163,14 +163,14 @@ public class HistoryFragmentFull extends Fragment {
                                     Company company = new Company();
                                     try {
                                         company.setId(content.getLong("company_id"));
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
                                     GregorianCalendar calFrom = new GregorianCalendar();
                                     try {
                                         calFrom.setTimeInMillis(content.getLong("start_at") * 1000);
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     coverage.setDateFrom(calFrom);
@@ -178,14 +178,14 @@ public class HistoryFragmentFull extends Fragment {
                                     GregorianCalendar calTo = new GregorianCalendar();
                                     try {
                                         calTo.setTimeInMillis(content.getLong("end_at") * 1000);
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     coverage.setDateTo(calTo);
 
                                     try {
                                         coverage.setClaimCount(content.getInt("claim_count"));
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         coverage.setClaimCount(0);
                                     }
 
@@ -229,7 +229,7 @@ public class HistoryFragmentFull extends Fragment {
                                     int state = 1;
                                     try {
                                         state = content.getInt("state");
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     PaymentState paymentState = PaymentState.values()[state - 1];
@@ -240,13 +240,13 @@ public class HistoryFragmentFull extends Fragment {
                                     double amount = 0;
                                     try {
                                         amount = content.getDouble("amount");
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     String currency = null;
                                     try {
                                         currency = content.getString("currency");
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
@@ -262,7 +262,7 @@ public class HistoryFragmentFull extends Fragment {
                                     GregorianCalendar calendar = new GregorianCalendar();
                                     try {
                                         calendar.setTimeInMillis(content.getLong("date") * 1000);
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     payment.setPaymentDate(calendar);

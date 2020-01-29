@@ -20,10 +20,11 @@ public class VehicleType implements Serializable {
     @SerializedName("icon_url")
     String iconURL;
 
-    @SerializedName("price_per_year")
-    double pricePerYear;
+    @SerializedName("price_per_year_usd")
+    double pricePerYearUsd;
 
-    @SerializedName("currency")
-    String currency;
+    @SerializedName("price_per_year_eur")
+    double pricePerYearEur;
+
 
 }

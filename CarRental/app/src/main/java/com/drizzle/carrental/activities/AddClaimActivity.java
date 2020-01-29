@@ -29,6 +29,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -70,7 +72,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -195,6 +196,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private Button buttonSubmitClaim;
 
+    private ScrollView scrollView;
+
     private ClaimCurrentStep claimCurrentStep = ClaimCurrentStep.NEW;
 
     private boolean isEditable = false; //indicates if any content is changed or not
@@ -207,6 +210,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
      * get control handlers by id and add listenres
      */
     private void getControlHandlersAndLinkActions() {
+
+        scrollView = findViewById(R.id.scrollView);
 
         buttonBack = findViewById(R.id.button_back_to_onboarding);
         buttonSave = findViewById(R.id.button_save);
@@ -313,7 +318,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         claim.setWhereHappened(loc);
         claim.setAddressHappened("Independence Street, No 37");
 
-        List<DamagedPart> damagedParts = new ArrayList<>();
+        ArrayList<DamagedPart> damagedParts = new ArrayList<>();
         damagedParts.add(DamagedPart.LEFT_BACK);
         damagedParts.add(DamagedPart.LEFT_FENDER_PANEL);
         claim.setDamagedParts(damagedParts);
@@ -380,22 +385,33 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         if (claim.getWhatHappened() == null || claim.getWhatHappened().isEmpty()) {
 
             claimCurrentStep = ClaimCurrentStep.NEW;
-        } else if (claim.getWhenHappened() == null) {
+        } else {
 
             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
-        } else if (claim.getAddressHappened() == null || claim.getAddressHappened().isEmpty()) {
+        }
+
+        if (claim.getWhenHappened() != null) {
 
             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHENHAPPENED;
-        } else if (claim.getDamagedParts() == null || claim.getDamagedParts().isEmpty()) {
+        }
+
+        if (claim.getAddressHappened() != null && !claim.getAddressHappened().isEmpty()) {
 
             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHEREHAPPENED;
-        } else if (claim.getVideoURL() == null || claim.getVideoURL().isEmpty()) {
+        }
+
+        if (claim.getDamagedParts() != null && !claim.getDamagedParts().isEmpty()) {
 
             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
-        } else if (claim.getExtraDescription() == null || claim.getExtraDescription().isEmpty()) {
+        }
 
-            claimCurrentStep = ClaimCurrentStep.ELSE_ANSWER_EDITING;
-        } else {
+        if (claim.getVideoURL() != null && !claim.getVideoURL().isEmpty()) {
+
+            claimCurrentStep = ClaimCurrentStep.ANSWERED_TAKE_VIDEO;
+        }
+
+        if (claim.getExtraDescription() != null && !claim.getExtraDescription().isEmpty()) {
+
             claimCurrentStep = ClaimCurrentStep.ANSWERED_ELSE;
         }
 
@@ -405,6 +421,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
             isEditable = false;
         }
+
     }
 
     /**
@@ -428,6 +445,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         //prepareTestData();
 
         updateViewContent();
+
     }
 
     /**
@@ -435,7 +453,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
      */
     public void updateViewContent() {
 
-        updateSaveButton();
+        updateButtons();
         updateAnswerWhatHappenedLayout();
         updateWhenHappenedLayout();
         updateWhereHappenedLayout();
@@ -443,29 +461,54 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         updateTakeVideoLayout();
         updateElseLayout();
 
-        if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_TAKE_VIDEO.getIntValue()) {
+        if (isEditable) {
 
-            buttonSubmitClaim.setClickable(true);
-            buttonSubmitClaim.setBackgroundResource(R.drawable.active_button);
+            buttonEditAnswerWhatHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhenHappened.setVisibility(View.VISIBLE);
+            buttonEditAnswerWhereHappened.setVisibility(View.VISIBLE);
+            buttonEditTakeVideo.setVisibility(View.GONE);
+            buttonEditDamagedPart.setVisibility(View.VISIBLE);
 
         } else {
-            buttonSubmitClaim.setClickable(false);
-            buttonSubmitClaim.setBackgroundResource(R.drawable.inactive_button);
+
+            buttonEditAnswerWhatHappened.setVisibility(View.GONE);
+            buttonEditAnswerWhenHappened.setVisibility(View.GONE);
+            buttonEditAnswerWhereHappened.setVisibility(View.GONE);
+            buttonEditTakeVideo.setVisibility(View.GONE);
+            buttonEditDamagedPart.setVisibility(View.GONE);
+
+            editTextAnswerElse.setEnabled(false);
         }
     }
 
-    private void updateSaveButton() {
+    private void updateButtons() {
 
         if (isEditable) {
 
 //            buttonSave.setTextColor(getResources().getColor(R.color.colorInvalid, null));
 //            buttonSave.setBackground(getResources().getDrawable(R.drawable.file_a_claim_save_button_inactived, null));
+
             buttonSave.setVisibility(View.VISIBLE);
+
+            if (claimCurrentStep.getIntValue() >= ClaimCurrentStep.ANSWERED_TAKE_VIDEO.getIntValue()) {
+                buttonSubmitClaim.setBackgroundResource(R.drawable.active_button);
+                buttonSubmitClaim.setEnabled(true);
+            } else {
+                buttonSubmitClaim.setBackgroundResource(R.drawable.inactive_button);
+                buttonSubmitClaim.setEnabled(false);
+            }
+
         } else {
             buttonSave.setVisibility(View.GONE);
             buttonSave.setTextColor(getResources().getColor(R.color.colorValid, null));
             buttonSave.setBackground(getResources().getDrawable(R.drawable.file_a_claim_save_button_actived, null));
+
+            buttonSubmitClaim.setBackgroundResource(R.drawable.inactive_button);
+            buttonSubmitClaim.setEnabled(false);
+
         }
+
+
     }
 
     private void updateAnswerWhatHappenedLayout() {
@@ -488,7 +531,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             layoutQuestionWhatHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
             layoutAnswerWhatHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_new, null));
             imageViewAnswerWhatHappendIcon.setImageResource(R.drawable.file_a_claim_answer_what_happened_icon_enabled);
-            textViewAnswerWhatHappenedTitle.setText(getResources().getText(R.string.file_a_claim_answer_what_happened_text_title));
+            textViewAnswerWhatHappenedTitle.setText(getResources().getText(R.string.file_a_claim_answer_what_happened_text_title_select_answer));
             buttonEditAnswerWhatHappened.setText(getResources().getText(R.string.drop_down_list_symbol_character));
             buttonEditAnswerWhatHappened.setBackgroundResource(0);
             textViewAnswerWhatHappenedTitle.setTextColor(Color.WHITE);
@@ -506,11 +549,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
             layoutQuestionWhatHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_enabled, null));
             textViewAnswerWhatHappenedTitle.setTextColor(getResources().getColor(R.color.colorNormalText, null));
-            textViewAnswerWhatHappenedTitle.setText(getResources().getString(R.string.file_a_claim_answer_what_happened_text_title));
+            textViewAnswerWhatHappenedTitle.setText(getResources().getString(R.string.file_a_claim_answer_what_happened_text_title_your_description));
             layoutAnswerWhatHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
             imageViewAnswerWhatHappendIcon.setImageResource(R.drawable.file_a_claim_answer_what_happened_icon_editing);
 
-            buttonEditAnswerWhatHappened.setBackgroundResource(R.drawable.icon_edit);
+            buttonEditAnswerWhatHappened.setBackgroundResource(R.drawable.ic_edit_black_24dp);
             buttonEditAnswerWhatHappened.setText("");
 
         } else {
@@ -527,7 +570,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             layoutQuestionWhatHappened.setBackground(getResources().getDrawable(R.drawable.file_a_claim_question_disabled, null));
             layoutAnswerWhatHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
             imageViewAnswerWhatHappendIcon.setImageResource(R.drawable.file_a_claim_answer_what_happened_icon_saved);
-            buttonEditAnswerWhatHappened.setBackgroundResource(R.drawable.icon_edit);
+            buttonEditAnswerWhatHappened.setBackgroundResource(R.drawable.ic_edit_black_24dp);
             buttonEditAnswerWhatHappened.setText("");
 
             if (claim.getWhatHappened() != null) {
@@ -537,7 +580,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         && !claim.getWhatHappened().equals(getResources().getString(R.string.claim_reason_rock_hit_glass))
                         && !claim.getWhatHappened().equals(getResources().getString(R.string.claim_reason_natural_hazard))) {
 
-                    textViewAnswerWhatHappenedTitle.setText(getResources().getString(R.string.file_a_claim_answer_what_happened_text_title));
+                    textViewAnswerWhatHappenedTitle.setText(getResources().getString(R.string.file_a_claim_answer_what_happened_text_title_your_description));
                     textViewAnswerWhatHappenedDescription.setText(claim.getWhatHappened());
                 } else {
                     textViewAnswerWhatHappenedTitle.setText(claim.getWhatHappened());
@@ -581,11 +624,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewQuestionWhenHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
 
             layoutAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.claim_answer_saved, null));
-            imageViewAnswerWhenHappenedIcon.setImageResource(R.drawable.file_a_claim_calendar_icon_saved);
+            imageViewAnswerWhenHappenedIcon.setImageResource(R.drawable.ic_icon_date_transparent);
             textViewAnswerWhenHappened.setText(claim.getDateString());
             textViewAnswerWhenHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
 
-            buttonEditAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.icon_edit));
+            buttonEditAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.ic_edit_black_24dp, null));
             buttonEditAnswerWhenHappened.setText("");
 
         } else {
@@ -662,7 +705,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             imageViewAnswerWhereHappenedIcon.setImageResource(R.drawable.file_a_claim_icon_location_saved);
             textViewAnswerWhereHappened.setText(claim.getAddressHappened());
             textViewAnswerWhereHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
-            buttonEditAnswerWhereHappened.setBackgroundResource(R.drawable.icon_edit);
+            buttonEditAnswerWhereHappened.setBackgroundResource(R.drawable.ic_edit_black_24dp);
             buttonEditAnswerWhereHappened.setText("");
 
         } else {
@@ -738,7 +781,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewAnswerDamagedPart.setTextColor(getResources().getColor(R.color.colorInvalid, null));
             textViewAnswerDamagedPart.setTypeface(null, Typeface.ITALIC);
             buttonEditDamagedPart.setText("");
-            buttonEditDamagedPart.setBackgroundResource(R.drawable.icon_edit);
+            buttonEditDamagedPart.setBackgroundResource(R.drawable.ic_edit_black_24dp);
 
             int damagedZoneCount = 0;
             if (claim.getDamagedParts() != null) {
@@ -831,8 +874,13 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewAnswerTakeVideo.setTextColor(getResources().getColor(R.color.colorInvalid, null));
             textViewAnswerTakeVideo.setTypeface(null, Typeface.ITALIC);
             buttonEditTakeVideo.setText("");
-            buttonEditTakeVideo.setBackgroundResource(R.drawable.icon_edit);
-            Picasso.get().load(claim.getImageURL()).placeholder(R.drawable.image_damaged_zone).into(imageViewAnswerTakeVideo);
+            buttonEditTakeVideo.setBackgroundResource(R.drawable.ic_edit_black_24dp);
+
+            Picasso picasso = Picasso.get();
+            picasso.invalidate(claim.getImageURL());
+            picasso.load(claim.getImageURL()).placeholder(R.drawable.image_damaged_zone).into(imageViewAnswerTakeVideo);
+
+
             //Picasso.get().load("file:///storage/emulated/0/Pictures/DamagedPart.png").placeholder(R.drawable.image_damaged_zone).into(imageViewAnswerTakeVideo);
 
             //Picasso.with(context).load(new File(path)).into(imageView);
@@ -932,81 +980,68 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    private boolean validateFields(ClaimState claimState) {
+
+        if (claim.getWhatHappened() == null || claim.getWhatHappened().isEmpty()) {
+            Toast.makeText(this, getString(R.string.message_input_what_happened), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (claimState != ClaimState.INCOMPLETE) {
+
+            if (claim.getWhenHappened() == null) {
+
+                Toast.makeText(this, getString(R.string.message_input_when_happened), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (claim.getWhereHappened() == null || claim.getAddressHappened() == null || claim.getAddressHappened().isEmpty()) {
+                Toast.makeText(this, getString(R.string.message_input_where_happened), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (claim.getDamagedParts() == null || claim.getDamagedParts().isEmpty()) {
+
+                Toast.makeText(this, getString(R.string.message_select_damaged_zone), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (claim.getVideoURL() == null || claim.getVideoURL().isEmpty()) {
+
+                Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+
+                String urlPrefix = "file://";
+
+                File file = new File(claim.getVideoURL().substring(urlPrefix.length()));
+                if (!file.exists()) {
+                    Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                File file1 = new File(claim.getImageURL().substring(urlPrefix.length()));
+                if (!file1.exists()) {
+                    Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+
+        return true;
+
+    }
+
     private void saveClaimToDb(ClaimState claimState) {
+
+        if (!validateFields(claimState)) {
+
+            return;
+        }
 
         claim.setClaimState(claimState);
 
         claim.setExtraDescription(editTextAnswerElse.getText().toString());
-
-//        try {
-//
-//            if (claim.getId() > 0) {
-//
-//                paramObject.put("id", claim.getId());
-//            }
-//
-//            if (claim.getWhatHappened() != null) {
-//                paramObject.put("what_happened", claim.getWhatHappened());
-//
-//            } else {
-//                Toast.makeText(this, getResources().getString(R.string.message_input_what_happened), Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-//
-//            if (claim.getWhereHappened() != null) {
-//                paramObject.put("latitude", claim.getWhereHappened().getLatitude());
-//                paramObject.put("longitude", claim.getWhereHappened().getLongitude());
-//            }
-//
-//            if (claim.getAddressHappened() != null) {
-//                paramObject.put("address", claim.getAddressHappened());
-//            }
-//
-//            if (Globals.coverage != null) {
-//
-//                if (Globals.coverage.getId() != null) {
-//                    paramObject.put("coverage_id", Globals.coverage.getId());
-//                }
-//            }
-//
-//            if (claim.getWhenHappened() != null) {
-//                paramObject.put("time_happened", claim.getWhenHappened().getTimeInMillis() / 1000);
-//            }
-//            if (claim.getDamagedParts() != null) {
-//
-//                if (!claim.getDamagedParts().isEmpty()) {
-//                    paramObject.put("damaged_part", claim.getDamagedPartsString());
-//                }
-//            }
-//            if (claim.getExtraDescription() != null && !claim.getExtraDescription().isEmpty()) {
-//                paramObject.put("note", claim.getExtraDescription());
-//            }
-//            if (claim.getClaimState() != null) {
-//                paramObject.put("state", claimState.getIntValue());
-//            }
-//
-////            paramObject.put("start_at", Globals.coverage.getDateFrom().getTimeInMillis() / 1000);
-////            paramObject.put("end_at", Globals.coverage.getDateTo().getTimeInMillis() / 1000);
-////            paramObject.put("state", CoverageState.UNCOVERED.getIntValue());
-//
-//        } catch (JSONException e) {
-//
-//            e.printStackTrace();
-//            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-//        }
-//
-//        JsonParser jsonParser = new JsonParser();
-//        JsonObject gSonObject = (JsonObject) jsonParser.parse(paramObject.toString());
-//
-//        //get apiInterface
-//        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-//        //display waiting dialog
-//        showWaitingScreen();
-//        //send request
-//
-//        apiInterface.addClaim(gSonObject).enqueue(this);
 
         showWaitingScreen();
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(
@@ -1023,7 +1058,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         if (responseString != null) {
                             try {
                                 object = new JSONObject(responseString);
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
@@ -1082,7 +1117,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                             }
 
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
 
                             Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
@@ -1109,11 +1144,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 }
                 if (claim.getAddressHappened() != null) {
 
-                    try {
-                        paramObject.put("address", URLEncoder.encode(claim.getAddressHappened(),"UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        paramObject.put("address", "");
-                    }
+                    paramObject.put("address", Utils.encodeAsUTF8(claim.getAddressHappened()));
                 }
 
                 paramObject.put("access_token", SharedHelper.getKey(AddClaimActivity.this, "access_token"));
@@ -1121,14 +1152,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     paramObject.put("coverage_id", Long.valueOf(Globals.coverage.getId()).toString());
                 }
                 if (claim.getWhatHappened() != null) {
-                    paramObject.put("what_happened", claim.getWhatHappened());
-                    try {
-                        paramObject.put("what_happened", URLEncoder.encode(claim.getWhatHappened(),"UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        paramObject.put("what_happened", "");
-                    }
+                    paramObject.put("what_happened", Utils.encodeAsUTF8(claim.getWhatHappened()));
+
+
                 }
-                if (claim.getWhatHappened() != null) {
+                if (claim.getWhenHappened() != null) {
                     paramObject.put("time_happened", Long.valueOf(claim.getWhenHappened().getTimeInMillis() / 1000).toString());
                 }
 
@@ -1137,11 +1165,9 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 }
                 if (claim.getExtraDescription() != null) {
 
-                    try {
-                        paramObject.put("note", URLEncoder.encode(claim.getExtraDescription(), "UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        paramObject.put("note", "");
-                    }
+
+                    paramObject.put("note", Utils.encodeAsUTF8(claim.getExtraDescription()));
+
 
                 }
 
@@ -1199,6 +1225,9 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
         switch (view.getId()) {
 
+            case R.id.edittext_answer_else:
+                //scrollView.scrollTo(0, scrollView.getBottom());
+                break;
             case R.id.button_save:
                 isSaveOrSubmit = true;
                 saveClaimToDb(ClaimState.INCOMPLETE);
@@ -1216,6 +1245,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 saveClaimToDb(ClaimState.PENDING_REVIEW);
                 break;
 
+            case R.id.imagebutton_edit_answer_what_happend:
             case R.id.textview_answer_what_happend_title:
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.dialog_claim_reason_selector);
@@ -1232,7 +1262,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onClick(View v) {
 
-                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                            claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        }
+
                         claim.setWhatHappened(getResources().getString(R.string.claim_reason_car_accident));
                         dialog.dismiss();
                         updateViewContent();
@@ -1243,7 +1276,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onClick(View v) {
-                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                            claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        }
                         claim.setWhatHappened(getResources().getString(R.string.claim_reason_car_stolen));
                         dialog.dismiss();
                         updateViewContent();
@@ -1254,7 +1290,9 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onClick(View v) {
-                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                            claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        }
                         claim.setWhatHappened(getResources().getString(R.string.claim_reason_rock_hit_glass));
                         dialog.dismiss();
                         updateViewContent();
@@ -1265,7 +1303,9 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onClick(View v) {
-                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                            claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        }
                         claim.setWhatHappened(getResources().getString(R.string.claim_reason_natural_hazard));
                         dialog.dismiss();
                         updateViewContent();
@@ -1276,7 +1316,9 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onClick(View v) {
-                        claimCurrentStep = ClaimCurrentStep.WHAT_HAPPENED_EDITING;
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+                            claimCurrentStep = ClaimCurrentStep.WHAT_HAPPENED_EDITING;
+                        }
                         //claim.setWhatHappened(getResources().getString(R.string.claim_reason_other_reason));
                         dialog.dismiss();
                         updateViewContent();
@@ -1305,13 +1347,19 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 dialog.show();
                 break;
+
+
             case R.id.imagebutton_clear_answer_what_happened_description:
                 editTextAnswerWhatHappenedDescription.setText("");
                 break;
 
 
             case R.id.button_done_answer_what_happend_description:
-                claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+
+                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                    claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                }
+
                 claim.setWhatHappened(editTextAnswerWhatHappenedDescription.getText().toString());
                 updateViewContent();
 
@@ -1326,19 +1374,23 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 break;
 
+            case R.id.imagebutton_edit_when_happend:
             case R.id.textview_answer_when_happend:
                 showDatePicker();
                 break;
 
+            case R.id.imagebutton_edit_answer_where_happened:
             case R.id.textview_answer_where_happened:
                 navigateToAddLocationActivity();
                 break;
 
+            case R.id.imagebutton_edit_answer_damaged_part:
             case R.id.textview_answer_damaged_part:
                 displaySelectDamagedPartDialog();
 
                 break;
 
+            case R.id.imagebutton_edit_answer_take_video:
             case R.id.textview_answer_take_video:
 
                 checkPermission();
@@ -1391,13 +1443,64 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         Button doneButton = dialog.findViewById(R.id.button_done);
 
         ArrayList<DamagedPart> selectedParts = new ArrayList<>();
+        if (claim.getDamagedParts() != null && !claim.getDamagedParts().isEmpty()) {
+
+            for (int i = 0; i < claim.getDamagedParts().size(); i++) {
+
+                selectedParts.add(claim.getDamagedParts().get(i));
+
+                switch (claim.getDamagedParts().get(i)) {
+                    case LEFT_FENDER_PANEL:
+                        imageButtonLeftFenderPanel.setImageResource(R.drawable.damaged_zone_left_fender_panel_selected);
+                        break;
+                    case LEFT_FRONT_DOOR:
+                        imageButtonLeftFrontDoor.setImageResource(R.drawable.damaged_zone_left_front_door_selected);
+                        break;
+                    case LEFT_QUARTER_PANEL:
+                        imageButton_leftQuarterPanel.setImageResource(R.drawable.damaged_zone_left_quarter_panel_selected);
+                        break;
+                    case LEFT_HOOD:
+                        imageButtonLeftHood.setImageResource(R.drawable.damaged_zone_left_hood_selected);
+                        break;
+                    case RIGHT_HOOD:
+                        imageButtonRightHood.setImageResource(R.drawable.damaged_zone_right_hood_selected);
+                        break;
+                    case RIGHT_ROOF:
+                        imageButtonRightRoof.setImageResource(R.drawable.damaged_zone_right_roof_selected);
+
+                        break;
+                    case LEFT_ROOF:
+                        imageButtonLeftRoof.setImageResource(R.drawable.damaged_zone_left_roof_selected);
+                        break;
+                    case LEFT_BACK:
+                        imageButtonLeftBack.setImageResource(R.drawable.damaged_zone_left_back_selected);
+                        break;
+                    case RIGHT_BACK:
+                        imageButtonRightBack.setImageResource(R.drawable.damaged_zone_right_back_selected);
+                        break;
+                    case RIGHT_FENDER_PANEL:
+                        imageButtonRightFenderPanel.setImageResource(R.drawable.damaged_zone_right_fender_panel_selected);
+                        break;
+                    case RIGHT_FRONT_DOOR:
+                        imageButtonRightFrontDoor.setImageResource(R.drawable.damaged_zone_right_front_door_selected);
+                        break;
+                    case RIGHT_QUARTER_PANEL:
+                        imageButtonRightQuarterPanel.setImageResource(R.drawable.damaged_zone_right_quarter_panel_selected);
+                        break;
+                }
+            }
+        }
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (!selectedParts.isEmpty()) {
-                    claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
+
+                    if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED.getIntValue()) {
+                        claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
+                    }
+
                     claim.setDamagedParts(selectedParts);
                     updateViewContent();
                     dialog.dismiss();
@@ -1582,10 +1685,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 if (selectedParts.contains(DamagedPart.RIGHT_QUARTER_PANEL)) {
                     selectedParts.remove(DamagedPart.RIGHT_QUARTER_PANEL);
-                    imageButtonRightQuarterPanel.setImageResource(R.drawable.damaged_zone_right_fender_panel);
+                    imageButtonRightQuarterPanel.setImageResource(R.drawable.damaged_zone_right_quarter_panel);
                 } else {
                     selectedParts.add(DamagedPart.RIGHT_QUARTER_PANEL);
-                    imageButtonRightQuarterPanel.setImageResource(R.drawable.damaged_zone_right_fender_panel_selected);
+                    imageButtonRightQuarterPanel.setImageResource(R.drawable.damaged_zone_right_quarter_panel_selected);
                 }
             }
         });
@@ -1630,10 +1733,53 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                claimCurrentStep = ClaimCurrentStep.ANSWERED_WHENHAPPENED;
-                claim.setWhenHappened(new GregorianCalendar(year, month, dayOfMonth));
-                textViewAnswerWhenHappened.setText(claim.getDateString());
-                updateViewContent();
+                GregorianCalendar currentDate = new GregorianCalendar();
+                currentDate.set(Calendar.HOUR, 0);
+                currentDate.set(Calendar.MINUTE, 0);
+                currentDate.set(Calendar.SECOND, 0);
+                currentDate.set(Calendar.MILLISECOND, 0);
+                currentDate.set(Calendar.AM_PM, Calendar.AM);
+
+                GregorianCalendar selectedDate = new GregorianCalendar(year, month, dayOfMonth);
+
+                if (selectedDate.before(currentDate)) {
+
+                    Toast.makeText(getBaseContext(), R.string.claim_date_is_past, Toast.LENGTH_SHORT).show();
+
+                    if (claim.getWhenHappened() != null) {
+
+                    }
+                    else {
+
+                        Globals.coverage.setDateFrom(null);
+                        textViewAnswerWhenHappened.setText(getString(R.string.file_a_claim_answer_when_happened_text_title));
+
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                            claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        }
+
+                        updateViewContent();
+                    }
+
+
+
+                } else {
+
+                    try {
+
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHENHAPPENED.getIntValue()) {
+                            claimCurrentStep = ClaimCurrentStep.ANSWERED_WHENHAPPENED;
+                        }
+
+                        claim.setWhenHappened(new GregorianCalendar(year, month, dayOfMonth));
+                        textViewAnswerWhenHappened.setText(claim.getDateString());
+                        updateViewContent();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
 
             }
         }, year, month, day);
@@ -1664,7 +1810,12 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         if (requestCode == ADD_LOCATION_REQUEST_CODE) {
 
             if (resultCode == RESULT_OK) {
-                claimCurrentStep = ClaimCurrentStep.ANSWERED_WHEREHAPPENED;
+
+
+                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHEREHAPPENED.getIntValue()) {
+                    claimCurrentStep = ClaimCurrentStep.ANSWERED_WHEREHAPPENED;
+                }
+
                 claim.setWhereHappened(Constants.selectedLocation);
 
                 if (googleMapWhereHappened != null && claim.getWhereHappened() != null) {
@@ -1688,7 +1839,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         if (requestCode == MY_CAMERA_ACTIVITY_REQUEST_CODE) {
 
             if (resultCode == RESULT_OK) {
-                claimCurrentStep = ClaimCurrentStep.ANSWERED_TAKE_VIDEO;
+                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_TAKE_VIDEO.getIntValue()) {
+                    claimCurrentStep = ClaimCurrentStep.ANSWERED_TAKE_VIDEO;
+                }
+
                 claim.setImageURL("file://" + BaseCameraActivity.getImageFilePath());
                 claim.setVideoURL("file://" + BaseCameraActivity.getVideoFilePath());
                 updateViewContent();

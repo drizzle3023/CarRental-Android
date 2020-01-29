@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -26,19 +25,11 @@ import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.models.VehicleType;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.annotations.SerializedName;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
-import io.habit.analytics.HabitStatusCodes;
-import io.habit.analytics.SDK;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -127,7 +118,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
             paramObject.put("mobile", Globals.mobileNumber);
             paramObject.put("code", stringOtp);
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
             Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
@@ -155,7 +146,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
             if (body != null) {
                 responseString = body.string();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -163,7 +154,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
         if (responseString != null) {
             try {
                 object = new JSONObject(responseString);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -180,33 +171,6 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         try {
             if (object.getString("success").equals("true")) {
-
-                if (Globals.isSignUpOrLoginRequest) {
-
-                    MyProfile myProfile = new MyProfile();
-                    myProfile.setName(Globals.userName);
-                    myProfile.setMobile(Globals.mobileNumber);
-                    myProfile.setEmail(Globals.emailAddress);
-                    Globals.profile = myProfile;
-
-                    JSONObject dataObject = object.getJSONObject("data");
-                    SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
-                    SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
-
-
-
-                    navigateToPaymentActivity();
-
-                } else {
-                    Globals.isLoggedIn = true;
-                    JSONObject dataObject = object.getJSONObject("data");
-                    SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
-                    SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
-
-                    navigateToHomeActivity();
-
-
-                }
 
                 MyProfile myProfile = new MyProfile();
 
@@ -268,17 +232,19 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                             e.printStackTrace();
                         }
 
+
                         try {
-                            vehicleType.setCurrency(vehicleTypeJSON.getString("currency"));
+                            vehicleType.setPricePerYearUsd(vehicleTypeJSON.getDouble("price_per_year_usd"));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                         try {
-                            vehicleType.setPricePerYear(vehicleTypeJSON.getDouble("price_per_year"));
+                            vehicleType.setPricePerYearEur(vehicleTypeJSON.getDouble("price_per_year_eur"));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
 
                         try {
                             vehicleType.setIconURL(Constants.MEDIA_PATH_URL + vehicleTypeJSON.getString("icon_url"));
@@ -286,22 +252,53 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                             e.printStackTrace();
                         }
 
+                        myProfile.setVehicleType(vehicleType);
+
                         Globals.profile.setVehicleType(vehicleType);
                         Globals.selectedVehicleType = vehicleType;
 
                         ServiceArea serviceArea = new ServiceArea();
-                        serviceArea.setAreaName(myProfile.getWorldZone());
-                        if (myProfile.getWorldZone().equals("Europe")) {
+
+                        if (myProfile.getWorldZone().equals("US")) {
                             serviceArea.setId(1);
-                        } else {
+                            serviceArea.setAreaName(getString(R.string.worldzone_us));
+                        } else if (myProfile.getWorldZone().equals("EU")) {
                             serviceArea.setId(2);
+                            serviceArea.setAreaName(getString(R.string.worldzone_europe));
                         }
                         Globals.selectedServiceArea = serviceArea;
-
                     }
                 }
 
                 Utils.initHabitSDK(this);
+
+                if (Globals.isSignUpOrLoginRequest) {
+
+                    Globals.profile = myProfile;
+
+                    JSONObject dataObject = object.getJSONObject("data");
+                    SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
+                    SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
+
+
+                    Globals.isLoggedIn = true;
+                    navigateToHomeActivity();
+
+                } else {
+
+                    Globals.profile = myProfile;
+
+                    Globals.isLoggedIn = true;
+                    JSONObject dataObject = object.getJSONObject("data");
+                    SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
+                    SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
+
+                    navigateToHomeActivity();
+
+
+                }
+
+
 
             } else if (object.getString("success").equals("false")) {
 

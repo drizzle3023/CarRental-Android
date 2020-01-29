@@ -21,15 +21,17 @@ public class Claim {
 
     long id = 0; //id of claim
 
+    String name; //claim number
+
     String whatHappened; //answer for "What happened"
 
-    GregorianCalendar whenHappened; //answer for "When this happened"
+    GregorianCalendar whenHappened = null; //answer for "When this happened"
 
     Location whereHappened; //answer for "Where this happened"
 
     String addressHappened; //address of happened location
 
-    List<DamagedPart> damagedParts; //damaged part
+    ArrayList<DamagedPart> damagedParts; //damaged part
 
     String videoURL; //url of recorded video
 

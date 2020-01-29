@@ -39,14 +39,14 @@ public class SignUpLoginActivity extends AppCompatActivity implements View.OnCli
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
                 if (checkedId == R.id.radio_signup) {
-                    if (Globals.selectedServiceArea == null || Globals.selectedVehicleType == null) {
-                        Intent intent = new Intent(SignUpLoginActivity.this, SubscriptionNewActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
+//                    if (Globals.selectedServiceArea == null || Globals.selectedVehicleType == null) {
+//                        Intent intent = new Intent(SignUpLoginActivity.this, SubscriptionNewActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//                    else {
                         showFragment(R.id.frame_signup_frag_container, SignupFragment.class);
-                    }
+//                    }
                 } else {
                     showFragment(R.id.frame_login_frag_container, LoginFragment.class);
                 }

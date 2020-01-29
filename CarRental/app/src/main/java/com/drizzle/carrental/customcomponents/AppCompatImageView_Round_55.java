@@ -37,6 +37,7 @@ public class AppCompatImageView_Round_55 extends AppCompatImageViewEx {
                 scrollX + getRight() - getLeft() - getPaddingRight(),
                 scrollY + getBottom() - getTop() - getPaddingBottom()), radius, radius, Path.Direction.CW);
 
+
         super.onDraw(canvas);
     }
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.models.History;
 import com.squareup.picasso.Picasso;
 
@@ -132,8 +133,10 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
             viewHolder.textViewState.setText(historyModel.getCoverage().getState().toString());
             viewHolder.textViewPeriod.setText(historyModel.getCoverage().getPeriod());
 
-            Picasso.get().load(historyModel.getCoverage().getUrlImageVehicle()).placeholder(R.drawable.video_vehicle).into(viewHolder.imageButton);
-            //Picasso.get().load(image_url).placeholder(R.drawable.icon_add_coverage).into(viewHolder.imageButton);
+            Picasso picasso = Picasso.get();
+            picasso.invalidate(historyModel.getCoverage().getUrlImageVehicle());
+            picasso.load(historyModel.getCoverage().getUrlImageVehicle()).placeholder(R.drawable.video_vehicle).into(viewHolder.imageButton);
+            //Picasso.get().load(image_url).placeholder(R.drawable.ic_icon_add_coverage).into(viewHolder.imageButton);
             viewHolder.imageButton.setImageResource(R.drawable.video_vehicle);
 
 

@@ -74,10 +74,9 @@ public class AppHelper {
                 baos.write(buf, 0, n);
 
             videoBytes = baos.toByteArray();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+
         }
         return videoBytes;
     }

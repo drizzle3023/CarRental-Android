@@ -21,6 +21,8 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -82,7 +84,7 @@ public class Utils {
 
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -155,7 +157,19 @@ public class Utils {
         SharedHelper.clearSharedPreferences(context);
         Utils.resetAllGlobals();
         Intent intent = new Intent(activity, OnboardingActivity.class);
+        activity.startActivity(intent);
         activity.finish();
+    }
+
+    public static String encodeAsUTF8(String str) {
+
+        try {
+            return URLEncoder.encode(str, "UTF-8").replace("+", "%20");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+
+        }
     }
 
 }

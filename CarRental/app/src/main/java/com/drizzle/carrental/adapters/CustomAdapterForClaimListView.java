@@ -1,8 +1,6 @@
 package com.drizzle.carrental.adapters;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -61,7 +59,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             if (body != null) {
                 responseString = body.string();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -69,7 +67,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         if (responseString != null) {
             try {
                 object = new JSONObject(responseString);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -103,7 +101,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
                 Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -151,7 +149,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             paramObject.put("access_token", SharedHelper.getKey(getContext(), "access_token"));
             paramObject.put("claim_id", claimId);
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
             Toast.makeText(getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
@@ -247,7 +245,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         lastPosition = position;
 
         viewHolder.textViewClaimDate.setText(claim.getDateString());
-        viewHolder.textViewClaimLocation.setText(claim.getAddressHappened());
+        viewHolder.textViewClaimLocation.setText(claim.getName());
 
         viewHolder.imageButtonRemoveClaim.setVisibility(View.GONE);
 

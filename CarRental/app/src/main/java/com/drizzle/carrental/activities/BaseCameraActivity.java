@@ -211,7 +211,7 @@ public class BaseCameraActivity extends AppCompatActivity {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
             retriever.setDataSource(getVideoFilePath());
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
@@ -318,7 +318,7 @@ public class BaseCameraActivity extends AppCompatActivity {
 
 
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(BaseCameraActivity.this, getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                         }
@@ -588,7 +588,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                     bitmapSource[offset2 + j] = pixel;
                 }
             }
-        } catch (GLException e) {
+        } catch (Exception e) {
             Log.e("CreateBitmap", "createBitmapFromGLSurface: " + e.getMessage(), e);
             return null;
         }
@@ -605,7 +605,7 @@ public class BaseCameraActivity extends AppCompatActivity {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

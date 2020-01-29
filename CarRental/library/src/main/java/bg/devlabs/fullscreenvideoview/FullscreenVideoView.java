@@ -754,7 +754,7 @@ public class FullscreenVideoView extends FrameLayout {
 
                 videoMediaPlayer.prepareAsync();
             }
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             if (onErrorListener != null) {
                 FullscreenVideoViewException fullscreenVideoViewException =
                         new FullscreenVideoViewException(exception.getLocalizedMessage());

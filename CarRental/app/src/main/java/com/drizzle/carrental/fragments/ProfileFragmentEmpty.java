@@ -3,6 +3,7 @@ package com.drizzle.carrental.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.drizzle.carrental.BuildConfig;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.SignUpLoginActivity;
 import com.drizzle.carrental.activities.SubscriptionNewActivity;
@@ -37,11 +39,18 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
 
         textViewLogin.setOnClickListener(this);
         textViewSignup.setOnClickListener(this);
-        textViewFAQs.setOnClickListener(this);
-        textViewAbout.setOnClickListener(this);
+//        textViewFAQs.setOnClickListener(this);
+//        textViewAbout.setOnClickListener(this);
 
         textViewFAQs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs</i></a>"));
-        textViewAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About</i></a>"));
+        textViewAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About " + BuildConfig.VERSION_NAME + "</i></a>"));
+
+
+        textViewFAQs.setClickable(true);
+        textViewFAQs.setMovementMethod(LinkMovementMethod.getInstance());
+
+        textViewAbout.setClickable(true);
+        textViewAbout.setMovementMethod(LinkMovementMethod.getInstance());
 
         return view;
 
@@ -56,7 +65,7 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
                 navigateToLoginActivity();
                 break;
             case R.id.link_signup:
-                navigateToSubscriptionNewActivity();
+                navigateToSignupActivity();
                 break;
 
             case R.id.link_faqs:
@@ -66,9 +75,10 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
         }
     }
 
-    private void navigateToSubscriptionNewActivity() {
+    private void navigateToSignupActivity() {
 
-        Intent intent = new Intent(getActivity(), SubscriptionNewActivity.class);
+        Constants.isNavigateToSignupOrLogin = true;
+        Intent intent = new Intent(getActivity(), SignUpLoginActivity.class);
         startActivity(intent);
     }
 

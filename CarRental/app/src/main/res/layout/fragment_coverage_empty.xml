@@ -38,7 +38,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@null"
-            android:src="@drawable/icon_contact"/>
+            android:src="@drawable/ic_icon_contact"/>
 
     </RelativeLayout>
 
@@ -118,7 +118,7 @@
             android:layout_marginTop="6dp"
             android:background="@null"
             android:scaleType="fitCenter"
-            android:src="@drawable/information"/>
+            android:src="@drawable/ic_icon_info"/>
 
     </RelativeLayout>
 

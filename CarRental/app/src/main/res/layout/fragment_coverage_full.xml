@@ -18,7 +18,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@null"
-            android:src="@drawable/icon_contact"/>
+            android:src="@drawable/ic_icon_contact" />
 
         <TextView
             android:id="@+id/textView2"
@@ -44,9 +44,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:background="@drawable/coverage_radius_content"
-        android:orientation="vertical"
-        android:layout_margin="16dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                 android:background="@null"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:src="@drawable/icon_car" />
+                android:src="@drawable/ic_icon_car" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -85,36 +85,40 @@
                 android:background="@drawable/my_coverage_claims_button"
                 android:text="Claims"
                 android:textAllCaps="false"
-                android:visibility="gone"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/imageButton2"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@null"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:src="@drawable/icon_more_info" />
+                android:src="@drawable/ic_more_vert_black_24dp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="20dp">
 
             <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55
                 android:id="@+id/imageview_start_coverage"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center"
-                android:scaleType="fitXY"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/coverage_icon_radius"
-                android:src="@drawable/icon_add_coverage" />
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_icon_add_coverage">
+
+
+            </com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,12 +131,13 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="right"
+                    android:background="@drawable/remove_coverage_radius"
                     android:scaleType="fitXY"
-                    android:src="@drawable/remove_coverage"
-                    android:visibility="gone"
-                    android:background="@null">
+                    android:src="@drawable/ic_clear_black_24dp"
+                    android:visibility="gone">
 
                 </ImageButton>
+
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -152,18 +157,18 @@
 
                 <LinearLayout
                     android:id="@+id/layout_location"
-                    android:layout_gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imageview_location_icon"
-                        android:paddingRight="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_location">
+                        android:paddingRight="10dp"
+                        android:src="@drawable/ic_icon_location">
 
                     </ImageView>
 
@@ -232,10 +237,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingTop="19dp"
-            android:paddingBottom="19dp"
             android:paddingLeft="21dp"
-            android:paddingRight="21dp">
+            android:paddingTop="19dp"
+            android:paddingRight="21dp"
+            android:paddingBottom="19dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -245,20 +250,21 @@
 
                 <ImageButton
                     android:id="@+id/imagebutton_assistence"
-                    android:background="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="8dp"
-                    android:src="@drawable/assitence_disabled" />
+                    android:background="@drawable/coverage_bottom_bar_icon_radius_inactive"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_icon_assistance" />
 
                 <TextView
                     android:id="@+id/textview_assistence"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Assistence"
                     android:textAlignment="center"
-                    android:textSize="11sp"
-                    android:text="Assistence" />
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -269,20 +275,20 @@
 
                 <ImageButton
                     android:id="@+id/imagebutton_lostkeys"
-                    android:background="@null"
-                    android:src="@drawable/lost_keys_disabled"
-                    android:layout_marginBottom="8dp"
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/coverage_bottom_bar_icon_radius_inactive"
+                    android:src="@drawable/lost_keys_disabled" />
 
                 <TextView
                     android:id="@+id/textview_lostkeys"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Lost Keys"
                     android:textAlignment="center"
-                    android:textSize="11sp"
-                    android:text="Lost Keys" />
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -293,20 +299,20 @@
 
                 <ImageButton
                     android:id="@+id/imagebutton_broken_glasses"
-                    android:background="@null"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/lost_keys_disabled"
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/coverage_bottom_bar_icon_radius_inactive"
+                    android:src="@drawable/lost_keys_disabled" />
 
                 <TextView
                     android:id="@+id/textview_broken_glasses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Broken Glasses"
                     android:textAlignment="center"
-                    android:textSize="11sp"
-                    android:text="Broken Glasses" />
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -317,20 +323,20 @@
 
                 <ImageButton
                     android:id="@+id/imagebutton_cover_theft"
-                    android:background="@null"
-                    android:src="@drawable/lost_keys_disabled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:background="@drawable/coverage_bottom_bar_icon_radius_inactive"
+                    android:src="@drawable/lost_keys_disabled" />
 
                 <TextView
                     android:id="@+id/textview_cover_theft"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Cover theft"
                     android:textAlignment="center"
-                    android:textSize="11sp"
-                    android:text="Cover theft" />
+                    android:textSize="11sp" />
             </LinearLayout>
         </LinearLayout>
 

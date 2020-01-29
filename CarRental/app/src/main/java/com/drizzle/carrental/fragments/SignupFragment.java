@@ -90,7 +90,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
 
 
         checkAgreeTerm.setText(Html.fromHtml("I agree to the " +
-                "<a href='" + Constants.SERVER_HTTP_URL + "'><i>Terms of Service</i></a>"));
+                "<a href='" + Constants.CONTACT_URL + "'><i>Terms of Service</i></a>"));
 
         checkAgreeTerm.setClickable(true);
         checkAgreeTerm.setMovementMethod(LinkMovementMethod.getInstance());
@@ -197,9 +197,19 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
                 paramObject.put("email", strEmail);
                 paramObject.put("mobile", strPhone);
 
-                paramObject.put("car_type_id", Globals.selectedVehicleType.getId());
-                paramObject.put("world_zone", Globals.selectedServiceArea.getAreaName());
-            } catch (JSONException e) {
+                if (Globals.selectedVehicleType != null) {
+                    paramObject.put("car_type_id", Globals.selectedVehicleType.getId());
+                }
+                if (Globals.selectedServiceArea != null) {
+
+                    if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_europe))) {
+                        paramObject.put("world_zone", "EU");
+                    }
+                    else if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_us))){
+                        paramObject.put("world_zone", "US");
+                    }
+                }
+            } catch (Exception e) {
 
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
@@ -286,7 +296,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
             if (body != null) {
                 responseString = body.string();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -294,7 +304,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         if (responseString != null) {
             try {
                 object = new JSONObject(responseString);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -333,7 +343,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
 
                 Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             e.printStackTrace();

@@ -1,11 +1,9 @@
 package com.drizzle.carrental.activities;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -19,8 +17,6 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.card.CardComponent;
 import com.adyen.checkout.card.CardConfiguration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.dropin.DropIn;
@@ -32,12 +28,10 @@ import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.globals.Utils;
-import com.drizzle.carrental.models.Payment;
 import com.drizzle.carrental.services.YourDropService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -109,8 +103,24 @@ public class PaymentActivity extends FragmentActivity {
             return;
         }
 
-        double amount = Globals.selectedVehicleType.getPricePerYear();
-        String currency = Globals.selectedVehicleType.getCurrency();
+        double amount = 0;
+
+
+        String currency = "";
+
+        if (Globals.profile.getWorldZone() != null && !Globals.profile.getWorldZone().isEmpty()) {
+
+            if (Globals.profile.getWorldZone().equals("US")) {
+
+                currency = Constants.CURRENCY_USD;
+                amount = Globals.selectedVehicleType.getPricePerYearUsd();
+            }
+            else if (Globals.profile.getWorldZone().equals("EU")) {
+
+                currency = Constants.CURRENCY_EURO;
+                amount = Globals.selectedVehicleType.getPricePerYearEur();
+            }
+        }
 
         String strAmount = String.format(Locale.getDefault(),  "%.2f", amount);
         if (currency.equals("EUR")) {
@@ -239,7 +249,7 @@ public class PaymentActivity extends FragmentActivity {
                 }
             });
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

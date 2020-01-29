@@ -2,8 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item >
         <shape android:shape="oval"  >
-            <corners android:radius="55dp" />
-            <stroke android:width="1dip" android:color="@color/colorInvalid" />
+            <size android:width="110dp" android:height="110dp"></size>
+            <solid android:color="@color/colorStartCoverageButtonBack"></solid>
         </shape>
     </item>
 </selector>

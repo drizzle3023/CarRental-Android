@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -27,17 +26,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Console;
-import java.io.IOException;
 import java.util.Iterator;
 
-import io.habit.analytics.HabitStatusCodes;
-import io.habit.analytics.SDK;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,8 +72,8 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
     }
 
     private void runMainProcess() {
-//
-//        Intent newIntent = new Intent(SplashActivity.this, RecordMileActivity.class);
+
+//        Intent newIntent = new Intent(SplashActivity.this, AddClaimActivity.class);
 //        startActivity(newIntent);
 //        finish();
 ////
@@ -145,7 +137,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         try {
 
             paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -170,7 +162,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
             if (body != null) {
                 responseString = body.string();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -178,7 +170,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         if (responseString != null) {
             try {
                 object = new JSONObject(responseString);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -210,7 +202,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                 JSONObject vehicleTypeJSON = null;
                 try {
                     vehicleTypeJSON = profileData.getJSONObject("car_type");
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -219,31 +211,31 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                     VehicleType vehicleType = new VehicleType();
                     try {
                         vehicleType.setId(vehicleTypeJSON.getLong("id"));
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                     try {
                         vehicleType.setName(vehicleTypeJSON.getString("name"));
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                     try {
-                        vehicleType.setCurrency(vehicleTypeJSON.getString("currency"));
-                    } catch (JSONException e) {
+                        vehicleType.setPricePerYearUsd(vehicleTypeJSON.getDouble("price_per_year_usd"));
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                     try {
-                        vehicleType.setPricePerYear(vehicleTypeJSON.getDouble("price_per_year"));
-                    } catch (JSONException e) {
+                        vehicleType.setPricePerYearEur(vehicleTypeJSON.getDouble("price_per_year_eur"));
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                     try {
                         vehicleType.setIconURL(Constants.MEDIA_PATH_URL + vehicleTypeJSON.getString("icon_url"));
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -251,12 +243,14 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                     Globals.selectedVehicleType = vehicleType;
 
                     ServiceArea serviceArea = new ServiceArea();
-                    serviceArea.setAreaName(myProfile.getWorldZone());
-                    if (myProfile.getWorldZone().equals("Europe")) {
+
+                    if (myProfile.getWorldZone().equals("US")) {
                         serviceArea.setId(1);
+                        serviceArea.setAreaName(getString(R.string.worldzone_us));
                     }
-                    else {
+                    else if (myProfile.getWorldZone().equals("EU")) {
                         serviceArea.setId(2);
+                        serviceArea.setAreaName(getString(R.string.worldzone_europe));
                     }
                     Globals.selectedServiceArea = serviceArea;
 
@@ -294,7 +288,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
                 navigateToOnboardingActivity();
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             navigateToOnboardingActivity();

@@ -67,6 +67,7 @@
         android:layout_height="match_parent">
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#EFEFEF"
@@ -138,7 +139,7 @@
                             android:fontFamily="@font/sf_pro_display_regular"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:text="Your description"
+                            android:text="@string/file_a_claim_answer_what_happened_text_title_select_answer"
                             android:textColor="@color/colorNormalText"
                             android:textSize="15sp" />
 
@@ -259,7 +260,7 @@
                             android:layout_width="19dip"
                             android:layout_height="19dip"
                             android:layout_weight="0"
-                            android:src="@drawable/calendar_icon_saved" />
+                            android:src="@drawable/ic_icon_date_transparent" />
 
                         <TextView
                             android:id="@+id/textview_answer_when_happend"
@@ -337,7 +338,7 @@
                             android:layout_width="19dip"
                             android:layout_height="19dip"
                             android:layout_weight="0"
-                            android:src="@drawable/mapmarker" />
+                            android:src="@drawable/ic_icon_location" />
 
                         <TextView
                             android:id="@+id/textview_answer_where_happened"
@@ -657,7 +658,7 @@
 
 
 
-                <Space
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="90dp" />
 

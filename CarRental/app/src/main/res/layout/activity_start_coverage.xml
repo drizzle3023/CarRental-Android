@@ -99,8 +99,7 @@
                 android:layout_height="44dp"
                 android:background="@null"
                 android:paddingLeft="20dp"
-
-                android:src="@drawable/icon_location_transparent" />
+                android:src="@drawable/ic_icon_location_transparent" />
 
 
             <ImageButton
@@ -110,7 +109,7 @@
                 android:layout_gravity="right"
                 android:background="@null"
                 android:paddingRight="20dp"
-                android:src="@drawable/icon_your_location" />
+                android:src="@drawable/ic_icon_your_location" />
 
         </FrameLayout>
 
@@ -177,7 +176,7 @@
                     android:background="@null"
                     android:paddingLeft="15dp"
 
-                    android:src="@drawable/icon_calendar" />
+                    android:src="@drawable/ic_icon_date_transparent" />
 
             </FrameLayout>
 
@@ -209,7 +208,7 @@
                     android:background="@null"
                     android:paddingLeft="15dp"
 
-                    android:src="@drawable/icon_calendar" />
+                    android:src="@drawable/ic_icon_date_transparent" />
 
             </FrameLayout>
         </LinearLayout>

@@ -40,7 +40,8 @@
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="9dp"
                 android:background="@null"
-                android:src="@drawable/icon_edit" />
+                android:visibility="gone"
+                android:src="@drawable/ic_edit_black_24dp" />
 
 
     </FrameLayout>
@@ -69,13 +70,19 @@
                 android:paddingRight="18dp"
                 android:text="Start Coverage" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/imagebutton_start_coverage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:padding="7dp"
-                android:src="@drawable/num_1" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:background="@drawable/add_coverage_step_button_back_active"
+                android:fontFamily="@font/sf_pro_display_bold"
+                android:text="1"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -108,7 +115,8 @@
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:minHeight="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="vertical">
 
                 <View
@@ -148,12 +156,14 @@
                         android:id="@+id/button_location"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/coverage_info_label"
                         android:fontFamily="@font/sf_pro_text_medium"
+                        android:minHeight="30dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:text="Queens, NY 11430, USA"
+                        android:textAlignment="textStart"
                         android:textAllCaps="false"
                         android:textColor="@android:color/black"
                         android:textSize="13sp" />
@@ -178,6 +188,7 @@
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:text="Budget Car Rental"
+                        android:textAlignment="textStart"
                         android:textAllCaps="false"
                         android:textColor="@android:color/black"
                         android:textSize="15sp" />
@@ -202,6 +213,7 @@
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:text="10 March - 15 March"
+                        android:textAlignment="textStart"
                         android:textAllCaps="false"
                         android:textColor="@android:color/black"
                         android:textSize="15sp" />
@@ -245,13 +257,19 @@
                 android:paddingRight="18dp"
                 android:text="Video Record" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/button_record_car"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:padding="7dp"
-                android:src="@drawable/num_2" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:background="@drawable/add_coverage_step_button_back_active"
+                android:fontFamily="@font/sf_pro_display_bold"
+                android:text="2"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -267,6 +285,8 @@
             android:layout_width="44dp"
             android:layout_height="40dp"
             android:minHeight="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -283,6 +303,8 @@
             android:id="@+id/layout_video_vehicle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -360,13 +382,19 @@
                 android:paddingRight="18dp"
                 android:text="Record Miles/Kilometers" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/button_record_mile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:padding="7dp"
-                android:src="@drawable/num_3" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:background="@drawable/add_coverage_step_button_back_active"
+                android:fontFamily="@font/sf_pro_display_bold"
+                android:text="3"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -375,6 +403,8 @@
             android:layout_width="44dp"
             android:layout_height="40dp"
             android:minHeight="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -391,6 +421,8 @@
             android:id="@+id/layout_video_mile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -466,7 +498,7 @@
             android:layout_marginRight="27dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/gradient_button"
-            android:text="Got it"
+            android:text="start now"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="17sp" />

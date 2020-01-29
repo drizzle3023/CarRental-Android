@@ -64,6 +64,10 @@
     <color name="switchThumbActive">#ad1457</color>
     <color name="switchThumbkNormal">#64b5f6</color>
 
+    <color name="colorBottombarIconDisabled">#CDD7D9</color>
+    <color name="colorStartCoverageButtonBack">#f0e9f7</color>
 
+    <color name="colorAddCoverageStepButtonInactive">#e2e5ec</color>
+    <color name="colorAddCoverageStepTextViewInactive">#B8C0D0</color>
 
 </resources>

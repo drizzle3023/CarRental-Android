@@ -178,7 +178,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
             paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
             paramObject.put("coverage_id", Globals.coverage.getId());
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -216,7 +216,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
             if (body != null) {
                 responseString = body.string();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -224,7 +224,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         if (responseString != null) {
             try {
                 object = new JSONObject(responseString);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -256,14 +256,21 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
                     claim.setId(parseClaim.getId());
 
+                    if (parseClaim.getName() != null && !parseClaim.getName().isEmpty()) {
+                        claim.setName(parseClaim.getName());
+                    }
+
                     if (parseClaim.getWhatHappened() != null) {
                         claim.setWhatHappened(parseClaim.getWhatHappened());
                     }
 
-                    GregorianCalendar calendar = new GregorianCalendar();
-                    calendar.setTimeInMillis(parseClaim.getTimeHappened() * 1000);
+                    if (parseClaim.getTimeHappened() != 0) {
 
-                    claim.setWhenHappened(calendar);
+                        GregorianCalendar calendar = new GregorianCalendar();
+                        calendar.setTimeInMillis(parseClaim.getTimeHappened() * 1000);
+                        claim.setWhenHappened(calendar);
+                    }
+
 
                     Location location = new Location("location");
                     location.setLatitude(parseClaim.getLatitude());
@@ -330,7 +337,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
             }
 
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             e.printStackTrace();

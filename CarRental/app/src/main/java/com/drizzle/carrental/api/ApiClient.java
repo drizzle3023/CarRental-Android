@@ -52,7 +52,7 @@ public class ApiClient {
         try {
             multipartUploadRequest.addFileToUpload(filePath, "video-vehicle");
             multipartUploadRequest.addParameter("coverage_id", Globals.coverage.getId().toString());
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

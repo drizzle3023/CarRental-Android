@@ -50,6 +50,10 @@ public class Constants {
 
     public static final int CONNECTION_TIMEOUT = 60;
 
+    public static final int WORLD_ZONE_US = 1;
+
+    public static final int WORLD_ZONE_EUROPE = 2;
+
     /**
      * Temporary variables
      */

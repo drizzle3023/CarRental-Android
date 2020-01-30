@@ -48,7 +48,7 @@
             android:layout_marginLeft="9dp"
             android:padding="10dp"
             android:background="@null"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
         <Button
             android:id="@+id/button_save"

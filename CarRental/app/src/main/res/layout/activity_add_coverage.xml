@@ -20,7 +20,7 @@
                 android:layout_marginLeft="9dp"
                 android:background="@null"
                 android:padding="10dp"
-                android:src="@drawable/back" />
+                android:src="@drawable/ic_chevron_left_black_24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -342,8 +342,7 @@
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"
-                        android:background="@drawable/video_vehicle"
-                        android:src="@drawable/test" />
+                        android:src="@drawable/video_vehicle"/>
 
                 </LinearLayout>
 
@@ -460,8 +459,7 @@
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"
-                        android:background="@drawable/video_mile"
-                        android:src="@drawable/test" />
+                        android:background="@drawable/video_mile"/>
 
 
                 </LinearLayout>

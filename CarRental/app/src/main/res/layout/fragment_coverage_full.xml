@@ -100,132 +100,146 @@
 
         </LinearLayout>
 
-        <LinearLayout
+
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="20dp">
+            android:layout_height="wrap_content">
 
-            <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55
-                android:id="@+id/imageview_start_coverage"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/coverage_icon_radius"
+            <ImageButton
+                android:id="@+id/imagebutton_remove_coverage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:padding="5dp"
+                android:layout_gravity="right"
+                android:background="@drawable/remove_coverage_radius"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_icon_add_coverage">
+                android:src="@drawable/ic_clear_black_24dp"
+                android:visibility="visible">
 
-
-            </com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55>
-
+            </ImageButton>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-                <ImageButton
-                    android:id="@+id/imagebutton_remove_coverage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="right"
-                    android:background="@drawable/remove_coverage_radius"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_clear_black_24dp"
-                    android:visibility="gone">
-
-                </ImageButton>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="0dp" />
-
-                <TextView
-                    android:id="@+id/textview_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55
+                    android:id="@+id/imageview_start_coverage"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/sf_pro_display_semibold"
-                    android:lineSpacingMultiplier="1.2"
-                    android:text="@string/start_coverage_title"
-                    android:textColor="@color/colorNormalText"
-                    android:textSize="15sp" />
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/coverage_icon_radius"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_icon_add_coverage">
+
+
+                </com.drizzle.carrental.customcomponents.AppCompatImageView_Round_55>
+
 
                 <LinearLayout
-                    android:id="@+id/layout_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/imageview_location_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:src="@drawable/ic_icon_location">
 
-                    </ImageView>
-
-                    <TextView
-                        android:id="@+id/textview_address"
+                    <Space
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" "
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_period"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:minHeight="0dp" />
 
                     <TextView
-                        android:id="@+id/textView122"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textview_title"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:text=" Ending in "
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/textview_period"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" "
-                        android:textColor="@color/colorNormalBlue"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="5dp"
+                        android:paddingRight="10dp"
+                        android:fontFamily="@font/sf_pro_display_semibold"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="@string/start_coverage_title"
+                        android:textColor="@color/colorNormalText"
                         android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/imageview_location_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="10dp"
+                            android:src="@drawable/ic_icon_location">
+
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/textview_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=" "
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_period"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView122"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_pro_text_regular"
+                            android:text=" Ending in "
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/textview_period"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" "
+                            android:textColor="@color/colorNormalBlue"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/button_got_it"
+                        android:layout_width="103dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="left"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="32dp"
+                        android:background="@drawable/gradient_button"
+                        android:fontFamily="@font/sf_pro_display_semibold"
+                        android:text="GOT IT"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:visibility="gone" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="0dp" />
+
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/button_got_it"
-                    android:layout_width="103dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="left"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="32dp"
-                    android:background="@drawable/gradient_button"
-                    android:fontFamily="@font/sf_pro_display_semibold"
-                    android:text="GOT IT"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp"
-                    android:visibility="gone" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="0dp" />
-
             </LinearLayout>
-        </LinearLayout>
+
+        </FrameLayout>
+
 
         <View
             android:id="@+id/splitter"

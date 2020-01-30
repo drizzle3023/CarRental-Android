@@ -47,7 +47,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="9dp"
             android:background="@null"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
     </FrameLayout>
 

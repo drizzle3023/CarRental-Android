@@ -48,7 +48,7 @@
             android:layout_marginLeft="9dp"
             android:background="@null"
             android:padding="10dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
     </FrameLayout>
 
@@ -129,7 +129,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/spinner" />
+                android:src="@drawable/ic_arrow_drop_down_black_24dp" />
 
             <Spinner
                 android:id="@+id/spinner_company_select"

@@ -107,7 +107,7 @@
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:padding="12dp"
-            android:src="@drawable/remove_claim" />
+            android:src="@drawable/ic_delete_black_24dp" />
 
     </FrameLayout>
 

@@ -11,7 +11,7 @@
         android:padding="5dp"
         android:scaleX="0.6"
         android:scaleY="0.7"
-        android:src="@drawable/icon_company" /><!--Make sure image is present in Drawable folder-->
+        android:src="@drawable/ic_icon_company" /><!--Make sure image is present in Drawable folder-->
 
     <TextView
         android:id="@+id/textView"

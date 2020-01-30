@@ -34,11 +34,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="69dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="60dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/image_history" />
+        android:src="@drawable/ic_icon_history" />
 
     <TextView
         android:id="@+id/textView"

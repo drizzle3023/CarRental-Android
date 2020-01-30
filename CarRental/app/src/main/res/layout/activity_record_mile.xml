@@ -48,7 +48,7 @@
             android:layout_marginLeft="9dp"
             android:background="@null"
             android:padding="10dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
     </FrameLayout>
 
@@ -94,7 +94,7 @@
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/illustration_rec_miles" />
+        android:src="@drawable/ic_illustration_rec_miles" />
 
 
     <Space

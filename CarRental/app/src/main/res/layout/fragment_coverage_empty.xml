@@ -58,17 +58,17 @@
 
             <ImageButton
                 android:id="@+id/button_back_to_onboarding"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="124dp"
+                android:layout_height="125dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="14dp"
                 android:adjustViewBounds="true"
-                android:background="@null"
+                android:background="@drawable/round_onboarding_125"
                 android:cropToPadding="false"
                 android:fadeScrollbars="false"
-                android:scaleX="1"
-                android:scaleY="1"
-                android:src="@drawable/coverage_backtoprevious"/>
+                android:scaleType="centerInside"
+                android:padding="15dp"
+                android:src="@drawable/illustration_car"/>
 
             <TextView
                 android:id="@+id/textView3"

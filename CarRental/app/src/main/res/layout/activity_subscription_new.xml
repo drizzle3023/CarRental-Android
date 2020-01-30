@@ -18,7 +18,7 @@
             android:layout_gravity="center_vertical"
             android:background="@null"
             android:padding="10dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
         <TextView
             android:id="@+id/subscriptionActivityTitle"
@@ -81,7 +81,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/spinner" />
+                android:src="@drawable/ic_arrow_drop_down_black_24dp" />
 
             <Spinner
                 android:id="@+id/subscriptionCarTypeSpinner"
@@ -165,9 +165,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="9dp"
             android:layout_marginRight="17dp"
-            android:src="@drawable/check_item" />
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_black_24dp" />
 
         <TextView
             android:id="@+id/subscriptionNewDescription1"
@@ -193,9 +193,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
-            android:layout_marginTop="9dp"
             android:layout_marginRight="17dp"
-            android:src="@drawable/check_item" />
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_black_24dp" />
 
         <TextView
             android:id="@+id/subscriptionNewDescription2"
@@ -206,6 +206,7 @@
             android:fontFamily="@font/sf_pro_display_regular"
             android:text="Fast and Easy Claims "
             android:textColor="@color/colorSubscriptionContent"
+            android:layout_gravity="center"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -218,20 +219,21 @@
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginRight="17dp"
-            android:src="@drawable/check_item" />
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="17dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_black_24dp" />
 
         <TextView
             android:id="@+id/subscriptionNewDescription3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
+            android:layout_marginEnd="50dp"
             android:layout_weight="1"
             android:fontFamily="@font/sf_pro_display_regular"
             android:text="Optional extended coverage "
             android:textColor="@color/colorSubscriptionContent"
+            android:layout_gravity="center"
             android:textSize="15sp" />
     </LinearLayout>
 

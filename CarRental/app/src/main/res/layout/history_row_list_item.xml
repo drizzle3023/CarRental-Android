@@ -74,7 +74,7 @@
                     android:id="@+id/imageview_mapmarker"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/mapmarker"
+                    android:src="@drawable/ic_icon_location"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="10dp"
                     android:visibility="visible" />

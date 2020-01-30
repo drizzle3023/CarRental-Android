@@ -77,6 +77,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private boolean firstFlag = true;
 
+    int payState= 0;
+
     private void getControlHandlersAndLinkActions(View view) {
 
         imageButtonStartCoverage = view.findViewById(R.id.imageview_start_coverage);
@@ -309,6 +311,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void initVariables() {
 
+        payState = 0;
     }
 
     @Nullable
@@ -357,7 +360,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     try {
                         JSONObject object = new JSONObject(response.body().string());
 
-                        int payState= 0;
+
                         try {
                             payState = Integer.parseInt(object.getJSONObject("data").getString("pay_state"));
                         } catch (Exception e) {
@@ -483,6 +486,13 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         switch (view.getId()) {
 
             case R.id.imageview_start_coverage:
+
+                if (payState == 0) {
+                    navigateToSubscribeActivity();
+                    break;
+                }
+
+
                 if (Globals.coverage == null) {
                     navigateToAddCoverageActivity();
                 } else if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0 && Globals.coverage.getState() == CoverageState.COVERED) {

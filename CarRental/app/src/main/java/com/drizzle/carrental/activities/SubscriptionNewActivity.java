@@ -70,6 +70,15 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Globals.selectedVehicleType = null;
+        Globals.selectedServiceArea = null;
+
+    }
+
     private void getControlHandlersAndLinkActions() {
 
         spinner = (Spinner) findViewById(R.id.subscriptionCarTypeSpinner);
@@ -213,6 +222,9 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         }
 
         if (view.getId() == R.id.button_back_to_onboarding) {
+
+            Globals.selectedServiceArea = null;
+            Globals.selectedVehicleType = null;
             finish();
         }
 

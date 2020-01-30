@@ -76,8 +76,7 @@ public class PaymentActivity extends FragmentActivity {
         buttonPay = findViewById(R.id.button_pay);
         buttonPay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 getPaymentMethods();
 
 //                Intent intent=new Intent(PaymentActivity.this,SubscribeSuccessActivity.class);
@@ -88,8 +87,7 @@ public class PaymentActivity extends FragmentActivity {
         buttonBack = findViewById(R.id.imagebutton_back);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 finish();
             }
         });
@@ -108,25 +106,22 @@ public class PaymentActivity extends FragmentActivity {
 
         String currency = "";
 
-        if (Globals.profile.getWorldZone() != null && !Globals.profile.getWorldZone().isEmpty()) {
 
-            if (Globals.profile.getWorldZone().equals("US")) {
+        if (Globals.selectedServiceArea.getId() == Constants.WORLD_ZONE_US) {
 
-                currency = Constants.CURRENCY_USD;
-                amount = Globals.selectedVehicleType.getPricePerYearUsd();
-            }
-            else if (Globals.profile.getWorldZone().equals("EU")) {
+            currency = Constants.CURRENCY_USD;
+            amount = Globals.selectedVehicleType.getPricePerYearUsd();
+        } else if (Globals.selectedServiceArea.getId() == Constants.WORLD_ZONE_EUROPE) {
 
-                currency = Constants.CURRENCY_EURO;
-                amount = Globals.selectedVehicleType.getPricePerYearEur();
-            }
+            currency = Constants.CURRENCY_EURO;
+            amount = Globals.selectedVehicleType.getPricePerYearEur();
         }
 
-        String strAmount = String.format(Locale.getDefault(),  "%.2f", amount);
+
+        String strAmount = String.format(Locale.getDefault(), "%.2f", amount);
         if (currency.equals("EUR")) {
             currency = getResources().getString(R.string.euro_character);
-        }
-        else if (currency.equals("USD")) {
+        } else if (currency.equals("USD")) {
             currency = getResources().getString(R.string.usd_character);
         }
         String paymentInformation = strAmount + " " + currency + " / per year";
@@ -143,10 +138,10 @@ public class PaymentActivity extends FragmentActivity {
         String strExpireDate = "";
 
         DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT_GENERAL);
-            strExpireDate = df.format(calendar.getTime());
+        strExpireDate = df.format(calendar.getTime());
 
 
-            String strPrefix = "Covered until ";
+        String strPrefix = "Covered until ";
         strExpireDate = strPrefix + strExpireDate;
 
         Spannable spannable = new SpannableString(strExpireDate);
@@ -156,6 +151,7 @@ public class PaymentActivity extends FragmentActivity {
         textViewExpireDate.setText(spannable, TextView.BufferType.SPANNABLE);
 
     }
+
     /* Get available payment methods from the server.  */
     private void getPaymentMethods() {
 
@@ -185,7 +181,7 @@ public class PaymentActivity extends FragmentActivity {
                     try {
                         JSONObject object = new JSONObject(response.body().string());
 
-                        if (object.getString("success").equals("true")){
+                        if (object.getString("success").equals("true")) {
 
                             JSONObject data = object.getJSONObject("data");
                             JSONObject paymentMethods = data.getJSONObject("paymentMethods");

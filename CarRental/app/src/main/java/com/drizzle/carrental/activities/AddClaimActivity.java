@@ -200,6 +200,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private ClaimCurrentStep claimCurrentStep = ClaimCurrentStep.NEW;
 
+    private ClaimCurrentStep claimCurrentStepTemp =  ClaimCurrentStep.NEW;
+
     private boolean isEditable = false; //indicates if any content is changed or not
 
     private Claim claim;
@@ -631,7 +633,12 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             buttonEditAnswerWhenHappened.setBackground(getResources().getDrawable(R.drawable.ic_edit_black_24dp, null));
             buttonEditAnswerWhenHappened.setText("");
 
-        } else {
+        } else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+
+
+
+        }
+        else {
 
             layoutQuestionWhenHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhenHappened.setVisibility(View.VISIBLE);
@@ -707,6 +714,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             textViewAnswerWhereHappened.setTextColor(getResources().getColor(R.color.colorNormalText, null));
             buttonEditAnswerWhereHappened.setBackgroundResource(R.drawable.ic_edit_black_24dp);
             buttonEditAnswerWhereHappened.setText("");
+
+        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+
+
 
         } else {
 
@@ -805,6 +816,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             }
 
 
+        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+
+
+
         } else {
 
             layoutQuestionDamagedPart.setVisibility(View.VISIBLE);
@@ -895,6 +910,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 //            imageViewAnswerTakeVideo.setImageBitmap(Bitmap.createScaledBitmap(bitmap, imageViewAnswerTakeVideo.getWidth(), imageViewAnswerTakeVideo.getHeight(), false));
 
 
+        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+
+
+
         } else {
 
 
@@ -964,6 +983,10 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 buttonDoneElse.setTextColor(getResources().getColor(R.color.colorNormalBlue, null));
             }
             editTextAnswerElse.setEnabled(true);
+        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+
+
+
         } else {
 
             layoutQuestionElse.setBackgroundResource(R.drawable.file_a_claim_question_disabled);
@@ -1014,16 +1037,23 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 String urlPrefix = "file://";
 
-                File file = new File(claim.getVideoURL().substring(urlPrefix.length()));
-                if (!file.exists()) {
-                    Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
-                    return false;
-                }
+                if (claim.getVideoURL().contains(urlPrefix)) {
 
-                File file1 = new File(claim.getImageURL().substring(urlPrefix.length()));
-                if (!file1.exists()) {
-                    Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
-                    return false;
+
+                    File file = new File(claim.getVideoURL().substring(urlPrefix.length()));
+                    if (!file.exists()) {
+                        Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    File file1 = new File(claim.getImageURL().substring(urlPrefix.length()));
+                    if (!file1.exists()) {
+                        Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+                else {
+                    return true;
                 }
             }
         }
@@ -1181,8 +1211,24 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
 
                 if (Constants.isRecordingVehicleOrMileOrDamagedPart == 3) {
-                    params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
-                    params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+
+                    String urlPrefix = "file://";
+
+                    if (claim.getVideoURL().contains(urlPrefix)) {
+
+                        File file = new File(claim.getVideoURL().substring(urlPrefix.length()));
+                        if (file.exists()) {
+                            params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+
+                        }
+
+                        File file1 = new File(claim.getImageURL().substring(urlPrefix.length()));
+                        if (file1.exists()) {
+                            params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                        }
+
+                    }
+
                 }
 
                 return params;
@@ -1262,7 +1308,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onClick(View v) {
 
-                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
                         }
 
@@ -1277,7 +1323,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onClick(View v) {
 
-                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
                         }
                         claim.setWhatHappened(getResources().getString(R.string.claim_reason_car_stolen));
@@ -1290,7 +1336,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onClick(View v) {
-                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
                         }
                         claim.setWhatHappened(getResources().getString(R.string.claim_reason_rock_hit_glass));
@@ -1303,7 +1349,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onClick(View v) {
-                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
                         }
                         claim.setWhatHappened(getResources().getString(R.string.claim_reason_natural_hazard));
@@ -1316,9 +1362,16 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onClick(View v) {
-                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
-                            claimCurrentStep = ClaimCurrentStep.WHAT_HAPPENED_EDITING;
+                        //if (claimCurrentStep.getIntValue() < ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+                        if (claimCurrentStep.getIntValue() > ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
+                            claimCurrentStepTemp = claimCurrentStep;
                         }
+                        else {
+                            claimCurrentStepTemp = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
+                        }
+
+                            claimCurrentStep = ClaimCurrentStep.WHAT_HAPPENED_EDITING;
+                        //}
                         //claim.setWhatHappened(getResources().getString(R.string.claim_reason_other_reason));
                         dialog.dismiss();
                         updateViewContent();
@@ -1356,9 +1409,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.button_done_answer_what_happend_description:
 
-                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
-                    claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
-                }
+
+                    claimCurrentStep = claimCurrentStepTemp;
 
                 claim.setWhatHappened(editTextAnswerWhatHappenedDescription.getText().toString());
                 updateViewContent();
@@ -1497,7 +1549,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 if (!selectedParts.isEmpty()) {
 
-                    if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED.getIntValue()) {
+                    if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                         claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATPARTDAMAGED;
                     }
 
@@ -1754,7 +1806,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         Globals.coverage.setDateFrom(null);
                         textViewAnswerWhenHappened.setText(getString(R.string.file_a_claim_answer_when_happened_text_title));
 
-                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue()) {
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHATHAPPENED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
                         }
 
@@ -1767,7 +1819,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                     try {
 
-                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHENHAPPENED.getIntValue()) {
+                        if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHENHAPPENED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                             claimCurrentStep = ClaimCurrentStep.ANSWERED_WHENHAPPENED;
                         }
 
@@ -1812,7 +1864,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             if (resultCode == RESULT_OK) {
 
 
-                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHEREHAPPENED.getIntValue()) {
+                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_WHEREHAPPENED.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                     claimCurrentStep = ClaimCurrentStep.ANSWERED_WHEREHAPPENED;
                 }
 
@@ -1839,7 +1891,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         if (requestCode == MY_CAMERA_ACTIVITY_REQUEST_CODE) {
 
             if (resultCode == RESULT_OK) {
-                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_TAKE_VIDEO.getIntValue()) {
+                if (claimCurrentStep.getIntValue() < ClaimCurrentStep.ANSWERED_TAKE_VIDEO.getIntValue() && claimCurrentStep != ClaimCurrentStep.WHAT_HAPPENED_EDITING) {
                     claimCurrentStep = ClaimCurrentStep.ANSWERED_TAKE_VIDEO;
                 }
 

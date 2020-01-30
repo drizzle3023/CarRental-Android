@@ -18,7 +18,7 @@
             android:layout_gravity="center_vertical"
             android:background="@null"
             android:padding="10dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
         <TextView
             android:id="@+id/subscriptionActivityTitle"

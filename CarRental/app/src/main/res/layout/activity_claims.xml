@@ -46,7 +46,7 @@
             android:layout_marginLeft="9dp"
             android:background="@null"
             android:padding="10dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
     </FrameLayout>
 

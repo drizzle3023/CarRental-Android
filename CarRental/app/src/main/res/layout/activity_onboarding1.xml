@@ -20,12 +20,13 @@
 
         <ImageButton
             android:id="@+id/buttonDot"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="37dp"
+            android:layout_height="7dp"
             android:layout_gravity="center"
             android:background="@null"
             android:src="@drawable/dot_1"
             android:layout_weight="1"
+            android:scaleType="centerInside"
             android:textAlignment="center" />
 
         <TextView

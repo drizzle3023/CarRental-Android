@@ -165,8 +165,9 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                     fetchCompaniesFromServer();
                 }
 
-
-                Globals.coverage = new Coverage();
+                if (Globals.coverage == null) {
+                    Globals.coverage = new Coverage();
+                }
                 Globals.coverage.setLocation(currentLocation);
                 String strAddress = Utils.getAddressFromLocation(getApplicationContext(), Globals.coverage.getLocation());
                 Globals.coverage.setLocationAddress(strAddress);
@@ -237,12 +238,21 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void showWaitingScreen() {
 
-        progressDialog.show();
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Please wait...");
+            progressDialog.setCancelable(false);
+        }
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
     }
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
 
     }
 
@@ -449,7 +459,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                 params.put("company_id", String.format("%d", selectedCompany.getId()));
                 params.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
-                params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000));
+                params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000  + 3600 * 24 - 1));
                 params.put("state", String.format("%d", CoverageState.UNCOVERED.getIntValue()));
 
                 return params;

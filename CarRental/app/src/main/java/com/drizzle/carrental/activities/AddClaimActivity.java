@@ -61,12 +61,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -200,7 +197,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private ClaimCurrentStep claimCurrentStep = ClaimCurrentStep.NEW;
 
-    private ClaimCurrentStep claimCurrentStepTemp =  ClaimCurrentStep.NEW;
+    private ClaimCurrentStep claimCurrentStepTemp = ClaimCurrentStep.NEW;
 
     private boolean isEditable = false; //indicates if any content is changed or not
 
@@ -636,9 +633,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         } else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
 
 
-
-        }
-        else {
+        } else {
 
             layoutQuestionWhenHappened.setVisibility(View.VISIBLE);
             layoutAnswerWhenHappened.setVisibility(View.VISIBLE);
@@ -715,8 +710,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             buttonEditAnswerWhereHappened.setBackgroundResource(R.drawable.ic_edit_black_24dp);
             buttonEditAnswerWhereHappened.setText("");
 
-        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
-
+        } else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
 
 
         } else {
@@ -816,8 +810,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             }
 
 
-        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
-
+        } else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
 
 
         } else {
@@ -910,8 +903,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 //            imageViewAnswerTakeVideo.setImageBitmap(Bitmap.createScaledBitmap(bitmap, imageViewAnswerTakeVideo.getWidth(), imageViewAnswerTakeVideo.getHeight(), false));
 
 
-        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
-
+        } else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
 
 
         } else {
@@ -983,8 +975,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                 buttonDoneElse.setTextColor(getResources().getColor(R.color.colorNormalBlue, null));
             }
             editTextAnswerElse.setEnabled(true);
-        }else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
-
+        } else if (claimCurrentStep.getIntValue() == ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
 
 
         } else {
@@ -1051,8 +1042,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         Toast.makeText(this, getString(R.string.claim_question_take_a_video), Toast.LENGTH_SHORT).show();
                         return false;
                     }
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -1244,12 +1234,19 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
     private void showWaitingScreen() {
 
 
-        progressDialog.show();
+
+            if (!progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+
     }
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
 
@@ -1365,12 +1362,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         //if (claimCurrentStep.getIntValue() < ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
                         if (claimCurrentStep.getIntValue() > ClaimCurrentStep.WHAT_HAPPENED_EDITING.getIntValue()) {
                             claimCurrentStepTemp = claimCurrentStep;
-                        }
-                        else {
+                        } else {
                             claimCurrentStepTemp = ClaimCurrentStep.ANSWERED_WHATHAPPENED;
                         }
 
-                            claimCurrentStep = ClaimCurrentStep.WHAT_HAPPENED_EDITING;
+                        claimCurrentStep = ClaimCurrentStep.WHAT_HAPPENED_EDITING;
                         //}
                         //claim.setWhatHappened(getResources().getString(R.string.claim_reason_other_reason));
                         dialog.dismiss();
@@ -1410,7 +1406,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             case R.id.button_done_answer_what_happend_description:
 
 
-                    claimCurrentStep = claimCurrentStepTemp;
+                claimCurrentStep = claimCurrentStepTemp;
 
                 claim.setWhatHappened(editTextAnswerWhatHappenedDescription.getText().toString());
                 updateViewContent();
@@ -1794,14 +1790,13 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                 GregorianCalendar selectedDate = new GregorianCalendar(year, month, dayOfMonth);
 
-                if (selectedDate.before(currentDate)) {
+                if (selectedDate.after(currentDate)) {
 
-                    Toast.makeText(getBaseContext(), R.string.claim_date_is_past, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), R.string.claim_date_is_future, Toast.LENGTH_SHORT).show();
 
                     if (claim.getWhenHappened() != null) {
 
-                    }
-                    else {
+                    } else {
 
                         Globals.coverage.setDateFrom(null);
                         textViewAnswerWhenHappened.setText(getString(R.string.file_a_claim_answer_when_happened_text_title));
@@ -1812,7 +1807,6 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                         updateViewContent();
                     }
-
 
 
                 } else {

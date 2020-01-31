@@ -41,4 +41,7 @@ public class MyProfile implements Serializable {
     private String worldZone = "";
 
     VehicleType vehicleType = null;
+
+    @SerializedName("pay_state")
+    private int payState = 0;
 }

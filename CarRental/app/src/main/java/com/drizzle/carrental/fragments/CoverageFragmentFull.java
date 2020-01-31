@@ -77,8 +77,6 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private boolean firstFlag = true;
 
-    int payState= 0;
-
     private void getControlHandlersAndLinkActions(View view) {
 
         imageButtonStartCoverage = view.findViewById(R.id.imageview_start_coverage);
@@ -213,11 +211,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         buttonGotIt.setVisibility(View.VISIBLE);
                         layoutLocation.setVisibility(View.GONE);
 
-                        imageButtonStartCoverage.setImageResource(R.drawable.covered_coverage_image);
-
                         Picasso picasso = Picasso.get();
                         picasso.invalidate(Globals.coverage.getUrlImageVehicle());
                         picasso.load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
+
                         imageButtonStartCoverage.setAlpha(0.25f);
                         textViewCoverageTitle.setText(R.string.coverage_expired_title);
                         textViewCoveragePeriod.setText(R.string.no_remainingtime);
@@ -311,7 +308,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private void initVariables() {
 
-        payState = 0;
+
     }
 
     @Nullable
@@ -337,7 +334,9 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
@@ -362,15 +361,15 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
 
                         try {
-                            payState = Integer.parseInt(object.getJSONObject("data").getString("pay_state"));
+                            Globals.profile.setPayState(Integer.parseInt(object.getJSONObject("data").getString("pay_state")));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            payState = 0;
+                            Globals.profile.setPayState(0);
                         }
 
-                        if (payState == 0) {
-                            navigateToSubscribeActivity();
-                        }
+//                        if (payState == 0) {
+//                            navigateToSubscribeActivity();
+//                        }
                         if (object.getString("success").equals("true")) {
 
                             JSONObject data = object.getJSONObject("data");
@@ -487,7 +486,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             case R.id.imageview_start_coverage:
 
-                if (payState == 0) {
+                if (Globals.profile.getPayState() == 0) {
                     navigateToSubscribeActivity();
                     break;
                 }
@@ -547,12 +546,12 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         if (Globals.profile.getVehicleType() != null && Globals.profile.getWorldZone() != null && !Globals.profile.getWorldZone().isEmpty()) {
             Intent intent = new Intent(getActivity(), PaymentActivity.class);
             startActivity(intent);
-            getActivity().finish();
+            //getActivity().finish();
         }
         else {
             Intent intent = new Intent(getActivity(), SubscriptionNewActivity.class);
             startActivity(intent);
-            getActivity().finish();
+            //getActivity().finish();
         }
 
 
@@ -580,7 +579,9 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 

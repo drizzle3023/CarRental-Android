@@ -102,7 +102,6 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         textViewPrice = (TextView) findViewById(R.id.textview_price);
 
 
-
     }
 
     private void updateView() {
@@ -118,8 +117,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_us))) {
 
             textViewPrice.setText(df.format(Globals.selectedVehicleType.getPricePerYearUsd()) + getResources().getString(R.string.usd_character) + " / per year");
-        }
-        else if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_europe))) {
+        } else if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_europe))) {
 
             textViewPrice.setText(df.format(Globals.selectedVehicleType.getPricePerYearEur()) + getResources().getString(R.string.euro_character) + " / per year");
         }
@@ -186,18 +184,15 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
             if (!serviceAreas.isEmpty()) {
                 if (checkBoxUs.isChecked()) {
                     Globals.selectedServiceArea = serviceAreas.get(0);
-                }
-                else if (checkBoxEurope.isChecked()) {
+                } else if (checkBoxEurope.isChecked()) {
                     Globals.selectedServiceArea = serviceAreas.get(1);
-                }
-                else {
+                } else {
                     Globals.selectedServiceArea = null;
                 }
             }
 
             updateView();
-        }
-        else if (view.getId() == R.id.button_subscribe) {
+        } else if (view.getId() == R.id.button_subscribe) {
 
             if (Globals.selectedVehicleType == null) {
                 Toast.makeText(this, getResources().getString(R.string.no_vehicle_types), Toast.LENGTH_SHORT).show();
@@ -208,12 +203,11 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                 return;
             }
 
-            if (isSignedUpOrNot) {
+            if (Globals.isLoggedIn) {
 
                 Intent intent = new Intent(SubscriptionNewActivity.this, PaymentActivity.class);
                 startActivity(intent);
-            }
-            else {
+            } else {
                 Constants.isNavigateToSignupOrLogin = true;
                 Intent intent = new Intent(SubscriptionNewActivity.this, SignUpLoginActivity.class);
                 startActivity(intent);
@@ -267,14 +261,22 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
     private void showWaitingScreen() {
 
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+
+            progressDialog.setMessage("Please wait...");
+            progressDialog.setCancelable(false);
+
+            progressDialog.show();
+
+        }
     }
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+        if (progressDialog.isShowing()) {
+
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -316,7 +318,8 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
                 JSONObject data = object.getJSONObject("data");
                 JSONArray listObject = data.getJSONArray("carTypeList");
-                vehicleTypes = new Gson().fromJson(listObject.toString(), new TypeToken<List<VehicleType>>() {}.getType());
+                vehicleTypes = new Gson().fromJson(listObject.toString(), new TypeToken<List<VehicleType>>() {
+                }.getType());
 
                 if (!vehicleTypes.isEmpty()) {
                     try {
@@ -333,7 +336,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
                     if (Globals.profile.getVehicleType() != null && Globals.profile.getWorldZone() != null && !Globals.profile.getWorldZone().isEmpty()) {
 
-                        for (int i = 0; i < vehicleTypes.size(); i ++) {
+                        for (int i = 0; i < vehicleTypes.size(); i++) {
                             if (vehicleTypes.get(i).getId() == Globals.profile.getVehicleType().getId()) {
 
                                 spinner.setSelection(i);
@@ -345,8 +348,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
                             checkBoxEurope.setChecked(true);
                             checkBoxUs.setChecked(false);
-                        }
-                        else if (Globals.profile.getWorldZone().equals(getString(R.string.worldzone_us))) {
+                        } else if (Globals.profile.getWorldZone().equals(getString(R.string.worldzone_us))) {
                             checkBoxEurope.setChecked(false);
                             checkBoxUs.setChecked(true);
                         }

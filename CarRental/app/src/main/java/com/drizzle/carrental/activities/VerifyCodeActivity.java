@@ -209,6 +209,11 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                         e.printStackTrace();
                     }
 
+                    try {
+                        myProfile.setPayState(profileObject.getInt("pay_state"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     JSONObject vehicleTypeJSON = null;
                     try {
@@ -282,7 +287,13 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
 
                     Globals.isLoggedIn = true;
-                    navigateToHomeActivity();
+
+                    if (Globals.profile.getPayState() == 1) {
+                        navigateToHomeActivity();
+                    } else if (Globals.profile.getPayState() == 0) {
+                        navigateToPaymentActivity();
+                    }
+
 
                 } else {
 
@@ -293,11 +304,14 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
 
-                    navigateToHomeActivity();
+                    if (Globals.profile.getPayState() == 1) {
+                        navigateToHomeActivity();
+                    } else if (Globals.profile.getPayState() == 0) {
+                        navigateToPaymentActivity();
+                    }
 
 
                 }
-
 
 
             } else if (object.getString("success").equals("false")) {
@@ -351,12 +365,16 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
     }
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     private void navigateToPaymentActivity() {

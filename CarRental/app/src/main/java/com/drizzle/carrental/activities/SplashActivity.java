@@ -276,8 +276,12 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
                 Utils.initHabitSDK(SplashActivity.this);
 
-
-                navigateToHomeActivity();
+                if (Globals.profile.getPayState() == 1 ) {
+                    navigateToHomeActivity();
+                }
+                else if (Globals.profile.getPayState() == 0){
+                    navigateToPaymentActivity();
+                }
 
             } else if (object.getString("success").equals("false")) {
 
@@ -319,5 +323,11 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         finish();
     }
 
+    private void navigateToPaymentActivity() {
+
+        Intent newIntent = new Intent(SplashActivity.this, PaymentActivity.class);
+        startActivity(newIntent);
+        finish();
+    }
 
 }

@@ -172,7 +172,9 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
     }
 
     private void hideWaitingScreen() {

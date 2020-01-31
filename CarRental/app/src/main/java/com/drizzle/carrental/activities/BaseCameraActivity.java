@@ -235,12 +235,16 @@ public class BaseCameraActivity extends AppCompatActivity {
     private void showWaitingScreen() {
 
 
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
     }
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     private void backToPreviousActivity() {
@@ -303,7 +307,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                                 }
 
                                 backToPreviousActivity();
-                            } else if (jsonObject.getString("success").equals("false")){
+                            } else if (jsonObject.getString("success").equals("false")) {
 
                                 Toast.makeText(BaseCameraActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
 
@@ -314,8 +318,6 @@ public class BaseCameraActivity extends AppCompatActivity {
 
 
                             }
-
-
 
 
                         } catch (Exception e) {
@@ -467,10 +469,14 @@ public class BaseCameraActivity extends AppCompatActivity {
                     public void onRecordComplete() {
                         exportMp4ToGallery(getApplicationContext(), filepath);
 
-                        ProgressDialog progressDialog = new ProgressDialog(BaseCameraActivity.this);
-                        progressDialog.setMessage("Please wait...");
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
+                        //ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
+                        //progressDialog.setMessage("Please wait...");
+                        //progressDialog.setCancelable(false);
+                        if (!progressDialog.isShowing()) {
+
+                                progressDialog.show();
+
+                        }
 
                         DisplayMetrics metrics = getResources().getDisplayMetrics();
                         ViewGroup.LayoutParams buttonLayoutParams = recordBtn.getLayoutParams();
@@ -491,7 +497,10 @@ public class BaseCameraActivity extends AppCompatActivity {
                             @Override
                             public void run() {
 
-                                progressDialog.hide();
+                                if (progressDialog.isShowing()) {
+                                    progressDialog.hide();
+                                }
+
 
                                 File file = new File(getVideoFilePath());
                                 if (!file.exists() || !file.canRead() || !file.isFile()) {

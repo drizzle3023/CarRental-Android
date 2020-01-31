@@ -32,7 +32,7 @@ public class Constants {
 
     public static final String CONTACT_URL = "https://www.habit.io/contact-us.html";
 
-    //public static final String SERVER_HTTP_URL = "https://sandbox-zone02.netherlands.region.habit.io";
+//    public static final String SERVER_HTTP_URL = "https://sandbox-zone02.netherlands.region.habit.io";
 
     public static final String MEDIA_PATH_URL = SERVER_HTTP_URL + "/site-media/";
 

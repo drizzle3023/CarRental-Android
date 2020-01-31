@@ -93,8 +93,8 @@
 
     <string name="message_company_id_is_missing">Please select a company.</string>
     <string name="message_address_is_missing">Couldn\'t get your current address.</string>
-    <string name="message_enddate_is_missing">Please select your start date.</string>
-    <string name="message_startdate_is_missing">Please select your end date.</string>
+    <string name="message_enddate_is_missing">Please select your end date.</string>
+    <string name="message_startdate_is_missing">Please select your start date.</string>
     <string name="message_period_is_not_correct">Please select valid date range.</string>
 
     <string name="message_input_what_happened">Select what happened to you.</string>
@@ -124,7 +124,7 @@
     <string name="worldzone_us">United States</string>
     <string name="worldzone_europe">Europe</string>
 
-    <string name="claim_date_is_past">Can’t be in the past</string>
+    <string name="claim_date_is_future">Shouldn’t be in the future</string>
 
     <string name="message_service_is_not_defined">Service zone is not defined.</string>
 

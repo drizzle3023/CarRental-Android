@@ -73,7 +73,9 @@ public class HistoryFragmentFull extends Fragment {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 

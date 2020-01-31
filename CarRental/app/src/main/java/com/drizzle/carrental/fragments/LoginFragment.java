@@ -63,9 +63,9 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
 
                 strPhoneNumber = phoneNumber.getText().toString();
-                if (strPhoneNumber.equalsIgnoreCase("")){
+                if (strPhoneNumber.equalsIgnoreCase("")) {
                     Toast.makeText(getContext(), getString(R.string.required_phone_number), Toast.LENGTH_SHORT).show();
-                } else{
+                } else {
 
                     strPhoneNumber = countryNumber.getText().toString() + strPhoneNumber;
 
@@ -73,7 +73,9 @@ public class LoginFragment extends Fragment {
                     final ProgressDialog progressDialog = new ProgressDialog(getContext());
                     progressDialog.setMessage("Please wait...");
                     progressDialog.setCancelable(false);
-                    progressDialog.show();
+                    if (!progressDialog.isShowing()) {
+                        progressDialog.show();
+                    }
 
                     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
@@ -95,7 +97,7 @@ public class LoginFragment extends Fragment {
                                 try {
                                     JSONObject object = new JSONObject(response.body().string());
 
-                                    if (object.getString("success").equals("true")){
+                                    if (object.getString("success").equals("true")) {
 
                                         Globals.mobileNumber = strPhoneNumber;
                                         Globals.isSignUpOrLoginRequest = false;
@@ -103,7 +105,7 @@ public class LoginFragment extends Fragment {
                                         startActivity(newIntent);
 
 
-                                    } else{
+                                    } else {
                                         JSONObject data = object.getJSONObject("data");
                                         Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
                                     }
@@ -120,7 +122,7 @@ public class LoginFragment extends Fragment {
                                 Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                             }
                         });
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         progressDialog.dismiss();
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();

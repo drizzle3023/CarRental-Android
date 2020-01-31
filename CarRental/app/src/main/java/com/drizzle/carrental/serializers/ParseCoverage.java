@@ -49,6 +49,6 @@ public class ParseCoverage implements Serializable {
     @SerializedName("image_mile")
     String imageMile;
 
-    @SerializedName("remaining_time")
+    @SerializedName("time_left")
     long remainingTime;
 }

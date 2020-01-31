@@ -158,7 +158,9 @@ public class PaymentActivity extends FragmentActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
@@ -176,7 +178,9 @@ public class PaymentActivity extends FragmentActivity {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                    progressDialog.dismiss();
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
 
                     try {
                         JSONObject object = new JSONObject(response.body().string());
@@ -239,7 +243,9 @@ public class PaymentActivity extends FragmentActivity {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    progressDialog.dismiss();
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                     t.printStackTrace();
                     Toast.makeText(PaymentActivity.this, "Server connect error", Toast.LENGTH_SHORT).show();
                 }

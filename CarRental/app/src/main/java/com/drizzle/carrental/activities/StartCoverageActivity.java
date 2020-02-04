@@ -459,7 +459,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                 params.put("company_id", String.format("%d", selectedCompany.getId()));
                 params.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
-                params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000  + 3600 * 24 - 1));
+                params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000 + 3600 * 24 - 1));
                 params.put("state", String.format("%d", CoverageState.UNCOVERED.getIntValue()));
 
                 return params;
@@ -503,7 +503,14 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.layout_pickup_location:
-                getCurrentAddress();
+                try {
+                    if (Globals.coverage.getLocationAddress() == null || Globals.coverage.getLocationAddress().isEmpty() || Globals.coverage.getLocation() == null) {
+                        getCurrentAddress();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
 
             case R.id.layout_start_date:

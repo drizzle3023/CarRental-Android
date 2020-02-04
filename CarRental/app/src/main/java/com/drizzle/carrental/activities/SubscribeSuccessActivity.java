@@ -31,7 +31,11 @@ public class SubscribeSuccessActivity extends Activity {
             public void onClick(View view) {
                 Globals.isLoggedIn = true;
                 Intent intent = new Intent(SubscribeSuccessActivity.this, HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
+
+
             }
         });
 
@@ -59,4 +63,14 @@ public class SubscribeSuccessActivity extends Activity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        Globals.isLoggedIn = true;
+        Intent intent = new Intent(SubscribeSuccessActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+
+    }
 }

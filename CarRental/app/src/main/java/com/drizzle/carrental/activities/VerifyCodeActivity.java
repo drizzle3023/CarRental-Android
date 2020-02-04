@@ -285,13 +285,19 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
 
-
                     Globals.isLoggedIn = true;
 
                     if (Globals.profile.getPayState() == 1) {
-                        navigateToHomeActivity();
+
                     } else if (Globals.profile.getPayState() == 0) {
-                        navigateToPaymentActivity();
+
+                        if (Globals.selectedServiceArea == null || Globals.selectedVehicleType == null) {
+                            navigateToHomeActivity();
+                        }
+                        else {
+                            navigateToPaymentActivity();
+                        }
+
                     }
 
 
@@ -304,12 +310,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     SharedHelper.putKey(this, "access_token", dataObject.getString("access_token"));
                     SharedHelper.putKey(this, "payload", dataObject.getJSONObject("user").toString());
 
-                    if (Globals.profile.getPayState() == 1) {
-                        navigateToHomeActivity();
-                    } else if (Globals.profile.getPayState() == 0) {
-                        navigateToPaymentActivity();
-                    }
 
+                    navigateToHomeActivity();
 
                 }
 
@@ -381,6 +383,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         Intent newIntent = new Intent(this, PaymentActivity.class);
         startActivity(newIntent);
+        finish();
     }
 
     private void navigateToHomeActivity() {

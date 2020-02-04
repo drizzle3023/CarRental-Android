@@ -73,10 +73,10 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
     private void runMainProcess() {
 
-//        Intent newIntent = new Intent(SplashActivity.this, AddClaimActivity.class);
-//        startActivity(newIntent);
-//        finish();
-////
+//        Constants.isRecordingVehicleOrMileOrDamagedPart = 1;
+//        Intent intent = new Intent(SplashActivity.this, MyCameraActivity.class);
+//        startActivityForResult(intent, 1);
+
 //        return;
 //        load saved api token
 //        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
@@ -280,7 +280,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                     navigateToHomeActivity();
                 }
                 else if (Globals.profile.getPayState() == 0){
-                    navigateToPaymentActivity();
+                    navigateToOnboardingActivity();
                 }
 
             } else if (object.getString("success").equals("false")) {

@@ -129,6 +129,21 @@ public class Utils {
 
     public static void initHabitSDK(Context context) {
 
+//        SDK.INSTANCE.init(context, "", new Function1<HabitStatusCodes, Unit>() {
+//
+//            @Override
+//            public Unit invoke(HabitStatusCodes habitStatusCodes) {
+//                if (habitStatusCodes == HabitStatusCodes.HABIT_SDK_SET_AUTHENTICATION) {
+//
+//                    Constants.isHabitSDKReady = true;
+//                    SDK.INSTANCE.setAuthorization(SharedHelper.getKey(context, "payload"));
+//                }
+//
+//                return Unit.INSTANCE;
+//            }
+//        });
+
+
         //init habit analyatics sdk
         SDK.INSTANCE.init(context, "", SharedHelper.getKey(context, "payload"), new Function1<HabitStatusCodes, Unit>() {
             @Override

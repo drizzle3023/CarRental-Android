@@ -198,6 +198,7 @@ public class PaymentActivity extends FragmentActivity {
                             CardConfiguration cardConfiguration = new CardConfiguration.Builder(Locale.getDefault(), Environment.TEST, Constants.ADYEN_PAYMENT_PUBLIC_KEY).build();
 
                             // After payment succeed, call this intent.
+                            Globals.profile.setPayState(1);
                             Intent resultintent = new Intent(PaymentActivity.this, SubscribeSuccessActivity.class);
 
                             DropInConfiguration dropInConfiguration = new DropInConfiguration.Builder(

@@ -62,6 +62,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -154,7 +155,13 @@ public class BaseCameraActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
 
-                        cameraRecorder.stop();
+                        if (cameraRecorder != null) {
+                            try {
+                                cameraRecorder.stop();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
 
 
                         break;
@@ -235,15 +242,19 @@ public class BaseCameraActivity extends AppCompatActivity {
     private void showWaitingScreen() {
 
 
-        if (!progressDialog.isShowing()) {
+
             progressDialog.show();
-        }
+
     }
 
     private void hideWaitingScreen() {
 
         if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
+            try {
+                progressDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -467,6 +478,30 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onRecordComplete() {
+
+                        File file = new File(getVideoFilePath());
+
+                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+
+                        try {
+                            retriever.setDataSource(BaseCameraActivity.this, Uri.fromFile(file));
+                        } catch (Exception e) {
+                            Toast.makeText(BaseCameraActivity.this, getString(R.string.message_video_is_not_valid), Toast.LENGTH_SHORT).show();
+
+                            recordBtn.setText(getString(R.string.app_record));
+                            recordBtn.setLayoutParams(layoutParams);
+                            recordBtn.setBackgroundResource(R.drawable.record_start_button);
+                            buttonPlay.setVisibility(View.GONE);
+                            fullscreenVideoView.setVisibility(View.GONE);
+                            FrameLayout frameLayout = findViewById(R.id.wrap_view);
+                            frameLayout.setVisibility(View.VISIBLE);
+                            sampleGLView.setVisibility(View.VISIBLE);
+
+                            e.printStackTrace();
+                            return;
+                        }
+
+
                         exportMp4ToGallery(getApplicationContext(), filepath);
 
                         //ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
@@ -502,18 +537,23 @@ public class BaseCameraActivity extends AppCompatActivity {
                                 }
 
 
-                                File file = new File(getVideoFilePath());
-                                if (!file.exists() || !file.canRead() || !file.isFile()) {
-                                    return;
-                                }
+
 
                                 fullscreenVideoView.videoUrl("file://" + getVideoFilePath()).addOnVideoCompletedListener(new OnVideoCompletedListener() {
                                     @Override
                                     public void onFinished() {
 
-                                        sampleGLView.setVisibility(View.GONE);
+                                        try {
+                                            sampleGLView.setVisibility(View.GONE);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
 
-                                        buttonPlay.setVisibility(View.VISIBLE);
+                                        try {
+                                            buttonPlay.setVisibility(View.VISIBLE);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
 
                                     }
                                 });

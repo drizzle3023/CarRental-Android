@@ -39,6 +39,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
         bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
 
         if (Globals.isLoggedIn) {
@@ -47,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
             } else {
                 showFragment(R.id.frame_coverage, ProfileFragmentFull.class);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
             }
 
         } else {

@@ -103,6 +103,8 @@
 
     <string name="message_invalid_claim_id">Invalid claim.</string>
     <string name="message_select_damaged_zone">Please select damaged parts.</string>
+    <string name="message_video_is_not_valid">Recorded video is not valid.</string>
+
 
     <string name="rental_type_unlimited_rental">Unlimited rentals</string>
 

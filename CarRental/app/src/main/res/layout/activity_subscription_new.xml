@@ -34,17 +34,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="17dp"
         android:background="@drawable/subscription_description_back"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/sf_pro_display_semibold"
             android:text="*Unlimited Rentals for only"
             android:textAlignment="center"
@@ -56,8 +56,8 @@
             android:id="@+id/textview_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:fontFamily="@font/sf_pro_display_semibold"
             android:text="@string/no_vehicle_types"
             android:textAlignment="center"
@@ -69,7 +69,6 @@
             android:layout_height="44dp"
             android:layout_marginLeft="80dp"
             android:layout_marginRight="80dp"
-            android:layout_marginBottom="25dp"
             android:background="@drawable/cartype_select_spinner"
             android:orientation="horizontal">
 
@@ -99,7 +98,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <RadioGroup
@@ -145,8 +145,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:fontFamily="@font/sf_pro_display_semibold"
         android:text="what you get"
         android:textAllCaps="true"
@@ -156,8 +156,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="6dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -185,7 +184,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="6dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -237,12 +236,12 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_height="match_parent">
 
+    </Space>
     <Button
         android:id="@+id/button_subscribe"
         android:layout_width="match_parent"

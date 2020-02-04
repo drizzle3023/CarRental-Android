@@ -544,7 +544,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
     private void navigateToSubscribeActivity() {
 
         if (Globals.profile.getVehicleType() != null && Globals.profile.getWorldZone() != null && !Globals.profile.getWorldZone().isEmpty()) {
-            Intent intent = new Intent(getActivity(), PaymentActivity.class);
+            Intent intent = new Intent(getActivity(),  PaymentActivity.class);
             startActivity(intent);
             //getActivity().finish();
         }

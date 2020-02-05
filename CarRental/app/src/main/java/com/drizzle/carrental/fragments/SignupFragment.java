@@ -212,7 +212,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
             } catch (Exception e) {
 
                 e.printStackTrace();
-                Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             JsonParser jsonParser = new JsonParser();

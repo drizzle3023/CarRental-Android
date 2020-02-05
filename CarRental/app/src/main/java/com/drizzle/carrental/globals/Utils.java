@@ -119,8 +119,8 @@ public class Utils {
 
         Globals.isLoggedIn  = false;
         Globals.profile  = new MyProfile();
-        Globals.selectedVehicleType  = new VehicleType();
-        Globals.selectedServiceArea  = new ServiceArea();
+        Globals.selectedVehicleType = null;
+        Globals.selectedServiceArea = null;
         Globals.paymentId  = 0;
         Globals.coverage  = new Coverage(); //current active coverage
         Globals.mobileNumber = ""; //string phone number
@@ -173,9 +173,8 @@ public class Utils {
 
     public static void logout(Context context, Activity activity) {
 
-        if (Constants.isHabitSDKReady) {
+
             SDK.INSTANCE.logout();
-        }
 
         SharedHelper.clearSharedPreferences(context);
         Utils.resetAllGlobals();

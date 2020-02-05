@@ -73,9 +73,9 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         linkLogout = view.findViewById(R.id.link_logout);
 
 
-        linkFeedback.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>Feedback</i></a>"));
-        linkFaqs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs</i></a>"));
-        linkAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About " + BuildConfig.VERSION_NAME + "</i></a>"));
+        linkFeedback.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>Feedback </i></a>"));
+        linkFaqs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs </i></a>"));
+        linkAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About " + BuildConfig.VERSION_NAME + " </i></a>"));
 
         linkFeedback.setClickable(true);
         linkFeedback.setMovementMethod(LinkMovementMethod.getInstance());

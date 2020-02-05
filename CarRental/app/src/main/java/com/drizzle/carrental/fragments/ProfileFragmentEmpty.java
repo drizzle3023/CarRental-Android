@@ -42,8 +42,8 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
 //        textViewFAQs.setOnClickListener(this);
 //        textViewAbout.setOnClickListener(this);
 
-        textViewFAQs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs</i></a>"));
-        textViewAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About " + BuildConfig.VERSION_NAME + "</i></a>"));
+        textViewFAQs.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>FAQs </i></a>"));
+        textViewAbout.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>About " + BuildConfig.VERSION_NAME + " </i></a>"));
 
 
         textViewFAQs.setClickable(true);

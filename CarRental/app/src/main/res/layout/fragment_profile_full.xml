@@ -42,7 +42,7 @@
                 style="@style/AppTheme.ProfileCategoryCaption"
                 android:layout_marginLeft="23dp"
                 android:paddingRight="10dp"
-                android:text="Profile" />
+                android:text="Profile " />
 
             <TextView
                 android:id="@+id/textview_name"
@@ -52,7 +52,7 @@
                 style="@style/AppTheme.ProfileItem"
                 android:layout_marginLeft="23dp"
                 android:paddingRight="10dp"
-                android:text="John" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/textview_phonenumber"
@@ -62,7 +62,7 @@
                 style="@style/AppTheme.ProfileItem"
                 android:layout_marginLeft="23dp"
                 android:paddingTop="5dp"
-                android:paddingRight="10dp"
+
                 android:text="" />
 
             <TextView
@@ -73,8 +73,8 @@
                 android:layout_marginLeft="23dp"
                 style="@style/AppTheme.ProfileButton"
                 android:paddingTop="5dp"
-                android:paddingRight="10dp"
-                android:text="+ Add email" />
+
+                android:text="+ Add email " />
 
             <View
                 android:id="@+id/view7"
@@ -93,7 +93,7 @@
                 style="@style/AppTheme.ProfileCategoryCaption"
                 android:layout_marginLeft="23dp"
                 android:layout_marginTop="10dp"
-                android:text="Support" />
+                android:text="Support " />
 
             <TextView
                 android:id="@+id/link_feedback"
@@ -102,9 +102,9 @@
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
-                android:paddingRight="10dp"
+
                 android:textColorLink="@android:color/holo_blue_dark"
-                android:text="Feedback" />
+                android:text="Feedback " />
 
             <TextView
                 android:id="@+id/link_faqs"
@@ -113,10 +113,10 @@
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
-                android:paddingRight="10dp"
+
                 android:textColorLink="@android:color/holo_blue_dark"
                 android:paddingTop="5dp"
-                android:text="FAQs" />
+                android:text="FAQs " />
 
             <View
                 android:id="@+id/view8"
@@ -143,8 +143,8 @@
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
-                android:paddingRight="10dp"
-                android:text="****4242" />
+
+                android:text="****4242 " />
 
             <View
                 android:id="@+id/view8_2"
@@ -153,7 +153,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:paddingRight="10dp"
+
                 android:visibility="gone"
                 android:background="@color/colorDivider" />
 
@@ -202,9 +202,9 @@
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
-                android:paddingRight="5dp"
+
                 android:textColorLink="@android:color/holo_blue_dark"
-                android:text="About" />
+                android:text="About " />
 
             <TextView
                 android:id="@+id/link_logout"
@@ -214,8 +214,8 @@
                 style="@style/AppTheme.ProfileButton"
                 android:layout_marginLeft="23dp"
                 android:paddingTop="5dp"
-                android:paddingRight="10dp"
-                android:text="Log out" />
+
+                android:text="Log out " />
 
         </LinearLayout>
     </ScrollView>

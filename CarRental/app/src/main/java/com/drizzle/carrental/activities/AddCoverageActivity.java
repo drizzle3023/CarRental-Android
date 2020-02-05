@@ -349,7 +349,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
             Picasso picasso = Picasso.get();
             picasso.invalidate(Globals.coverage.getUrlImageVehicle());
-            picasso.load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.video_vehicle).into(imageViewVideoVehicle);
+            picasso.load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.history_row_item_image_corner_radius).into(imageViewVideoVehicle);
         }
 
 
@@ -363,7 +363,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
             Picasso picasso = Picasso.get();
             picasso.invalidate(Globals.coverage.getUrlImageMile());
-            picasso.load(Globals.coverage.getUrlImageMile()).placeholder(R.drawable.video_mile).into(imageViewVideoMile);
+            picasso.load(Globals.coverage.getUrlImageMile()).placeholder(R.drawable.history_row_item_image_corner_radius).into(imageViewVideoMile);
         }
 
 

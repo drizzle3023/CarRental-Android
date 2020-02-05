@@ -243,16 +243,24 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             progressDialog.setMessage("Please wait...");
             progressDialog.setCancelable(false);
         }
-        if (!progressDialog.isShowing()) {
+
+        try {
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     private void hideWaitingScreen() {
 
-        if (progressDialog.isShowing()) {
+
+        try {
             progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
     }
 
@@ -327,7 +335,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                                 SharedHelper.putKey(StartCoverageActivity.this, "access_token", newToken);
                                 SharedHelper.putKey(StartCoverageActivity.this, "payload", newPayload);
 
-                                Utils.initHabitSDK(StartCoverageActivity.this);
+                                Utils.setAuthHabitSDK(StartCoverageActivity.this);
                             }
                         }
                     }

@@ -11,6 +11,7 @@ import com.drizzle.carrental.BuildConfig;
 import com.drizzle.carrental.activities.SplashActivity;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 
 import net.gotev.uploadservice.UploadServiceConfig;
 
@@ -45,6 +46,6 @@ public class MyApplication extends Application {
                 notificationChannelId,
                 BuildConfig.DEBUG);
 
-        
+        Utils.initHabitSDK(this);
     }
 }

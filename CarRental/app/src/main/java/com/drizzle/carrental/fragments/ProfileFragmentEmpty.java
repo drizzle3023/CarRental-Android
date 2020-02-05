@@ -32,10 +32,10 @@ public class ProfileFragmentEmpty extends Fragment implements View.OnClickListen
 
         View view = inflater.inflate(R.layout.fragment_profile_empty, container, false);
 
-        textViewLogin = (TextView) view.findViewById(R.id.link_login);
-        textViewSignup = (TextView) view.findViewById(R.id.link_signup);
-        textViewFAQs = (TextView) view.findViewById(R.id.link_faqs);
-        textViewAbout = (TextView) view.findViewById(R.id.link_about);
+        textViewLogin = view.findViewById(R.id.link_login);
+        textViewSignup = view.findViewById(R.id.link_signup);
+        textViewFAQs = view.findViewById(R.id.link_faqs);
+        textViewAbout = view.findViewById(R.id.link_about);
 
         textViewLogin.setOnClickListener(this);
         textViewSignup.setOnClickListener(this);

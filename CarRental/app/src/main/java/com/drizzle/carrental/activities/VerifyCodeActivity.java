@@ -275,7 +275,6 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     }
                 }
 
-                Utils.initHabitSDK(this);
 
                 if (Globals.isSignUpOrLoginRequest) {
 
@@ -314,6 +313,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     navigateToHomeActivity();
 
                 }
+
+                Utils.setAuthHabitSDK(this);
 
 
             } else if (object.getString("success").equals("false")) {
@@ -365,17 +366,21 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
     private void showWaitingScreen() {
 
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
-        if (!progressDialog.isShowing()) {
+        try {
+            progressDialog.setMessage("Please wait...");
+            progressDialog.setCancelable(false);
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void hideWaitingScreen() {
 
-        if (progressDialog.isShowing()) {
+        try {
             progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

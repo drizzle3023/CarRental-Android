@@ -565,9 +565,9 @@
                         android:id="@+id/imageview_answer_take_video"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
-                        android:scaleType="fitCenter"
+                        android:scaleType="fitXY"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/image_damaged_zone">
+                        android:src="@drawable/history_row_item_image_corner_radius">
 
                     </ImageView>
 

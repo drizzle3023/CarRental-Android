@@ -9,7 +9,8 @@
     <dimen name="switch_stroke_height">0dp</dimen>
 
     <dimen name="view_round_radius_10">10dp</dimen>
-    <dimen name="view_round_radius_55">55dp</dimen>
+    <dimen name="view_round_round_55">55dp</dimen>
+    <dimen name="view_round_round_64">64dp</dimen>
 
 
 

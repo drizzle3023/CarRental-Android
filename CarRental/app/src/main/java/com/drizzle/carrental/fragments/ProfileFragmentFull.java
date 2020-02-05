@@ -62,15 +62,15 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_profile_full, container, false);
 
 
-        textViewName = (TextView) view.findViewById(R.id.textview_name);
-        textViewPhoneNumber = (TextView) view.findViewById(R.id.textview_phonenumber);
-        textViewCardNo = (TextView) view.findViewById(R.id.link_card_no);
-        linkAddEmail = (TextView) view.findViewById(R.id.link_add_email);
-        linkFeedback = (TextView) view.findViewById(R.id.link_feedback);
-        linkFaqs = (TextView) view.findViewById(R.id.link_faqs);
-        linkPermissions = (TextView) view.findViewById(R.id.link_permissions);
-        linkAbout = (TextView) view.findViewById(R.id.link_about);
-        linkLogout = (TextView) view.findViewById(R.id.link_logout);
+        textViewName = view.findViewById(R.id.textview_name);
+        textViewPhoneNumber = view.findViewById(R.id.textview_phonenumber);
+        textViewCardNo = view.findViewById(R.id.link_card_no);
+        linkAddEmail = view.findViewById(R.id.link_add_email);
+        linkFeedback = view.findViewById(R.id.link_feedback);
+        linkFaqs =  view.findViewById(R.id.link_faqs);
+        linkPermissions = view.findViewById(R.id.link_permissions);
+        linkAbout =  view.findViewById(R.id.link_about);
+        linkLogout = view.findViewById(R.id.link_logout);
 
 
         linkFeedback.setText(Html.fromHtml("<a href='" + Constants.CONTACT_URL + "'><i>Feedback</i></a>"));
@@ -88,7 +88,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
         textViewCardNo.setOnClickListener(this);
         linkAddEmail.setOnClickListener(this);
-//        1
+
         linkPermissions.setOnClickListener(this);
         //linkAbout.setOnClickListener(this);
         linkLogout.setOnClickListener(this);
@@ -108,23 +108,37 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
         if (Globals.profile != null) {
 
-            if (Globals.profile.getName() != null) {
+            if (Globals.profile.getName() == null || Globals.profile.getName().isEmpty()) {
+
+            }
+            else {
                 textViewName.setText(Globals.profile.getName());
             }
-            if (Globals.profile.getMobile() != null) {
+
+            if (Globals.profile.getMobile() == null || Globals.profile.getMobile().isEmpty()) {
+
+            }
+            else {
                 textViewPhoneNumber.setText(Globals.profile.getMobile());
             }
-            if (Globals.profile.getEmail() != null) {
+
+            if (Globals.profile.getEmail() == null || Globals.profile.getEmail().isEmpty()) {
+
+
+            }
+            else {
+
                 linkAddEmail.setText(Globals.profile.getEmail());
                 linkAddEmail.setTextColor(getResources().getColor(R.color.colorNormalText, null));
             }
 
-            try {
-                int cardNoLength = Globals.profile.getCreditCardNo().length();
-                textViewCardNo.setText("****" + Globals.profile.getCreditCardNo().substring(cardNoLength - 4));
-            } catch (Exception e) {
-                textViewCardNo.setText("****");
-            }
+            textViewCardNo.setText("****");
+//            try {
+//                int cardNoLength = Globals.profile.getCreditCardNo().length();
+//                textViewCardNo.setText("****" + Globals.profile.getCreditCardNo().substring(cardNoLength - 4));
+//            } catch (Exception e) {
+//                textViewCardNo.setText("****");
+//            }
         }
     }
 

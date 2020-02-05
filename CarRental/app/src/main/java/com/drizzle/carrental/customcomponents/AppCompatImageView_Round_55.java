@@ -32,7 +32,7 @@ public class AppCompatImageView_Round_55 extends AppCompatImageViewEx {
         else
             clipPath = new Path();
 
-        int radius = getResources().getDimensionPixelOffset(R.dimen.view_round_radius_55);
+        int radius = getResources().getDimensionPixelOffset(R.dimen.view_round_round_55);
         clipPath.addRoundRect(new RectF(scrollX + getPaddingLeft(), scrollY + getPaddingTop(),
                 scrollX + getRight() - getLeft() - getPaddingRight(),
                 scrollY + getBottom() - getTop() - getPaddingBottom()), radius, radius, Path.Direction.CW);

@@ -232,14 +232,20 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
 
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        if (!progressDialog.isShowing()) {
+        try {
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void hideWaitingScreen() {
 
-        progressDialog.dismiss();
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -62,10 +62,14 @@ public class HistoryFragmentFull extends Fragment {
 
         dataModels = new ArrayList<>();
 
-        fetchHistoryFromServer();
-
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        fetchHistoryFromServer();
     }
 
     private void fetchHistoryFromServer() {
@@ -73,8 +77,10 @@ public class HistoryFragmentFull extends Fragment {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        if (!progressDialog.isShowing()) {
+        try {
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -92,12 +98,18 @@ public class HistoryFragmentFull extends Fragment {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                    progressDialog.dismiss();
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     try {
                         JSONObject object = new JSONObject(response.body().string());
 
                         if (object.getString("success").equals("true")) {
+
+                            dataModels.clear();
 
                             JSONObject data = object.getJSONObject("data");
                             JSONArray jsonHistory = data.getJSONArray("historyList");
@@ -308,7 +320,11 @@ public class HistoryFragmentFull extends Fragment {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    progressDialog.dismiss();
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     t.printStackTrace();
                     Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                 }

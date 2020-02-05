@@ -261,21 +261,24 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
     private void showWaitingScreen() {
 
-        if (!progressDialog.isShowing()) {
 
+        try {
             progressDialog.setMessage("Please wait...");
             progressDialog.setCancelable(false);
-
             progressDialog.show();
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 
     private void hideWaitingScreen() {
 
-        if (progressDialog.isShowing()) {
-
+        try {
             progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

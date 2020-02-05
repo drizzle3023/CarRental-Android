@@ -79,9 +79,10 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
 //        return;
 //        load saved api token
-//        SharedHelper.putKey(this, "access_token", "bstohcty6u56epm09pnplrlcgpv07dj6ur6korqomx2nk0lmcy8w97anye3pxj7xoey46ckmabnp7pht3t92ssgaoy5t007ojy557aaoimc2yw25tg2ke314bdw5w6m4");
+//        SharedHelper.putKey(this, "access_token", "x5bhde5www5j5met223bj0kcck2z5gglz3beqqpn2dqo775pb7cctemwwsskgvi6f99inq2a9900n0pddx85qiddju45ghhwiopqpp1atpll53dmnqqnl104geeghz3j");
 //
         String strAccessToken = SharedHelper.getKey(this, "access_token");
+
 
         if (!strAccessToken.isEmpty()) {
 
@@ -239,6 +240,8 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                         e.printStackTrace();
                     }
 
+
+
                     Globals.profile.setVehicleType(vehicleType);
                     Globals.selectedVehicleType = vehicleType;
 
@@ -269,12 +272,14 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                             SharedHelper.putKey(SplashActivity.this, "access_token", newToken);
                             SharedHelper.putKey(SplashActivity.this, "payload", newPayload);
 
-                            Utils.initHabitSDK(SplashActivity.this);
+                            //Utils.setAuthHabitSDK(SplashActivity.this);
                         }
                     }
                 }
 
-                Utils.initHabitSDK(SplashActivity.this);
+                Globals.isLoggedIn = true;
+
+                Utils.setAuthHabitSDK(SplashActivity.this);
 
                 if (Globals.profile.getPayState() == 1 ) {
                     navigateToHomeActivity();

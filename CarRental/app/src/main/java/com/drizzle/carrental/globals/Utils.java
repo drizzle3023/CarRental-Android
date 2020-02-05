@@ -163,6 +163,14 @@ public class Utils {
 
     }
 
+    public static void setAuthHabitSDK(Context context) {
+
+        if (Constants.isHabitSDKReady) {
+
+            SDK.INSTANCE.setAuthorization(SharedHelper.getKey(context, "payload"));
+        }
+    }
+
     public static void logout(Context context, Activity activity) {
 
         if (Constants.isHabitSDKReady) {

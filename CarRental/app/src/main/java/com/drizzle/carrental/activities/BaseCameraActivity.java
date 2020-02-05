@@ -241,20 +241,20 @@ public class BaseCameraActivity extends AppCompatActivity {
 
     private void showWaitingScreen() {
 
-
-
+        try {
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     private void hideWaitingScreen() {
 
-        if (progressDialog.isShowing()) {
-            try {
-                progressDialog.dismiss();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -312,7 +312,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                                             SharedHelper.putKey(BaseCameraActivity.this, "access_token", newToken);
                                             SharedHelper.putKey(BaseCameraActivity.this, "payload", newPayload);
 
-                                            Utils.initHabitSDK(BaseCameraActivity.this);
+                                            Utils.setAuthHabitSDK(BaseCameraActivity.this);
                                         }
                                     }
                                 }
@@ -326,8 +326,6 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                                     Utils.logout(BaseCameraActivity.this, BaseCameraActivity.this);
                                 }
-
-
                             }
 
 
@@ -504,14 +502,12 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                         exportMp4ToGallery(getApplicationContext(), filepath);
 
-                        //ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
-                        //progressDialog.setMessage("Please wait...");
-                        //progressDialog.setCancelable(false);
-                        if (!progressDialog.isShowing()) {
-
-                                progressDialog.show();
-
+                        try {
+                            progressDialog.show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
 
                         DisplayMetrics metrics = getResources().getDisplayMetrics();
                         ViewGroup.LayoutParams buttonLayoutParams = recordBtn.getLayoutParams();
@@ -532,11 +528,11 @@ public class BaseCameraActivity extends AppCompatActivity {
                             @Override
                             public void run() {
 
-                                if (progressDialog.isShowing()) {
+                                try {
                                     progressDialog.hide();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-
-
 
 
                                 fullscreenVideoView.videoUrl("file://" + getVideoFilePath()).addOnVideoCompletedListener(new OnVideoCompletedListener() {

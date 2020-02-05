@@ -94,15 +94,19 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         imageButtonAssistence = view.findViewById(R.id.imagebutton_assistence);
         textViewAssistence = view.findViewById(R.id.textview_assistence);
+        imageButtonAssistence.setOnClickListener(this);
 
         imageButtonBrokenGlasses = view.findViewById(R.id.imagebutton_broken_glasses);
         textViewBrokenGlasses = view.findViewById(R.id.textview_broken_glasses);
+        imageButtonBrokenGlasses.setOnClickListener(this);
 
         imageButtonLostKeys = view.findViewById(R.id.imagebutton_lostkeys);
         textViewLostKeys = view.findViewById(R.id.textview_lostkeys);
+        imageButtonLostKeys.setOnClickListener(this);
 
         imageButtonCoverTheft = view.findViewById(R.id.imagebutton_cover_theft);
         textViewCoverTheft = view.findViewById(R.id.textview_cover_theft);
+        imageButtonCoverTheft.setOnClickListener(this);
 
         imageViewLocationIcon = view.findViewById(R.id.imageview_location_icon);
 
@@ -213,7 +217,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                         Picasso picasso = Picasso.get();
                         picasso.invalidate(Globals.coverage.getUrlImageVehicle());
-                        picasso.load(Globals.coverage.getUrlImageVehicle()).placeholder(R.drawable.covered_coverage_image).into(imageButtonStartCoverage);
+                        picasso.load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.ic_icon_add_coverage).into(imageButtonStartCoverage);
 
                         imageButtonStartCoverage.setAlpha(0.25f);
                         textViewCoverageTitle.setText(R.string.coverage_expired_title);
@@ -322,7 +326,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         initVariables();
 
 
-            //getActiveCoverage();
+        //getActiveCoverage();
 
 
         return view;
@@ -334,8 +338,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        if (!progressDialog.isShowing()) {
+        try {
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -354,7 +360,11 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                     firstFlag = true;
-                    progressDialog.dismiss();
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     try {
                         JSONObject object = new JSONObject(response.body().string());
@@ -503,6 +513,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.button_got_it:
+                Globals.coverage = new Coverage();
                 navigateToAddCoverageActivity();
                 break;
             case R.id.button_claims:
@@ -522,6 +533,17 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         .setNegativeButton(android.R.string.no, null).show();
 
                 break;
+
+            case R.id.imagebutton_assistence:
+            case R.id.imagebutton_broken_glasses:
+            case R.id.imagebutton_cover_theft:
+            case R.id.imagebutton_lostkeys:
+
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Notification")
+                        .setMessage("Help is on the way")
+                        .setPositiveButton(android.R.string.yes, null).show();
+
         }
     }
 
@@ -544,16 +566,14 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
     private void navigateToSubscribeActivity() {
 
         if (Globals.profile.getVehicleType() != null && Globals.profile.getWorldZone() != null && !Globals.profile.getWorldZone().isEmpty()) {
-            Intent intent = new Intent(getActivity(),  PaymentActivity.class);
+            Intent intent = new Intent(getActivity(), PaymentActivity.class);
             startActivity(intent);
             //getActivity().finish();
-        }
-        else {
+        } else {
             Intent intent = new Intent(getActivity(), SubscriptionNewActivity.class);
             startActivity(intent);
             //getActivity().finish();
         }
-
 
 
     }
@@ -579,9 +599,13 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
-        if (!progressDialog.isShowing()) {
+
+        try {
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
@@ -599,7 +623,11 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                    progressDialog.dismiss();
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     try {
                         JSONObject object = new JSONObject(response.body().string());
@@ -625,7 +653,11 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    progressDialog.dismiss();
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     t.printStackTrace();
                     Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
 

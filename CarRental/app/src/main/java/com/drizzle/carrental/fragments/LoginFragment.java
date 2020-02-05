@@ -73,8 +73,10 @@ public class LoginFragment extends Fragment {
                     final ProgressDialog progressDialog = new ProgressDialog(getContext());
                     progressDialog.setMessage("Please wait...");
                     progressDialog.setCancelable(false);
-                    if (!progressDialog.isShowing()) {
+                    try {
                         progressDialog.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -92,7 +94,11 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                                progressDialog.dismiss();
+                                try {
+                                    progressDialog.dismiss();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
                                 try {
                                     JSONObject object = new JSONObject(response.body().string());
@@ -117,13 +123,21 @@ public class LoginFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                progressDialog.dismiss();
+                                try {
+                                    progressDialog.dismiss();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 t.printStackTrace();
                                 Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } catch (Exception e) {
-                        progressDialog.dismiss();
+                        try {
+                            progressDialog.dismiss();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                     }

@@ -162,6 +162,7 @@
                         android:minHeight="30dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
+                        android:layout_marginRight="50dp"
                         android:text="Queens, NY 11430, USA"
                         android:textAlignment="textStart"
                         android:textAllCaps="false"
@@ -188,6 +189,7 @@
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:text="Budget Car Rental"
+                        android:layout_marginRight="50dp"
                         android:textAlignment="textStart"
                         android:textAllCaps="false"
                         android:textColor="@android:color/black"
@@ -212,6 +214,7 @@
                         android:fontFamily="@font/sf_pro_text_medium"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
+                        android:layout_marginRight="50dp"
                         android:text="10 March - 15 March"
                         android:textAlignment="textStart"
                         android:textAllCaps="false"
@@ -339,10 +342,10 @@
 
                     <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
                         android:id="@+id/imageview_video_vehicle"
-                        android:layout_width="65dp"
+                        android:layout_width="67dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/video_vehicle"/>
+                        android:src="@drawable/history_row_item_image_corner_radius" />
 
                 </LinearLayout>
 
@@ -459,7 +462,7 @@
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:scaleType="fitXY"
-                        android:background="@drawable/video_mile"/>
+                        android:src="@drawable/history_row_item_image_corner_radius"/>
 
 
                 </LinearLayout>

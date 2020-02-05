@@ -196,17 +196,21 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
     private void showWaitingScreen() {
 
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
-        if (!progressDialog.isShowing()) {
+        try {
+            progressDialog.setMessage("Please wait...");
+            progressDialog.setCancelable(false);
             progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void hideWaitingScreen() {
 
-        if (progressDialog.isShowing()) {
+        try {
             progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -318,7 +322,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                             SharedHelper.putKey(ClaimsActivity.this, "access_token", newToken);
                             SharedHelper.putKey(ClaimsActivity.this, "payload", newPayload);
 
-                            Utils.initHabitSDK(ClaimsActivity.this);
+                            Utils.setAuthHabitSDK(ClaimsActivity.this);
                         }
                     }
                 }

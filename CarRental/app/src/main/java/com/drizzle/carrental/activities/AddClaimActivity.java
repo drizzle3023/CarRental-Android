@@ -886,7 +886,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
             Picasso picasso = Picasso.get();
             picasso.invalidate(claim.getImageURL());
-            picasso.load(claim.getImageURL()).placeholder(R.drawable.image_damaged_zone).into(imageViewAnswerTakeVideo);
+            picasso.load(claim.getImageURL()).placeholder(R.drawable.history_row_item_image_corner_radius).into(imageViewAnswerTakeVideo);
 
 
             //Picasso.get().load("file:///storage/emulated/0/Pictures/DamagedPart.png").placeholder(R.drawable.image_damaged_zone).into(imageViewAnswerTakeVideo);
@@ -1116,7 +1116,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                                             SharedHelper.putKey(AddClaimActivity.this, "access_token", newToken);
                                             SharedHelper.putKey(AddClaimActivity.this, "payload", newPayload);
 
-                                            Utils.initHabitSDK(AddClaimActivity.this);
+                                            Utils.setAuthHabitSDK(AddClaimActivity.this);
                                         }
                                     }
                                 }
@@ -1233,20 +1233,22 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
     private void showWaitingScreen() {
 
-
-
-            if (!progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     private void hideWaitingScreen() {
 
-
-        if (progressDialog.isShowing()) {
+        try {
             progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
 

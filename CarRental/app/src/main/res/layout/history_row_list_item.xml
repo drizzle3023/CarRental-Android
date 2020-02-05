@@ -9,10 +9,10 @@
 
     <TextView
         android:id="@+id/textview_active_state"
+        style="@style/AppTheme.HistoryRowItemEnabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        style="@style/AppTheme.HistoryRowItemEnabled"
         android:text="1 Claim Active" />
 
     <LinearLayout
@@ -20,21 +20,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageButton
+        <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
             android:id="@+id/imagebutton"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:scaleType="fitXY"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
-            android:background="@drawable/history_row_item_image_corner_radius"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:src="@drawable/history_row_item_image_corner_radius"
+            android:scaleType="fitXY">
+
+
+        </com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -51,17 +55,17 @@
 
                 <TextView
                     android:id="@+id/textview_state"
+                    style="@style/AppTheme.HistoryRowItemState"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AppTheme.HistoryRowItemState"
                     android:text="TextView" />
 
                 <TextView
                     android:id="@+id/textview_period"
+                    style="@style/AppTheme.HistoryRowItemDisabled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    style="@style/AppTheme.HistoryRowItemDisabled"
                     android:text="TextView" />
             </LinearLayout>
 
@@ -74,16 +78,16 @@
                     android:id="@+id/imageview_mapmarker"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/ic_icon_location"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_icon_location"
                     android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/textview_location"
+                    style="@style/AppTheme.HistoryRowItemDisabled"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/AppTheme.HistoryRowItemDisabled"
                     android:gravity="center_vertical"
                     android:text="TextView" />
             </LinearLayout>

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10;
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.models.History;
@@ -31,7 +32,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
         TextView textViewState;
         TextView textViewPeriod;
         TextView textViewLocation;
-        ImageButton imageButton;
+        AppCompatImageView_Round_10 imageButton;
         ImageView mapMarker;
 
     }
@@ -78,13 +79,13 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.history_row_list_item, parent, false);
 
-            viewHolder.textViewActiveState = (TextView) convertView.findViewById(R.id.textview_active_state);
-            viewHolder.textViewTitle = (TextView) convertView.findViewById(R.id.textview_title);
-            viewHolder.textViewState = (TextView) convertView.findViewById(R.id.textview_state);
-            viewHolder.textViewPeriod = (TextView) convertView.findViewById(R.id.textview_period);
-            viewHolder.textViewLocation = (TextView) convertView.findViewById(R.id.textview_location);
-            viewHolder.imageButton = (ImageButton) convertView.findViewById(R.id.imagebutton);
-            viewHolder.mapMarker = (ImageView) convertView.findViewById(R.id.imageview_mapmarker);
+            viewHolder.textViewActiveState = convertView.findViewById(R.id.textview_active_state);
+            viewHolder.textViewTitle = convertView.findViewById(R.id.textview_title);
+            viewHolder.textViewState = convertView.findViewById(R.id.textview_state);
+            viewHolder.textViewPeriod = convertView.findViewById(R.id.textview_period);
+            viewHolder.textViewLocation = convertView.findViewById(R.id.textview_location);
+            viewHolder.imageButton = convertView.findViewById(R.id.imagebutton);
+            viewHolder.mapMarker = convertView.findViewById(R.id.imageview_mapmarker);
 
             result = convertView;
             convertView.setTag(viewHolder);
@@ -135,9 +136,9 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
 
             Picasso picasso = Picasso.get();
             picasso.invalidate(historyModel.getCoverage().getUrlImageVehicle());
-            picasso.load(historyModel.getCoverage().getUrlImageVehicle()).placeholder(R.drawable.video_vehicle).into(viewHolder.imageButton);
+            picasso.load(historyModel.getCoverage().getUrlImageVehicle()).placeholder(R.drawable.history_row_item_image_corner_radius).into(viewHolder.imageButton);
             //Picasso.get().load(image_url).placeholder(R.drawable.ic_icon_add_coverage).into(viewHolder.imageButton);
-            viewHolder.imageButton.setImageResource(R.drawable.video_vehicle);
+            //viewHolder.imageButton.setImageResource(R.drawable.video_vehicle);
 
 
             viewHolder.textViewLocation.setText(historyModel.getCoverage().getLocationAddress());

@@ -91,7 +91,8 @@
                 android:linksClickable="true"
                 android:paddingLeft="50dp"
                 android:paddingRight="50dp"
-                android:text="Pick-up Location " />
+                android:text="Pick-up Location "
+                android:textSize="15sp" />
 
             <ImageButton
                 android:id="@+id/button_location"
@@ -164,10 +165,11 @@
                     android:layout_height="44dp"
                     android:background="@drawable/coverage_add_button"
                     android:gravity="center_vertical"
+                    android:hint="Pick up Date"
                     android:linksClickable="true"
                     android:paddingLeft="50dp"
                     android:paddingRight="18dp"
-                    android:hint="Pick up Date" />
+                    android:textSize="15sp" />
 
                 <ImageButton
                     android:id="@+id/button_start_date"
@@ -196,10 +198,11 @@
                     android:layout_height="44dp"
                     android:background="@drawable/coverage_add_button"
                     android:gravity="center_vertical"
+                    android:hint="Drop off Date"
                     android:linksClickable="true"
                     android:paddingLeft="50dp"
                     android:paddingRight="18dp"
-                    android:hint="Drop off Date" />
+                    android:textSize="15sp" />
 
                 <ImageButton
                     android:id="@+id/button_end_date"

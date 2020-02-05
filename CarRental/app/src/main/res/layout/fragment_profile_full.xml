@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/textview_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileItem"
@@ -54,7 +54,7 @@
 
             <TextView
                 android:id="@+id/textview_phonenumber"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileItem"
@@ -64,7 +64,7 @@
 
             <TextView
                 android:id="@+id/link_add_email"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="23dp"
@@ -93,7 +93,7 @@
 
             <TextView
                 android:id="@+id/link_feedback"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
@@ -103,7 +103,7 @@
 
             <TextView
                 android:id="@+id/link_faqs"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
@@ -132,7 +132,7 @@
 
             <TextView
                 android:id="@+id/link_card_no"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"
@@ -189,7 +189,7 @@
 
             <TextView
                 android:id="@+id/link_about"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 style="@style/AppTheme.ProfileButton"

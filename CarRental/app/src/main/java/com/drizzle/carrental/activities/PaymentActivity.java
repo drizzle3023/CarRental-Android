@@ -171,6 +171,16 @@ public class PaymentActivity extends FragmentActivity {
             paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
             paramObject.put("car_type_id", Globals.selectedVehicleType.getId());
 
+            if (Globals.selectedServiceArea.getId() == 1) {
+
+                paramObject.put("world_zone", getString(R.string.worldzone_us_ab));
+            }
+            else if (Globals.selectedServiceArea.getId() == 2) {
+
+                paramObject.put("world_zone", getString(R.string.worldzone_europe_ab));
+            }
+
+
             JsonParser jsonParser = new JsonParser();
             gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
 

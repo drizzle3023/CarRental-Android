@@ -203,10 +203,10 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
                 if (Globals.selectedServiceArea != null) {
 
                     if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_europe))) {
-                        paramObject.put("world_zone", "EU");
+                        paramObject.put("world_zone", getString(R.string.worldzone_europe_ab));
                     }
                     else if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_us))){
-                        paramObject.put("world_zone", "US");
+                        paramObject.put("world_zone", getString(R.string.worldzone_us_ab));
                     }
                 }
             } catch (Exception e) {

@@ -264,10 +264,10 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
                         ServiceArea serviceArea = new ServiceArea();
 
-                        if (myProfile.getWorldZone().equals("US")) {
+                        if (myProfile.getWorldZone().equals(getString(R.string.worldzone_us_ab))) {
                             serviceArea.setId(1);
                             serviceArea.setAreaName(getString(R.string.worldzone_us));
-                        } else if (myProfile.getWorldZone().equals("EU")) {
+                        } else if (myProfile.getWorldZone().equals(getString(R.string.worldzone_europe_ab))) {
                             serviceArea.setId(2);
                             serviceArea.setAreaName(getString(R.string.worldzone_europe));
                         }

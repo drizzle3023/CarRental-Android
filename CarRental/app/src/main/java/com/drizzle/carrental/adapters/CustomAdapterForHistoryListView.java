@@ -1,6 +1,7 @@
 package com.drizzle.carrental.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10;
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Globals;
@@ -20,7 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class CustomAdapterForHistoryListView extends ArrayAdapter<History> implements View.OnClickListener {
+public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
 
     private ArrayList<History> dataSet;
     Context mContext;
@@ -45,20 +47,6 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
 
     }
 
-    @Override
-    public void onClick(View v) {
-
-        int position = (Integer) v.getTag();
-        Object object = getItem(position);
-
-        History historyModel = (History) object;
-
-        switch (v.getId()) {
-            case R.id.imageButton:
-
-                break;
-        }
-    }
 
     private int lastPosition = -1;
 
@@ -80,6 +68,14 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
             convertView = inflater.inflate(R.layout.history_row_list_item, parent, false);
 
             viewHolder.textViewActiveState = convertView.findViewById(R.id.textview_active_state);
+            viewHolder.textViewActiveState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(getContext(), ClaimsActivity.class);
+                    getContext().startActivity(intent);
+                }
+            });
             viewHolder.textViewTitle = convertView.findViewById(R.id.textview_title);
             viewHolder.textViewState = convertView.findViewById(R.id.textview_state);
             viewHolder.textViewPeriod = convertView.findViewById(R.id.textview_period);
@@ -121,7 +117,12 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
 
                 }
 
-                claimDescription = String.format("%d claims", claimCount);
+                if (claimCount == 0) {
+                    claimDescription = "No claims";
+                }
+                else {
+                    claimDescription = String.format("%d claims", claimCount);
+                }
 
                 viewHolder.textViewActiveState.setText(claimDescription);
                 viewHolder.textViewActiveState.setTextAppearance(R.style.AppTheme_HistoryRowItemEnabled);

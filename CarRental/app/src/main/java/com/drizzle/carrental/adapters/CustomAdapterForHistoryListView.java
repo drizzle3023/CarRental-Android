@@ -125,6 +125,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> imple
 
                 viewHolder.textViewActiveState.setText(claimDescription);
                 viewHolder.textViewActiveState.setTextAppearance(R.style.AppTheme_HistoryRowItemEnabled);
+                viewHolder.textViewActiveState.setVisibility(View.VISIBLE);
             } else {
                 //viewHolder.textViewActiveState.setText(R.string.one_claim_resolved);
                 viewHolder.textViewActiveState.setVisibility(View.GONE);

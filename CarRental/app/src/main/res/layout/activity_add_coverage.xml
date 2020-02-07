@@ -12,489 +12,505 @@
         android:background="@color/colorOnboardingBackcolor">
 
 
-            <ImageButton
-                android:id="@+id/button_back_to_onboarding"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="9dp"
-                android:background="@null"
-                android:padding="10dp"
-                android:src="@drawable/ic_chevron_left_black_24dp" />
+        <ImageButton
+            android:id="@+id/button_back_to_onboarding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="9dp"
+            android:background="@null"
+            android:padding="10dp"
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:text="Add vehicle coverage"
-                android:textColor="@color/colorCoverageTitle"
-                android:textSize="17sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/sf_pro_display_semibold"
+            android:text="Add vehicle coverage"
+            android:textColor="@color/colorCoverageTitle"
+            android:textSize="17sp" />
 
 
-
-            <ImageButton
-                android:id="@+id/button_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="9dp"
-                android:background="@null"
-                android:visibility="gone"
-                android:src="@drawable/ic_edit_black_24dp" />
+        <ImageButton
+            android:id="@+id/button_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="9dp"
+            android:background="@null"
+            android:src="@drawable/ic_edit_black_24dp"
+            android:visibility="gone" />
 
 
     </FrameLayout>
 
-    <LinearLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/caption_start_coverage"
-                style="@style/AppTheme.SubtitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:background="@drawable/coverage_add_button"
-                android:gravity="center_vertical"
-                android:linksClickable="true"
-                android:paddingLeft="44dp"
-                android:paddingRight="18dp"
-                android:text="Start Coverage" />
-
-            <Button
-                android:id="@+id/imagebutton_start_coverage"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="7dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="7dp"
-                android:layout_marginBottom="7dp"
-                android:background="@drawable/add_coverage_step_button_back_active"
-                android:fontFamily="@font/sf_pro_display_bold"
-                android:text="1"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_coverage_line_hidden"
-            android:layout_width="44dp"
-            android:layout_height="40dp"
-            android:minHeight="30dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/view31"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/colorDivider"
-                android:minHeight="30dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_coverage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/layout_coverage_line"
-                android:layout_width="44dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
-                <View
-                    android:id="@+id/view3"
-                    android:layout_width="1dp"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/colorDivider"
-                    android:minHeight="30dp" />
-            </LinearLayout>
+                    android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/layout_coverage_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/caption_start_coverage"
+                        style="@style/AppTheme.SubtitleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:background="@drawable/coverage_add_button"
+                        android:gravity="center_vertical"
+                        android:linksClickable="true"
+                        android:paddingLeft="44dp"
+                        android:paddingRight="18dp"
+                        android:text="Start Coverage" />
+
+                    <Button
+                        android:id="@+id/imagebutton_start_coverage"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:background="@drawable/add_coverage_step_button_back_active"
+                        android:fontFamily="@font/sf_pro_display_bold"
+                        android:text="1"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_weight="1"
+                    android:id="@+id/layout_coverage_line_hidden"
+                    android:layout_width="44dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:minHeight="30dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-
-                    <TextView
-                        android:id="@+id/textView10"
-                        style="@style/AppTheme.DescriptionTextView"
-                        android:layout_width="wrap_content"
+                    <View
+                        android:id="@+id/view31"
+                        android:layout_width="1dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="3dp"
-                        android:text="LOCATION" />
+                        android:layout_gravity="center"
+                        android:background="@color/colorDivider"
+                        android:minHeight="30dp" />
+                </LinearLayout>
 
-                    <Button
-                        android:id="@+id/button_location"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/coverage_info_label"
-                        android:fontFamily="@font/sf_pro_text_medium"
+                <LinearLayout
+                    android:id="@+id/layout_coverage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/layout_coverage_line"
+                        android:layout_width="44dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:minHeight="30dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:layout_marginRight="50dp"
-                        android:text="Queens, NY 11430, USA"
-                        android:textAlignment="textStart"
-                        android:textAllCaps="false"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp" />
+                        android:orientation="vertical">
+
+                        <View
+                            android:id="@+id/view3"
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@color/colorDivider"
+                            android:minHeight="30dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_coverage_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/textView10"
+                                style="@style/AppTheme.DescriptionTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:paddingLeft="3dp"
+                                android:text="LOCATION" />
+
+                            <Button
+                                android:id="@+id/button_location"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="50dp"
+                                android:background="@drawable/coverage_info_label"
+                                android:fontFamily="@font/sf_pro_text_medium"
+                                android:minHeight="30dp"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:text="Queens, NY 11430, USA"
+                                android:textAlignment="textStart"
+                                android:textAllCaps="false"
+                                android:textColor="@android:color/black"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/textview_company"
+                                style="@style/AppTheme.DescriptionTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="Company"
+                                android:textAllCaps="true" />
+
+                            <Button
+                                android:id="@+id/button_company"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginRight="50dp"
+                                android:background="@drawable/coverage_info_label"
+                                android:fontFamily="@font/sf_pro_text_medium"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:text="Budget Car Rental"
+                                android:textAlignment="textStart"
+                                android:textAllCaps="false"
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/textView12"
+                                style="@style/AppTheme.DescriptionTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="DATE"
+                                android:textAllCaps="false" />
+
+                            <Button
+                                android:id="@+id/button_period"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginRight="50dp"
+                                android:background="@drawable/coverage_info_label"
+                                android:fontFamily="@font/sf_pro_text_medium"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:text="10 March - 15 March"
+                                android:textAlignment="textStart"
+                                android:textAllCaps="false"
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/button_delete_coverage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="12dp"
+                                android:background="@null"
+                                android:src="@drawable/icon_delete">
+
+                            </ImageButton>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textview_company"
-                        style="@style/AppTheme.DescriptionTextView"
+                        android:id="@+id/caption_record_car"
+                        style="@style/AppTheme.SubtitleTextView"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="44dp"
                         android:gravity="center_vertical"
-                        android:padding="3dp"
-                        android:text="Company"
-                        android:textAllCaps="true" />
+                        android:linksClickable="true"
+                        android:paddingLeft="44dp"
+                        android:paddingRight="18dp"
+                        android:text="Video Record" />
 
                     <Button
-                        android:id="@+id/button_company"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:background="@drawable/coverage_info_label"
-                        android:fontFamily="@font/sf_pro_text_medium"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:text="Budget Car Rental"
-                        android:layout_marginRight="50dp"
-                        android:textAlignment="textStart"
-                        android:textAllCaps="false"
-                        android:textColor="@android:color/black"
-                        android:textSize="15sp" />
+                        android:id="@+id/button_record_car"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:background="@drawable/add_coverage_step_button_back_active"
+                        android:fontFamily="@font/sf_pro_display_bold"
+                        android:text="2"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_video_vehicle_line_hidden"
+                    android:layout_width="44dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:minHeight="30dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:id="@+id/view32"
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorDivider"
+                        android:minHeight="30dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_video_vehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/layout_video_vehicle_line"
+                        android:layout_width="44dp"
+                        android:layout_height="match_parent"
+                        android:minHeight="30dp"
+                        android:orientation="vertical">
+
+                        <View
+                            android:id="@+id/view4"
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@color/colorDivider" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_video_vehicle_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+
+                            <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
+                                android:id="@+id/imageview_video_vehicle"
+                                android:layout_width="67dp"
+                                android:layout_height="65dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/history_row_item_image_corner_radius" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/button_delete_video"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="12dp"
+                                android:background="@null"
+                                android:src="@drawable/icon_delete">
+
+                            </ImageButton>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
 
                     <TextView
-                        android:id="@+id/textView12"
-                        style="@style/AppTheme.DescriptionTextView"
+                        android:id="@+id/caption_record_mile"
+                        style="@style/AppTheme.SubtitleTextView"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="44dp"
                         android:gravity="center_vertical"
-                        android:padding="3dp"
-                        android:text="DATE"
-                        android:textAllCaps="false" />
+                        android:linksClickable="true"
+                        android:paddingLeft="44dp"
+                        android:paddingRight="18dp"
+                        android:text="Record Miles/Kilometers" />
 
                     <Button
-                        android:id="@+id/button_period"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:background="@drawable/coverage_info_label"
-                        android:fontFamily="@font/sf_pro_text_medium"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:layout_marginRight="50dp"
-                        android:text="10 March - 15 March"
-                        android:textAlignment="textStart"
-                        android:textAllCaps="false"
-                        android:textColor="@android:color/black"
-                        android:textSize="15sp" />
+                        android:id="@+id/button_record_mile"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:background="@drawable/add_coverage_step_button_back_active"
+                        android:fontFamily="@font/sf_pro_display_bold"
+                        android:text="3"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:id="@+id/layout_video_mile_line_hidden"
+                    android:layout_width="44dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:minHeight="30dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <ImageButton
-                        android:id="@+id/button_delete_coverage"
-                        android:layout_width="wrap_content"
+                    <View
+                        android:id="@+id/view33"
+                        android:layout_width="1dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="12dp"
-                        android:background="@null"
-                        android:src="@drawable/icon_delete">
-
-                    </ImageButton>
-
+                        android:layout_gravity="center"
+                        android:background="@color/colorDivider"
+                        android:minHeight="30dp" />
                 </LinearLayout>
 
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/caption_record_car"
-                style="@style/AppTheme.SubtitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:gravity="center_vertical"
-                android:linksClickable="true"
-                android:paddingLeft="44dp"
-                android:paddingRight="18dp"
-                android:text="Video Record" />
-
-            <Button
-                android:id="@+id/button_record_car"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="7dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="7dp"
-                android:layout_marginBottom="7dp"
-                android:background="@drawable/add_coverage_step_button_back_active"
-                android:fontFamily="@font/sf_pro_display_bold"
-                android:text="2"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_video_vehicle_line_hidden"
-            android:layout_width="44dp"
-            android:layout_height="40dp"
-            android:minHeight="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/view32"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/colorDivider"
-                android:minHeight="30dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_video_vehicle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/layout_video_vehicle_line"
-                android:layout_width="44dp"
-                android:layout_height="match_parent"
-                android:minHeight="30dp"
-                android:orientation="vertical">
-
-                <View
-                    android:id="@+id/view4"
-                    android:layout_width="1dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/colorDivider" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_video_vehicle_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
                 <LinearLayout
+                    android:id="@+id/layout_video_mile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:id="@+id/layout_video_mile_line"
+                        android:layout_width="44dp"
+                        android:layout_height="match_parent"
+                        android:minHeight="30dp"
+                        android:orientation="vertical">
 
-                    <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
-                        android:id="@+id/imageview_video_vehicle"
-                        android:layout_width="67dp"
-                        android:layout_height="65dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/history_row_item_image_corner_radius" />
+                        <View
+                            android:id="@+id/view5"
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@color/colorDivider" />
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/button_delete_video"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/layout_video_mile_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="12dp"
-                        android:background="@null"
-                        android:src="@drawable/icon_delete">
+                        android:orientation="horizontal">
 
-                    </ImageButton>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
+
+                            <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
+                                android:id="@+id/imageview_video_mile"
+                                android:layout_width="65dp"
+                                android:layout_height="65dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/history_row_item_image_corner_radius" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <ImageButton
+                                android:id="@+id/button_delete_miles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="12dp"
+                                android:background="@null"
+                                android:src="@drawable/icon_delete">
+
+                            </ImageButton>
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-
-            <TextView
-                android:id="@+id/caption_record_mile"
-                style="@style/AppTheme.SubtitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:gravity="center_vertical"
-                android:linksClickable="true"
-                android:paddingLeft="44dp"
-                android:paddingRight="18dp"
-                android:text="Record Miles/Kilometers" />
-
-            <Button
-                android:id="@+id/button_record_mile"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="7dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="7dp"
-                android:layout_marginBottom="7dp"
-                android:background="@drawable/add_coverage_step_button_back_active"
-                android:fontFamily="@font/sf_pro_display_bold"
-                android:text="3"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_video_mile_line_hidden"
-            android:layout_width="44dp"
-            android:layout_height="40dp"
-            android:minHeight="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/view33"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/colorDivider"
-                android:minHeight="30dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_video_mile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/layout_video_mile_line"
-                android:layout_width="44dp"
-                android:layout_height="match_parent"
-                android:minHeight="30dp"
-                android:orientation="vertical">
-
-                <View
-                    android:id="@+id/view5"
-                    android:layout_width="1dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/colorDivider" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_video_mile_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
+                <Space
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="100dp">
 
+                </Space>
 
-                    <com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10
-                        android:id="@+id/imageview_video_mile"
-                        android:layout_width="65dp"
-                        android:layout_height="65dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/history_row_item_image_corner_radius"/>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/button_delete_miles"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="12dp"
-                        android:background="@null"
-                        android:src="@drawable/icon_delete">
-
-                    </ImageButton>
-
-                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+
+        </ScrollView>
 
         <Button
             android:id="@+id/button_got_it"
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:layout_gravity="bottom"
             android:layout_marginLeft="27dp"
             android:layout_marginRight="27dp"
             android:layout_marginBottom="30dp"
@@ -503,5 +519,8 @@
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="17sp" />
-    </LinearLayout>
+
+    </FrameLayout>
+
+
 </LinearLayout>

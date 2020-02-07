@@ -126,6 +126,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         layoutStartDate = (FrameLayout) findViewById(R.id.layout_start_date);
         layoutEndDate = (FrameLayout) findViewById(R.id.layout_dropoff_date);
 
+        textViewCompany = findViewById(R.id.textview_company_placeholder);
         spinnerCompanySelector = findViewById(R.id.spinner_company_select);
         buttonDropDown = findViewById(R.id.company_select_dropdown_button);
 
@@ -157,6 +158,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
+
                 currentLocation = locationResult.getLocations().get(0);
 
                 isGettingCompanyListOrSubmitAction = true;
@@ -173,11 +175,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 Globals.coverage.setLocationAddress(strAddress);
                 textViewPickUpLocation.setText(strAddress);
 
-                //getAddress();
                 fusedLocationClient.removeLocationUpdates(locationCallback);
             }
-
-            ;
         };
         startLocationUpdates();
     }
@@ -694,6 +693,12 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void updateCompanySpinner() {
 
+        if (companies.isEmpty()) {
+            textViewCompany.setVisibility(View.VISIBLE);
+        }
+        else {
+            textViewCompany.setVisibility(View.GONE);
+        }
         CustomAdapterCompanySelect adapter = new CustomAdapterCompanySelect(getApplicationContext(), companies);
         spinnerCompanySelector.setAdapter(adapter);
 

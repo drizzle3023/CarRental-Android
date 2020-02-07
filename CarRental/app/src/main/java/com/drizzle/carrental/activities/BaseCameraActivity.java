@@ -477,51 +477,11 @@ public class BaseCameraActivity extends AppCompatActivity {
                     @Override
                     public void onRecordComplete() {
 
-                        File file = new File(getVideoFilePath());
-
-                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-
-                        try {
-                            retriever.setDataSource(BaseCameraActivity.this, Uri.fromFile(file));
-                        } catch (Exception e) {
-                            Toast.makeText(BaseCameraActivity.this, getString(R.string.message_video_is_not_valid), Toast.LENGTH_SHORT).show();
-
-                            recordBtn.setText(getString(R.string.app_record));
-                            recordBtn.setLayoutParams(layoutParams);
-                            recordBtn.setBackgroundResource(R.drawable.record_start_button);
-                            buttonPlay.setVisibility(View.GONE);
-                            fullscreenVideoView.setVisibility(View.GONE);
-                            FrameLayout frameLayout = findViewById(R.id.wrap_view);
-                            frameLayout.setVisibility(View.VISIBLE);
-                            sampleGLView.setVisibility(View.VISIBLE);
-
-                            e.printStackTrace();
-                            return;
-                        }
-
-
-                        exportMp4ToGallery(getApplicationContext(), filepath);
-
                         try {
                             progressDialog.show();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-
-                        DisplayMetrics metrics = getResources().getDisplayMetrics();
-                        ViewGroup.LayoutParams buttonLayoutParams = recordBtn.getLayoutParams();
-                        buttonLayoutParams.width = (int) (metrics.density * 120);
-                        buttonLayoutParams.height = (int) (metrics.density * 40);
-
-
-                        recordBtn.setText(getString(R.string.app_record_done));
-                        recordBtn.setLayoutParams(buttonLayoutParams);
-                        recordBtn.setBackgroundResource(R.drawable.active_button);
-                        buttonPlay.setVisibility(View.VISIBLE);
-
-                        fullscreenVideoView.setVisibility(View.VISIBLE);
-
 
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
@@ -534,6 +494,44 @@ public class BaseCameraActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
+                                File file = new File(getVideoFilePath());
+
+                                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+
+                                try {
+                                    retriever.setDataSource(BaseCameraActivity.this, Uri.fromFile(file));
+                                } catch (Exception e) {
+                                    Toast.makeText(BaseCameraActivity.this, getString(R.string.message_video_is_not_valid), Toast.LENGTH_SHORT).show();
+
+                                    recordBtn.setText(getString(R.string.app_record));
+                                    recordBtn.setLayoutParams(layoutParams);
+                                    recordBtn.setBackgroundResource(R.drawable.record_start_button);
+                                    buttonPlay.setVisibility(View.GONE);
+                                    fullscreenVideoView.setVisibility(View.GONE);
+                                    FrameLayout frameLayout = findViewById(R.id.wrap_view);
+                                    frameLayout.setVisibility(View.VISIBLE);
+                                    sampleGLView.setVisibility(View.VISIBLE);
+
+                                    e.printStackTrace();
+                                    return;
+                                }
+
+
+                                exportMp4ToGallery(getApplicationContext(), filepath);
+
+
+                                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                                ViewGroup.LayoutParams buttonLayoutParams = recordBtn.getLayoutParams();
+                                buttonLayoutParams.width = (int) (metrics.density * 120);
+                                buttonLayoutParams.height = (int) (metrics.density * 40);
+
+
+                                recordBtn.setText(getString(R.string.app_record_done));
+                                recordBtn.setLayoutParams(buttonLayoutParams);
+                                recordBtn.setBackgroundResource(R.drawable.active_button);
+                                buttonPlay.setVisibility(View.VISIBLE);
+
+                                fullscreenVideoView.setVisibility(View.VISIBLE);
 
                                 fullscreenVideoView.videoUrl("file://" + getVideoFilePath()).addOnVideoCompletedListener(new OnVideoCompletedListener() {
                                     @Override

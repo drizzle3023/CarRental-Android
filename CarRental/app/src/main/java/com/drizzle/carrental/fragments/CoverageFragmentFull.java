@@ -77,6 +77,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private boolean firstFlag = true;
 
+    ProgressDialog progressDialog;
+
     private void getControlHandlersAndLinkActions(View view) {
 
         imageButtonStartCoverage = view.findViewById(R.id.imageview_start_coverage);
@@ -326,6 +328,9 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         initVariables();
 
 
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
         //getActiveCoverage();
 
 
@@ -335,9 +340,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
     private void getActiveCoverage() {
 
         firstFlag = false;
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
+
+
         try {
             progressDialog.show();
         } catch (Exception e) {
@@ -370,17 +374,19 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         JSONObject object = new JSONObject(response.body().string());
 
 
-                        try {
-                            Globals.profile.setPayState(Integer.parseInt(object.getJSONObject("data").getString("pay_state")));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Globals.profile.setPayState(0);
-                        }
+
 
 //                        if (payState == 0) {
 //                            navigateToSubscribeActivity();
 //                        }
                         if (object.getString("success").equals("true")) {
+
+                            try {
+                                Globals.profile.setPayState(Integer.parseInt(object.getJSONObject("data").getString("pay_state")));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Globals.profile.setPayState(0);
+                            }
 
                             JSONObject data = object.getJSONObject("data");
                             JSONObject jsonCoverage = data.getJSONObject("coverage");
@@ -514,7 +520,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
             case R.id.button_got_it:
                 Globals.coverage = new Coverage();
-                navigateToAddCoverageActivity();
+                updateView();
+                //navigateToAddCoverageActivity();
                 break;
             case R.id.button_claims:
                 navigateToClaimsActivity();
@@ -596,9 +603,6 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
             return;
         }
 
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
 
         try {
             progressDialog.show();

@@ -284,6 +284,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         imageButtonLostKeys.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
 
                         imageButtonBrokenGlasses.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
+                        imageButtonBrokenGlasses.setBackgroundResource(R.drawable.ic_icon_small_check);
 
                         imageButtonCoverTheft.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
 

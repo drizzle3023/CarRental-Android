@@ -79,7 +79,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
 //        return;
 //        load saved api token
-//        SharedHelper.putKey(this, "access_token", "x5bhde5www5j5met223bj0kcck2z5gglz3beqqpn2dqo775pb7cctemwwsskgvi6f99inq2a9900n0pddx85qiddju45ghhwiopqpp1atpll53dmnqqnl104geeghz3j");
+        SharedHelper.putKey(this, "access_token", "ss7lpzzb3s3yy6hv89bbv7bjjgql199l74effy1o0eerze300i5p5aa9f5hyytnl8kuu9e6vhhn3xvv9mc1lluffwtt03nukk2d26aaejxy11ch00552c92xxt8qimmy");
 //
         String strAccessToken = SharedHelper.getKey(this, "access_token");
 

@@ -133,6 +133,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         layoutLocation.setVisibility(View.VISIBLE);
         imageButtonStartCoverage.setAlpha(1f);
 
+
         imageButtonStartCoverage.setImageResource(R.drawable.ic_icon_add_coverage);
         textViewCoverageTitle.setText(getResources().getString(R.string.start_coverage_title));
         textViewCoverageLocation.setText(getResources().getString(R.string.have_unlimited_coverage));
@@ -251,12 +252,15 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         imageButtonAssistence.setColorFilter(getResources().getColor(R.color.colorBottombarIconDisabled, null));
         imageButtonAssistence.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
 
+        imageButtonLostKeys.setColorFilter(getResources().getColor(R.color.colorBottombarIconDisabled, null));
         imageButtonLostKeys.setImageResource(R.drawable.lost_keys_disabled);
         imageButtonLostKeys.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
 
+        imageButtonBrokenGlasses.setColorFilter(getResources().getColor(R.color.colorBottombarIconDisabled, null));
         imageButtonBrokenGlasses.setImageResource(R.drawable.lost_keys_disabled);
         imageButtonBrokenGlasses.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
 
+        imageButtonCoverTheft.setColorFilter(getResources().getColor(R.color.colorBottombarIconDisabled, null));
         imageButtonCoverTheft.setImageResource(R.drawable.lost_keys_disabled);
         imageButtonCoverTheft.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_inactive);
 
@@ -283,15 +287,17 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                         imageButtonLostKeys.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
 
-                        imageButtonBrokenGlasses.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
-                        imageButtonBrokenGlasses.setBackgroundResource(R.drawable.ic_icon_small_check);
+                        //imageButtonBrokenGlasses.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
+                        imageButtonBrokenGlasses.setColorFilter(Color.WHITE);
+                        imageButtonBrokenGlasses.setImageResource(R.drawable.ic_check_black_24dp);
+                        imageButtonBrokenGlasses.setBackgroundResource(R.drawable.coverage_bottom_bar_icon_radius_active);
 
                         imageButtonCoverTheft.setColorFilter(getResources().getColor(R.color.colorNormalBlue, null));
 
 
                         textViewAssistence.setTextColor(getResources().getColor(R.color.colorNormalText, null));
                         textViewLostKeys.setTextColor(getResources().getColor(R.color.colorInvalid, null));
-                        textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorInvalid, null));
+                        textViewBrokenGlasses.setTextColor(getResources().getColor(R.color.colorNormalText, null));
                         textViewCoverTheft.setTextColor(getResources().getColor(R.color.colorInvalid, null));
 
                         break;

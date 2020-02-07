@@ -281,29 +281,7 @@
                     android:textSize="11sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/imagebutton_lostkeys"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/coverage_bottom_bar_icon_radius_inactive"
-                    android:src="@drawable/lost_keys_disabled" />
-
-                <TextView
-                    android:id="@+id/textview_lostkeys"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lost Keys"
-                    android:textAlignment="center"
-                    android:textSize="11sp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -325,6 +303,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Broken Glasses"
+                    android:textAlignment="center"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/imagebutton_lostkeys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/coverage_bottom_bar_icon_radius_inactive"
+                    android:src="@drawable/lost_keys_disabled" />
+
+                <TextView
+                    android:id="@+id/textview_lostkeys"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lost Keys"
                     android:textAlignment="center"
                     android:textSize="11sp" />
             </LinearLayout>

@@ -129,7 +129,7 @@
                 android:layout_height="match_parent"
                 android:hint="Rental company"
                 android:gravity="center_vertical"
-                android:paddingLeft="50dp"
+                android:paddingLeft="20dp"
                 >
 
             </TextView>

@@ -14,8 +14,8 @@
             android:id="@+id/button_back_to_onboarding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="9dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="9dp"
             android:background="@null"
             android:padding="10dp"
             android:src="@drawable/ic_chevron_left_black_24dp" />
@@ -24,234 +24,266 @@
             android:id="@+id/subscriptionActivityTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_display_semibold"
             android:layout_gravity="center"
+            android:fontFamily="@font/sf_pro_display_semibold"
             android:text="Subscription"
             android:textColor="@android:color/black"
             android:textSize="17sp" />
 
     </FrameLayout>
 
-    <LinearLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="17dp"
-        android:background="@drawable/subscription_description_back"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/sf_pro_display_semibold"
-            android:text="*Unlimited Rentals for only"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/colorSubscriptionTitle"
-            android:textSize="15sp" />
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/sf_pro_display_semibold"
-            android:text="@string/no_vehicle_types"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="22sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginLeft="80dp"
-            android:layout_marginRight="80dp"
-            android:background="@drawable/cartype_select_spinner"
-            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/subscriptionNewSpinDropDownButton"
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/subscription_description_back"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/sf_pro_display_semibold"
+                    android:text="*Unlimited Rentals for only"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorSubscriptionTitle"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/textview_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/sf_pro_display_semibold"
+                    android:text="@string/no_vehicle_types"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="80dp"
+                    android:background="@drawable/cartype_select_spinner"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/subscriptionNewSpinDropDownButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+
+                    <Spinner
+                        android:id="@+id/subscriptionCarTypeSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:spinnerMode="dropdown" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:id="@+id/radio_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/checkbox_us"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:layout_weight="1"
+                            android:button="@null"
+                            android:checked="true"
+                            android:drawableLeft="@drawable/checkbox_selector"
+                            android:drawablePadding="10dp"
+                            android:fontFamily="@font/sf_pro_text_semibold"
+                            android:text="United States"
+                            android:textColor="@color/colorSubscriptionContent"
+                            android:textSize="13sp" />
+
+                        <RadioButton
+                            android:id="@+id/checkbox_europe"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:button="@null"
+                            android:drawableLeft="@drawable/checkbox_selector"
+                            android:drawablePadding="10dp"
+                            android:fontFamily="@font/sf_pro_display_semibold"
+                            android:text="Europe"
+                            android:textColor="@color/colorSubscriptionContent"
+                            android:textSize="13sp" />
+                    </RadioGroup>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/subscriptionNewDescriptionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="what you get"
+                android:textAllCaps="true"
+                android:textColor="@color/colorSubscriptionWhatYouGet"
+                android:textSize="17sp" />
 
-            <Spinner
-                android:id="@+id/subscriptionCarTypeSpinner"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:spinnerMode="dropdown" />
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="17dp"
+                    android:src="@drawable/ic_check_black_24dp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/subscriptionNewDescription1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/sf_pro_display_regular"
+                    android:text="The annual policy covers your excess insurance for unlimited rentals, with an annual aggregate limit of 9,000 €"
+                    android:textColor="@color/colorSubscriptionContent"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
-            <RadioGroup
-                android:id="@+id/radio_location"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="17dp"
+                    android:src="@drawable/ic_check_black_24dp" />
+
+                <TextView
+                    android:id="@+id/subscriptionNewDescription2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/sf_pro_display_regular"
+                    android:text="Fast and Easy Claims "
+                    android:textColor="@color/colorSubscriptionContent"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/checkbox_us"
+                <ImageView
+                    android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:checked="true"
-                    android:drawableLeft="@drawable/checkbox_selector"
-                    android:drawablePadding="10dp"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:text="United States"
-                    android:textColor="@color/colorSubscriptionContent"
-                    android:textSize="13sp" />
+                    android:layout_gravity="center"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginEnd="17dp"
+                    android:src="@drawable/ic_check_black_24dp" />
 
-                <RadioButton
-                    android:id="@+id/checkbox_europe"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/subscriptionNewDescription3"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="50dp"
                     android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableLeft="@drawable/checkbox_selector"
-                    android:drawablePadding="10dp"
-                    android:fontFamily="@font/sf_pro_display_semibold"
-                    android:text="Europe"
+                    android:fontFamily="@font/sf_pro_display_regular"
+                    android:text="Optional extended coverage "
                     android:textColor="@color/colorSubscriptionContent"
-                    android:textSize="13sp" />
-            </RadioGroup>
+                    android:textSize="15sp" />
+            </LinearLayout>
 
-        </LinearLayout>
-    </LinearLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/subscriptionNewDescriptionTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/sf_pro_display_semibold"
-        android:text="what you get"
-        android:textAllCaps="true"
-        android:textColor="@color/colorSubscriptionWhatYouGet"
-        android:textSize="17sp" />
+            </Space>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:orientation="horizontal">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="17dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_check_black_24dp" />
+            </View>
 
-        <TextView
-            android:id="@+id/subscriptionNewDescription1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_marginRight="50dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/sf_pro_display_regular"
-            android:text="The annual policy covers your excess insurance for unlimited rentals, with an annual aggregate limit of 9,000 €"
-            android:textColor="@color/colorSubscriptionContent"
-            android:textSize="15sp" />
-    </LinearLayout>
+</LinearLayout>
+        </ScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="22dp"
-            android:layout_marginRight="17dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_check_black_24dp" />
+        <Button
+            android:id="@+id/button_subscribe"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
+            android:layout_marginBottom="58dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_button"
+            android:text="Subscribe"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/subscriptionNewDescription2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/sf_pro_display_regular"
-            android:text="Fast and Easy Claims "
-            android:textColor="@color/colorSubscriptionContent"
-            android:layout_gravity="center"
-            android:textSize="15sp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
-            android:layout_marginEnd="17dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_check_black_24dp" />
-
-        <TextView
-            android:id="@+id/subscriptionNewDescription3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/sf_pro_display_regular"
-            android:text="Optional extended coverage "
-            android:textColor="@color/colorSubscriptionContent"
-            android:layout_gravity="center"
-            android:textSize="15sp" />
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="match_parent">
-
-    </Space>
-    <Button
-        android:id="@+id/button_subscribe"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="27dp"
-        android:layout_marginRight="27dp"
-        android:layout_marginBottom="58dp"
-        android:background="@drawable/gradient_button"
-        android:text="Subscribe"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="17sp" />
 </LinearLayout>

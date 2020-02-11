@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,9 @@ import com.drizzle.carrental.models.MyProfile;
 import com.drizzle.carrental.models.VehicleType;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -85,7 +88,8 @@ public class Utils {
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         String address = "";
@@ -98,7 +102,8 @@ public class Utils {
             String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
         }
         catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         return address;
@@ -188,9 +193,48 @@ public class Utils {
         try {
             return URLEncoder.encode(str, "UTF-8").replace("+", "%20");
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
             return "";
 
+        }
+    }
+
+    public static void appendLog(String text)
+    {
+
+
+        File logFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/" + "eventlog.txt");
+
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+
+
+                //Utils.appendLog(System.err.toString());
+
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 

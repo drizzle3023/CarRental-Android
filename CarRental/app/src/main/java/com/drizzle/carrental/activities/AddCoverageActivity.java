@@ -1,6 +1,7 @@
 package com.drizzle.carrental.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -10,16 +11,32 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.api.VolleyMultipartRequest;
 import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10;
 import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddCoverageActivity extends Activity implements View.OnClickListener {
 
@@ -469,9 +486,12 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
                 break;
 
             case R.id.button_back_to_onboarding:
+                finish();
+                break;
+
             case R.id.button_got_it:
-                setResult(RESULT_OK);
-                super.onBackPressed();
+                setCoverageStateAsCovered();
+                break;
 
             case R.id.button_delete_coverage:
 
@@ -483,6 +503,100 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         }
     }
 
+    ProgressDialog progressDialog;
+    
+    private void showWaitingScreen() {
+
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Please wait...");
+            progressDialog.setCancelable(false);
+        }
+
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
+            e.printStackTrace();
+        }
+
+    }
+
+    private void hideWaitingScreen() {
+
+
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
+            e.printStackTrace();
+        }
+
+
+    }
+    private void setCoverageStateAsCovered() {
+
+        showWaitingScreen();
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(
+                Request.Method.POST, Constants.SERVER_HTTP_URL + "/api/add-coverage",
+                new com.android.volley.Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        hideWaitingScreen();
+
+                        String res = new String(response.data);
+                        try {
+                            JSONObject jsonObject = new JSONObject(res);
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            if (jsonObject.getString("success").equals("true")) {
+
+                                Toast.makeText(AddCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                                Globals.coverage.setId(data.getLong("coverage_id"));
+                                setResult(RESULT_OK);
+
+                                finish();
+
+                            } else {
+                                Toast.makeText(AddCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            //Utils.appendLog(System.err.toString());
+                            e.printStackTrace();
+                            Toast.makeText(AddCoverageActivity.this, getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hideWaitingScreen();
+                Toast.makeText(AddCoverageActivity.this, getResources().getString(R.string.message_no_response), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("access_token", SharedHelper.getKey(AddCoverageActivity.this, "access_token"));
+                params.put("state", String.format("%d", CoverageState.COVERED.getIntValue()));
+
+                return params;
+            }
+
+            @Override
+            protected Map<String, VolleyMultipartRequest.DataPart> getByteData() throws AuthFailureError {
+                Map<String, VolleyMultipartRequest.DataPart> params = new HashMap<>();
+
+
+                return params;
+            }
+        };
+
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(Constants.CONNECTION_TIMEOUT * 1000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(volleyMultipartRequest);
+    }
 
     /**
      * navigate to add new coverage activity

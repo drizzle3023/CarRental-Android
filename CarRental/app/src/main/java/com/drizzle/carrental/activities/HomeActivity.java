@@ -22,6 +22,7 @@ import com.drizzle.carrental.fragments.ProfileFragmentFull;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.fragments.ProfileFragmentEmpty;
 import com.drizzle.carrental.R;
+import com.drizzle.carrental.globals.Utils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -40,19 +41,21 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
+
 
         if (Globals.isLoggedIn) {
 
             if (Globals.profile.getPayState() == 1) {
-                showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
+  //              showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
             } else {
-                showFragment(R.id.frame_coverage, ProfileFragmentFull.class);
+//                showFragment(R.id.frame_coverage, ProfileFragmentFull.class);
                 bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
             }
 
         } else {
-            showFragment(R.id.frame_coverage, CoverageFragmentEmpty.class);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
+    //        showFragment(R.id.frame_coverage, CoverageFragmentEmpty.class);
         }
 
     }
@@ -126,7 +129,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 fragmentTransaction.show(fragment);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         curFragment = fragment;

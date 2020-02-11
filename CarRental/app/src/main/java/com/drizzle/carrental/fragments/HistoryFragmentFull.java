@@ -22,6 +22,7 @@ import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.enumerators.PaymentState;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Claim;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
@@ -80,6 +81,7 @@ public class HistoryFragmentFull extends Fragment {
         try {
             progressDialog.show();
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
 
@@ -101,6 +103,7 @@ public class HistoryFragmentFull extends Fragment {
                     try {
                         progressDialog.dismiss();
                     } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                     }
 
@@ -145,16 +148,24 @@ public class HistoryFragmentFull extends Fragment {
                                     coverage.setActiveState(true);
                                     coverage.setState(coverageState);
 
+                                    try {
+                                        coverage.setId(content.getLong("id"));
+                                    }
+                                    catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
 
                                     try {
                                         coverage.setTitle(content.getString("name"));
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
 
                                     try {
                                         coverage.setLocationAddress(content.getString("address"));
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
 
@@ -164,11 +175,13 @@ public class HistoryFragmentFull extends Fragment {
                                     try {
                                         loc.setLatitude(content.getDouble("latitude"));
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
                                     try {
                                         loc.setLongitude(content.getDouble("longitude"));
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
                                     coverage.setLocation(loc);
@@ -178,6 +191,7 @@ public class HistoryFragmentFull extends Fragment {
                                     try {
                                         company.setId(content.getLong("company_id"));
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
 
@@ -185,6 +199,7 @@ public class HistoryFragmentFull extends Fragment {
                                     try {
                                         calFrom.setTimeInMillis(content.getLong("start_at") * 1000);
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
                                     coverage.setDateFrom(calFrom);
@@ -193,6 +208,7 @@ public class HistoryFragmentFull extends Fragment {
                                     try {
                                         calTo.setTimeInMillis(content.getLong("end_at") * 1000);
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
                                     coverage.setDateTo(calTo);
@@ -205,29 +221,25 @@ public class HistoryFragmentFull extends Fragment {
 
                                     try {
                                         coverage.setUrlVideoVehicle(Constants.MEDIA_PATH_URL + content.getString("video_vehicle"));
-                                    }
-                                    catch (Exception e) {
+                                    } catch (Exception e) {
 
                                     }
 
                                     try {
                                         coverage.setUrlImageVehicle(Constants.MEDIA_PATH_URL + content.getString("image_vehicle"));
-                                    }
-                                    catch (Exception e) {
+                                    } catch (Exception e) {
 
                                     }
 
                                     try {
                                         coverage.setUrlVideoMile(Constants.MEDIA_PATH_URL + content.getString("video_mile"));
-                                    }
-                                    catch (Exception e) {
+                                    } catch (Exception e) {
 
                                     }
 
                                     try {
                                         coverage.setUrlImageMile(Constants.MEDIA_PATH_URL + content.getString("image_mile"));
-                                    }
-                                    catch (Exception e) {
+                                    } catch (Exception e) {
 
                                     }
 
@@ -244,6 +256,7 @@ public class HistoryFragmentFull extends Fragment {
                                     try {
                                         state = content.getInt("state");
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
                                     PaymentState paymentState = PaymentState.values()[state - 1];
@@ -255,12 +268,14 @@ public class HistoryFragmentFull extends Fragment {
                                     try {
                                         amount = content.getDouble("amount");
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
                                     String currency = null;
                                     try {
                                         currency = content.getString("currency");
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
 
@@ -277,6 +292,7 @@ public class HistoryFragmentFull extends Fragment {
                                     try {
                                         calendar.setTimeInMillis(content.getLong("date") * 1000);
                                     } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
                                         e.printStackTrace();
                                     }
                                     payment.setPaymentDate(calendar);
@@ -313,6 +329,7 @@ public class HistoryFragmentFull extends Fragment {
                             Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                     }
@@ -323,6 +340,7 @@ public class HistoryFragmentFull extends Fragment {
                     try {
                         progressDialog.dismiss();
                     } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                     }
                     t.printStackTrace();
@@ -331,6 +349,7 @@ public class HistoryFragmentFull extends Fragment {
             });
 
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
     }

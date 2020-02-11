@@ -247,7 +247,8 @@ public class PaymentActivity extends FragmentActivity {
 
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         Toast.makeText(PaymentActivity.this, "Server connect error", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -263,7 +264,8 @@ public class PaymentActivity extends FragmentActivity {
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 

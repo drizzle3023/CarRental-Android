@@ -75,7 +75,8 @@ public class AppHelper {
 
             videoBytes = baos.toByteArray();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
 
         }
         return videoBytes;

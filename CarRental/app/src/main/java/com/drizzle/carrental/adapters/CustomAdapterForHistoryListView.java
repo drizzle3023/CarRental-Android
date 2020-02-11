@@ -11,11 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.customcomponents.AppCompatImageView_Round_10;
 import com.drizzle.carrental.enumerators.CoverageState;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.models.History;
 import com.squareup.picasso.Picasso;
@@ -51,7 +53,6 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
     private int lastPosition = -1;
 
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
@@ -68,14 +69,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
             convertView = inflater.inflate(R.layout.history_row_list_item, parent, false);
 
             viewHolder.textViewActiveState = convertView.findViewById(R.id.textview_active_state);
-            viewHolder.textViewActiveState.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    Intent intent = new Intent(getContext(), ClaimsActivity.class);
-                    getContext().startActivity(intent);
-                }
-            });
             viewHolder.textViewTitle = convertView.findViewById(R.id.textview_title);
             viewHolder.textViewState = convertView.findViewById(R.id.textview_state);
             viewHolder.textViewPeriod = convertView.findViewById(R.id.textview_period);
@@ -92,6 +86,15 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
             result = convertView;
 
         }
+
+        viewHolder.textViewActiveState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ClaimsActivity.class);
+                intent.putExtra(Constants.INTENT_DATA_COVERAGE_ID, historyModel.getCoverage().getId());
+                getContext().startActivity(intent);
+            }
+        });
 
         Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
@@ -119,8 +122,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
 
                 if (claimCount == 0) {
                     claimDescription = "No claims";
-                }
-                else {
+                } else {
                     claimDescription = String.format("%d claims", claimCount);
                 }
 

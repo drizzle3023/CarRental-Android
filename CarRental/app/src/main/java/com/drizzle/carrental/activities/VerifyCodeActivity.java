@@ -120,7 +120,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
             Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
         }
 
@@ -147,7 +148,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                 responseString = body.string();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -155,6 +157,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
             try {
                 object = new JSONObject(responseString);
             } catch (Exception e) {
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
             }
         } else {
@@ -178,7 +181,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                 try {
                     profileObject = object.getJSONObject("data").getJSONObject("user_profile");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                 }
 
                 if (profileObject != null) {
@@ -186,40 +190,47 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                     try {
                         myProfile.setName(profileObject.getString("name"));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
                     try {
                         myProfile.setEmail(profileObject.getString("email"));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
                     try {
                         myProfile.setMobile(profileObject.getString("mobile"));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
                     try {
                         myProfile.setAddress(profileObject.getString("address"));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
                     try {
                         myProfile.setWorldZone(profileObject.getString("world_zone"));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
 
                     try {
                         myProfile.setPayState(profileObject.getInt("pay_state"));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
 
                     JSONObject vehicleTypeJSON = null;
                     try {
                         vehicleTypeJSON = profileObject.getJSONObject("car_type");
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
 
                     if (vehicleTypeJSON != null) {
@@ -228,33 +239,38 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
                         try {
                             vehicleType.setId(vehicleTypeJSON.getLong("id"));
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         }
 
                         try {
                             vehicleType.setName(vehicleTypeJSON.getString("name"));
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         }
 
 
                         try {
                             vehicleType.setPricePerYearUsd(vehicleTypeJSON.getDouble("price_per_year_usd"));
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         }
 
                         try {
                             vehicleType.setPricePerYearEur(vehicleTypeJSON.getDouble("price_per_year_eur"));
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         }
 
 
                         try {
                             vehicleType.setIconURL(Constants.MEDIA_PATH_URL + vehicleTypeJSON.getString("icon_url"));
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         }
 
                         myProfile.setVehicleType(vehicleType);
@@ -335,7 +351,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
         } catch (Exception e) {
 
             Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -371,7 +388,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
             progressDialog.setCancelable(false);
             progressDialog.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -380,7 +398,8 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 

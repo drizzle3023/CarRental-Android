@@ -54,6 +54,8 @@ public class Constants {
 
     public static final int WORLD_ZONE_EUROPE = 2;
 
+    public static final String INTENT_DATA_COVERAGE_ID = "COVERAGE_ID";
+
     /**
      * Temporary variables
      */

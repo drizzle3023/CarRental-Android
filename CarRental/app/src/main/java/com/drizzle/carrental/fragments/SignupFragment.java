@@ -211,6 +211,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
                 }
             } catch (Exception e) {
 
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
                 //Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
@@ -235,7 +236,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         try {
             progressDialog.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -244,7 +246,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -305,7 +308,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
                 responseString = body.string();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -313,6 +317,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
             try {
                 object = new JSONObject(responseString);
             } catch (Exception e) {
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
             }
         } else {
@@ -354,7 +359,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         } catch (Exception e) {
 
             Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 

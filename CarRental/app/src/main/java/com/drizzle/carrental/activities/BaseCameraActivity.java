@@ -1,5 +1,6 @@
 package com.drizzle.carrental.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -8,10 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.opengl.GLException;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -106,6 +109,46 @@ public class BaseCameraActivity extends AppCompatActivity {
 
     BroadcastReceiver broadcastReceiver;
 
+    boolean cameraPermission = false;
+
+    final int CAMERA_PERMISSION_REQUEST_CODE = 1;
+
+    private boolean checkPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+
+        // request camera permission if it has not been grunted.
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        ) {
+            cameraPermission = false;
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+            return false;
+        }
+        cameraPermission = true;
+
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    cameraPermission = true;
+                    Toast.makeText(BaseCameraActivity.this, "camera permission has been grunted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    cameraPermission = false;
+                    Toast.makeText(BaseCameraActivity.this, "[WARN] camera permission is not grunted.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
+
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreateActivity() {
 
@@ -122,52 +165,59 @@ public class BaseCameraActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
 
-                        if (recordBtn.getText().toString().equals(getString(R.string.app_record))) {
-                            File file = new File(getVideoFilePath());
-                            if (file.exists()) file.delete();
+                if (checkPermission()) {
 
-                            filepath = getVideoFilePath();
-                            cameraRecorder.start(filepath);
-                            recordBtn.setText(getString(R.string.app_record_stop));
-                            recordBtn.setLayoutParams(layoutParams);
-                            recordBtn.setBackgroundResource(R.drawable.record_start_button);
-                            buttonPlay.setVisibility(View.GONE);
-                            fullscreenVideoView.setVisibility(View.GONE);
-                            FrameLayout frameLayout = findViewById(R.id.wrap_view);
-                            frameLayout.setVisibility(View.VISIBLE);
-                            sampleGLView.setVisibility(View.VISIBLE);
+                    switch (event.getAction()) {
 
-                        } else if (recordBtn.getText().toString().equals(getString(R.string.app_record_done))) {
+                        case MotionEvent.ACTION_DOWN:
 
-                            saveFirstFrameOfVideoAsPng();
+                            if (recordBtn.getText().toString().equals(getString(R.string.app_record))) {
+                                File file = new File(getVideoFilePath(BaseCameraActivity.this));
+                                if (file.exists()) file.delete();
 
-                            if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1 || Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
-                                submitCoverageVehicleVideo();
-                            } else {
-                                backToPreviousActivity();
+                                filepath = getVideoFilePath(BaseCameraActivity.this);
+                                cameraRecorder.start(filepath);
+                                recordBtn.setText(getString(R.string.app_record_stop));
+                                recordBtn.setLayoutParams(layoutParams);
+                                recordBtn.setBackgroundResource(R.drawable.record_start_button);
+                                buttonPlay.setVisibility(View.GONE);
+                                fullscreenVideoView.setVisibility(View.GONE);
+                                FrameLayout frameLayout = findViewById(R.id.wrap_view);
+                                frameLayout.setVisibility(View.VISIBLE);
+                                sampleGLView.setVisibility(View.VISIBLE);
+
+                            } else if (recordBtn.getText().toString().equals(getString(R.string.app_record_done))) {
+
+                                saveFirstFrameOfVideoAsPng();
+
+                                if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1 || Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
+                                    submitCoverageVehicleVideo();
+                                } else {
+                                    backToPreviousActivity();
+                                }
                             }
-                        }
 
 
-                        break;
-                    case MotionEvent.ACTION_UP:
+                            break;
+                        case MotionEvent.ACTION_UP:
 
-                        if (cameraRecorder != null) {
-                            try {
-                                cameraRecorder.stop();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            if (cameraRecorder != null) {
+                                try {
+                                    cameraRecorder.stop();
+                                } catch (Exception e) {
+                                    //Utils.appendLog(System.err.toString());
+                                    e.printStackTrace();
+                                }
                             }
-                        }
 
 
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
+
 
                 return true;
 
@@ -210,15 +260,16 @@ public class BaseCameraActivity extends AppCompatActivity {
 
     private void saveFirstFrameOfVideoAsPng() {
 
-        File file = new File(getVideoFilePath());
+        File file = new File(getVideoFilePath(BaseCameraActivity.this));
         if (!file.exists() || !file.canRead() || !file.isFile()) {
             return;
         }
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
-            retriever.setDataSource(getVideoFilePath());
+            retriever.setDataSource(getVideoFilePath(BaseCameraActivity.this));
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
             return;
         }
@@ -226,7 +277,7 @@ public class BaseCameraActivity extends AppCompatActivity {
 
         Bitmap bitmap = retriever.getFrameAtTime();
 
-        File file1 = new File(getImageFilePath());
+        File file1 = new File(getImageFilePath(BaseCameraActivity.this));
         if (file1.exists()) file1.delete();
         try {
             FileOutputStream out = new FileOutputStream(file1);
@@ -234,6 +285,7 @@ public class BaseCameraActivity extends AppCompatActivity {
             out.flush();
             out.close();
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
 
@@ -244,6 +296,7 @@ public class BaseCameraActivity extends AppCompatActivity {
         try {
             progressDialog.show();
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
 
@@ -254,6 +307,7 @@ public class BaseCameraActivity extends AppCompatActivity {
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
     }
@@ -286,17 +340,17 @@ public class BaseCameraActivity extends AppCompatActivity {
                                 Globals.coverage.setId(data.getLong("coverage_id"));
                                 if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
-                                    Globals.coverage.setUrlVideoVehicle("file://" + getVideoFilePath());
-                                    Globals.coverage.setUrlImageVehicle("file://" + getImageFilePath());
+                                    Globals.coverage.setUrlVideoVehicle("file://" + getVideoFilePath(BaseCameraActivity.this));
+                                    Globals.coverage.setUrlImageVehicle("file://" + getImageFilePath(BaseCameraActivity.this));
 
                                 } else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
-                                    Globals.coverage.setUrlVideoMile("file://" + getVideoFilePath());
-                                    Globals.coverage.setUrlImageMile("file://" + getImageFilePath());
+                                    Globals.coverage.setUrlVideoMile("file://" + getVideoFilePath(BaseCameraActivity.this));
+                                    Globals.coverage.setUrlImageMile("file://" + getImageFilePath(BaseCameraActivity.this));
                                 } else {
 
-                                    Globals.selectedClaim.setVideoURL("file://" + getVideoFilePath());
-                                    Globals.selectedClaim.setImageURL("file://" + getImageFilePath());
+                                    Globals.selectedClaim.setVideoURL("file://" + getVideoFilePath(BaseCameraActivity.this));
+                                    Globals.selectedClaim.setImageURL("file://" + getImageFilePath(BaseCameraActivity.this));
                                 }
 
                                 if (data.getString("token_state").equals("valid")) {
@@ -330,6 +384,7 @@ public class BaseCameraActivity extends AppCompatActivity {
 
 
                         } catch (Exception e) {
+                            //Utils.appendLog(System.err.toString());
                             e.printStackTrace();
                             Toast.makeText(BaseCameraActivity.this, getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                         }
@@ -350,7 +405,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                 if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
                     paramObject.put("state", Integer.valueOf(CoverageState.UNCOVERED.getIntValue()).toString());
                 } else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
-                    paramObject.put("state", Integer.valueOf(CoverageState.COVERED.getIntValue()).toString());
+                    paramObject.put("state", Integer.valueOf(CoverageState.UNCOVERED.getIntValue()).toString());
                 }
 
 
@@ -363,17 +418,17 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                 if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
-                    params.put("video-vehicle", new VolleyMultipartRequest.DataPart("video-vehicle" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
-                    params.put("image-vehicle", new VolleyMultipartRequest.DataPart("image-vehicle" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                    params.put("video-vehicle", new VolleyMultipartRequest.DataPart("video-vehicle" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath(BaseCameraActivity.this)), "video/mp4"));
+                    params.put("image-vehicle", new VolleyMultipartRequest.DataPart("image-vehicle" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath(BaseCameraActivity.this)), "image/png"));
 
 
                 } else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
-                    params.put("video-mile", new VolleyMultipartRequest.DataPart("video-mile" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
-                    params.put("image-mile", new VolleyMultipartRequest.DataPart("image-mile" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                    params.put("video-mile", new VolleyMultipartRequest.DataPart("video-mile" + Globals.coverage.getId() + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath(BaseCameraActivity.this)), "video/mp4"));
+                    params.put("image-mile", new VolleyMultipartRequest.DataPart("image-mile" + Globals.coverage.getId() + ".png", AppHelper.getFileDataFromUri(getImageFilePath(BaseCameraActivity.this)), "image/png"));
                 } else {
-                    params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
-                    params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                    params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath(BaseCameraActivity.this)), "video/mp4"));
+                    params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath(BaseCameraActivity.this)), "image/png"));
                 }
                 return params;
             }
@@ -477,9 +532,12 @@ public class BaseCameraActivity extends AppCompatActivity {
                     @Override
                     public void onRecordComplete() {
 
+                        exportMp4ToGallery(getApplicationContext(), filepath);
+
                         try {
                             progressDialog.show();
                         } catch (Exception e) {
+                            //Utils.appendLog(System.err.toString());
                             e.printStackTrace();
                         }
 
@@ -491,10 +549,11 @@ public class BaseCameraActivity extends AppCompatActivity {
                                 try {
                                     progressDialog.hide();
                                 } catch (Exception e) {
+                                    //Utils.appendLog(System.err.toString());
                                     e.printStackTrace();
                                 }
 
-                                File file = new File(getVideoFilePath());
+                                File file = new File(getVideoFilePath(BaseCameraActivity.this));
 
                                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
@@ -512,12 +571,12 @@ public class BaseCameraActivity extends AppCompatActivity {
                                     frameLayout.setVisibility(View.VISIBLE);
                                     sampleGLView.setVisibility(View.VISIBLE);
 
+                                    //Utils.appendLog(System.err.toString());
                                     e.printStackTrace();
                                     return;
                                 }
 
 
-                                exportMp4ToGallery(getApplicationContext(), filepath);
 
 
                                 DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -533,19 +592,21 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                                 fullscreenVideoView.setVisibility(View.VISIBLE);
 
-                                fullscreenVideoView.videoUrl("file://" + getVideoFilePath()).addOnVideoCompletedListener(new OnVideoCompletedListener() {
+                                fullscreenVideoView.videoUrl("file://" + getVideoFilePath(BaseCameraActivity.this)).addOnVideoCompletedListener(new OnVideoCompletedListener() {
                                     @Override
                                     public void onFinished() {
 
                                         try {
                                             sampleGLView.setVisibility(View.GONE);
                                         } catch (Exception e) {
+                                            //Utils.appendLog(System.err.toString());
                                             e.printStackTrace();
                                         }
 
                                         try {
                                             buttonPlay.setVisibility(View.VISIBLE);
                                         } catch (Exception e) {
+                                            //Utils.appendLog(System.err.toString());
                                             e.printStackTrace();
                                         }
 
@@ -553,7 +614,7 @@ public class BaseCameraActivity extends AppCompatActivity {
                                 });
 
                             }
-                        }, 1000);
+                        }, 3000);
                     }
 
                     @Override
@@ -563,7 +624,10 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Exception exception) {
+
+                        exception.printStackTrace();
                         Log.e("CameraRecorder", exception.toString());
+                        //Utils.appendLog("CameraRecorder" + exception.toString());
                     }
 
                     @Override
@@ -633,6 +697,7 @@ public class BaseCameraActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.e("CreateBitmap", "createBitmapFromGLSurface: " + e.getMessage(), e);
+            //Utils.appendLog("CreateBitmap" + "createBitmapFromGLSurface: " + e.getMessage());
             return null;
         }
 
@@ -647,8 +712,10 @@ public class BaseCameraActivity extends AppCompatActivity {
             outStream.close();
 
         } catch (FileNotFoundException e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
     }
@@ -665,25 +732,26 @@ public class BaseCameraActivity extends AppCompatActivity {
     }
 
 
-    public static String getVideoFilePath() {
+    public static String getVideoFilePath(Context context) {
 
         //return getAndroidMoviesFolder().getAbsolutePath() + "/" + new SimpleDateFormat("yyyyMM_dd-HHmmss").format(new Date()) + "cameraRecorder.mp4";
         String filePath;
         if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
-            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.VEHICLE_VIDEO_FILE_NAME;
+            filePath = getAndroidMoviesFolder(context).getAbsolutePath() + "/" + Constants.VEHICLE_VIDEO_FILE_NAME;
         } else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
-            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.MILE_VIDEO_FILE_NAME;
+            filePath = getAndroidMoviesFolder(context).getAbsolutePath() + "/" + Constants.MILE_VIDEO_FILE_NAME;
         } else {
-            filePath = getAndroidMoviesFolder().getAbsolutePath() + "/" + Constants.DAMAGED_VIDEO_FILE_NAME;
+            filePath = getAndroidMoviesFolder(context).getAbsolutePath() + "/" + Constants.DAMAGED_VIDEO_FILE_NAME;
         }
 
         return filePath;
     }
 
-    public static File getAndroidMoviesFolder() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+    public static File getAndroidMoviesFolder(Context context) {
+        //return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        return context.getExternalFilesDir(Environment.DIRECTORY_MOVIES);
     }
 
     private static void exportPngToGallery(Context context, String filePath) {
@@ -694,23 +762,24 @@ public class BaseCameraActivity extends AppCompatActivity {
         context.sendBroadcast(mediaScanIntent);
     }
 
-    public static String getImageFilePath() {
+    public static String getImageFilePath(Context context) {
 
         String filePath;
         if (Constants.isRecordingVehicleOrMileOrDamagedPart == 1) {
 
-            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.VEHICLE_IMAGE_FILE_NAME;
+            filePath = getAndroidImageFolder(context).getAbsolutePath() + "/" + Constants.VEHICLE_IMAGE_FILE_NAME;
         } else if (Constants.isRecordingVehicleOrMileOrDamagedPart == 2) {
 
-            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.MILE_IMAGE_FILE_NAME;
+            filePath = getAndroidImageFolder(context).getAbsolutePath() + "/" + Constants.MILE_IMAGE_FILE_NAME;
         } else {
 
-            filePath = getAndroidImageFolder().getAbsolutePath() + "/" + Constants.DAMAGED_IMAGE_FILE_NAME;
+            filePath = getAndroidImageFolder(context).getAbsolutePath() + "/" + Constants.DAMAGED_IMAGE_FILE_NAME;
         }
         return filePath;
     }
 
-    public static File getAndroidImageFolder() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    public static File getAndroidImageFolder(Context context) {
+        //return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
     }
 }

@@ -15,6 +15,7 @@ import com.drizzle.carrental.R;
 import com.drizzle.carrental.fragments.SignupFragment;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.Utils;
 
 public class SignUpLoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -90,7 +91,8 @@ public class SignUpLoginActivity extends AppCompatActivity implements View.OnCli
                 fragmentTransaction.show(fragment);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         curFragment = fragment;

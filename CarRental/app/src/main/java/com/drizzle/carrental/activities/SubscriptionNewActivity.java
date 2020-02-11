@@ -15,6 +15,7 @@ import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ServiceArea;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.SubscriptionModel;
 import com.drizzle.carrental.models.VehicleType;
 import com.google.gson.Gson;
@@ -267,7 +268,8 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
             progressDialog.setCancelable(false);
             progressDialog.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
 
@@ -278,7 +280,8 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -294,7 +297,8 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                 responseString = body.string();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -302,6 +306,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
             try {
                 object = new JSONObject(responseString);
             } catch (Exception e) {
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
             }
         } else {
@@ -328,7 +333,8 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
                     try {
                         Globals.selectedVehicleType = vehicleTypes.get(0);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
                 }
 
@@ -371,7 +377,8 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         } catch (Exception e) {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 

@@ -157,7 +157,8 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
             paramObject.put("access_token", SharedHelper.getKey(getActivity(), "access_token"));
         } catch (Exception e) {
 
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JsonParser jsonParser = new JsonParser();
@@ -214,7 +215,8 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
                 responseString = body.string();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -222,6 +224,7 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
             try {
                 object = new JSONObject(responseString);
             } catch (Exception e) {
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
             }
         } else {
@@ -262,7 +265,8 @@ public class ProfileFragmentFull extends Fragment implements View.OnClickListene
 
             Toast.makeText(getActivity(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
 
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 

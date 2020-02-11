@@ -16,6 +16,7 @@ import com.drizzle.carrental.adapters.CustomAdapterForClaimListView;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.enumerators.ClaimState;
+import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
@@ -51,6 +52,8 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
     private Button buttonFileAClaim;
     private ListView listView;
     private ImageButton buttonBack;
+
+    private Long coverageId;
 
     private static CustomAdapterForClaimListView adapter;
 
@@ -117,7 +120,14 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
         getControlHandlersAndLinkActions();
 
-        fetchClaimListFromServer();
+        coverageId = getIntent().getLongExtra(Constants.INTENT_DATA_COVERAGE_ID, 0);
+        if (coverageId == 0) {
+            Toast.makeText(this, getString(R.string.coverage_is_not_existing), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            fetchClaimListFromServer(coverageId);
+        }
+
 
     }
 
@@ -134,7 +144,19 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
             case R.id.button_file_a_claim:
                 Globals.selectedClaim = new Claim();
-                navigateToFileAClaimActivity();
+                try {
+                    if (Globals.coverage.getId() > 0 && Globals.coverage.getState() == CoverageState.COVERED) {
+                        navigateToFileAClaimActivity();
+                    }
+                    else {
+                        Toast.makeText(this, getString(R.string.coverage_is_not_existing), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, getString(R.string.coverage_is_not_existing), Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.button_back_to_onboarding:
                 finish();
@@ -167,7 +189,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         }
     }
 
-    private void fetchClaimListFromServer() {
+    private void fetchClaimListFromServer(Long coverageId) {
 
         //prepare restrofit2 request parameters
         JsonObject gSonObject = new JsonObject();
@@ -177,10 +199,11 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         try {
 
             paramObject.put("access_token", SharedHelper.getKey(this, "access_token"));
-            paramObject.put("coverage_id", Globals.coverage.getId());
+            paramObject.put("coverage_id", coverageId);
         } catch (Exception e) {
 
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JsonParser jsonParser = new JsonParser();
@@ -201,7 +224,8 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
             progressDialog.setCancelable(false);
             progressDialog.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -210,7 +234,8 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -225,7 +250,8 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
                 responseString = body.string();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -233,6 +259,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
             try {
                 object = new JSONObject(responseString);
             } catch (Exception e) {
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
             }
         } else {
@@ -348,7 +375,8 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         } catch (Exception e) {
 
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -363,7 +391,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
         if (requestCode == CLAIM_ADD_REQUEST) {
             //if (resultCode == RESULT_OK) {
-            fetchClaimListFromServer();
+            fetchClaimListFromServer(coverageId);
             //}
         }
     }

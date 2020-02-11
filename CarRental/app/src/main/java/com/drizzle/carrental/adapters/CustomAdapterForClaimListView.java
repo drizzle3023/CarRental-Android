@@ -23,6 +23,7 @@ import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Claim;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -60,7 +61,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
                 responseString = body.string();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -68,6 +70,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             try {
                 object = new JSONObject(responseString);
             } catch (Exception e) {
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
             }
         } else {
@@ -104,7 +107,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         } catch (Exception e) {
 
             Toast.makeText(getContext(), R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
         idToBeRemoved = -1;
     }
@@ -151,7 +155,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
             Toast.makeText(getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
         }
 
@@ -174,7 +179,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             progressDialog.setCancelable(false);
             progressDialog.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -183,7 +189,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -209,34 +216,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             viewHolder.imageButtonRemoveClaim = convertView.findViewById(R.id.imagebutton_remove_claim);
             viewHolder.imageViewClaimStatus = convertView.findViewById(R.id.imageview_claim_state);
 
-            viewHolder.imageButtonRemoveClaim.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(mActivity)
-                            .setTitle("Remove Claim")
-                            .setMessage("Are you sure you want to remove this claim?")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                                public void onClick(DialogInterface dialog, int whichButton) {
-
-                                    idToBeRemoved = getItem(position).getId();
-                                    removeClaimFromServer(idToBeRemoved);
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null).show();
-                }
-            });
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Globals.selectedClaim = claim;
-                    Intent intent = new Intent(mActivity, AddClaimActivity.class);
-                    mActivity.startActivityForResult(intent, ClaimsActivity.CLAIM_ADD_REQUEST);
-                }
-            });
             result = convertView;
             convertView.setTag(viewHolder);
 
@@ -246,6 +226,36 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
             result = convertView;
 
         }
+
+        viewHolder.imageButtonRemoveClaim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(mActivity)
+                        .setTitle("Remove Claim")
+                        .setMessage("Are you sure you want to remove this claim?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                idToBeRemoved = getItem(position).getId();
+                                removeClaimFromServer(idToBeRemoved);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
+            }
+        });
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Globals.selectedClaim = claim;
+                Intent intent = new Intent(mActivity, AddClaimActivity.class);
+                mActivity.startActivityForResult(intent, ClaimsActivity.CLAIM_ADD_REQUEST);
+            }
+        });
+
 
         Animation animation = AnimationUtils.loadAnimation(mActivity, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);

@@ -28,6 +28,7 @@ import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.drizzle.carrental.models.Company;
 import com.drizzle.carrental.models.Coverage;
 import com.drizzle.carrental.serializers.ParseCoverage;
@@ -218,6 +219,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         buttonGotIt.setVisibility(View.VISIBLE);
                         layoutLocation.setVisibility(View.GONE);
 
+                        imageButtonStartCoverage.setImageDrawable(null);
                         Picasso picasso = Picasso.get();
                         picasso.invalidate(Globals.coverage.getUrlImageVehicle());
                         picasso.load(Globals.coverage.getUrlImageVehicle()).resize(imageButtonStartCoverage.getWidth(), imageButtonStartCoverage.getHeight()).placeholder(R.drawable.ic_icon_add_coverage).into(imageButtonStartCoverage);
@@ -352,7 +354,9 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         try {
             progressDialog.show();
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
+
         }
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -374,13 +378,12 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     try {
                         progressDialog.dismiss();
                     } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                     }
 
                     try {
                         JSONObject object = new JSONObject(response.body().string());
-
-
 
 
 //                        if (payState == 0) {
@@ -391,6 +394,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                             try {
                                 Globals.profile.setPayState(Integer.parseInt(object.getJSONObject("data").getString("pay_state")));
                             } catch (Exception e) {
+                                //Utils.appendLog(System.err.toString());
                                 e.printStackTrace();
                                 Globals.profile.setPayState(0);
                             }
@@ -468,6 +472,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         }
                     } catch (
                             Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                     }
@@ -488,6 +493,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         } catch (
                 Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
 
@@ -573,7 +579,17 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
      * navigateToClaimsActivity
      */
     private void navigateToClaimsActivity() {
+        long coverageId = 0;
+        try {
+            coverageId = Globals.coverage.getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), getString(R.string.coverage_is_not_existing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(getActivity(), ClaimsActivity.class);
+        intent.putExtra(Constants.INTENT_DATA_COVERAGE_ID, coverageId);
         startActivity(intent);
     }
 
@@ -614,6 +630,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
         try {
             progressDialog.show();
         } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
 
@@ -637,6 +654,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     try {
                         progressDialog.dismiss();
                     } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                     }
 
@@ -655,6 +673,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                         }
                     } catch (
                             Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                     }
@@ -667,6 +686,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                     try {
                         progressDialog.dismiss();
                     } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
                         e.printStackTrace();
                     }
                     t.printStackTrace();
@@ -678,6 +698,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         } catch (
                 Exception e) {
+            //Utils.appendLog(System.err.toString());
             e.printStackTrace();
         }
     }

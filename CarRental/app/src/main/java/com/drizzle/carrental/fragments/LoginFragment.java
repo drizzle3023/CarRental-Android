@@ -76,7 +76,8 @@ public class LoginFragment extends Fragment {
                     try {
                         progressDialog.show();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
 
                     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -97,7 +98,8 @@ public class LoginFragment extends Fragment {
                                 try {
                                     progressDialog.dismiss();
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                                 }
 
                                 try {
@@ -116,7 +118,8 @@ public class LoginFragment extends Fragment {
                                         Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                                     Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -126,7 +129,8 @@ public class LoginFragment extends Fragment {
                                 try {
                                     progressDialog.dismiss();
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                                 }
                                 t.printStackTrace();
                                 Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
@@ -138,7 +142,8 @@ public class LoginFragment extends Fragment {
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
                     }
                 }

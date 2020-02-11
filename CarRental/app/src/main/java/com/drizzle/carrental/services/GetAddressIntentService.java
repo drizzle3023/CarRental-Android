@@ -11,6 +11,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.drizzle.carrental.globals.Utils;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +35,7 @@ public class GetAddressIntentService extends IntentService {
         if (addressResultReceiver == null) {
             Log.e("GetAddressIntentService",
                     "No receiver, not processing the request further");
+            //Utils.appendLog("GetAddressIntentService: No receiver, not processing the request further");
             return;
         }
 
@@ -55,6 +58,7 @@ public class GetAddressIntentService extends IntentService {
                     location.getLongitude(),
                     1);
         } catch (Exception ioException) {
+            //Utils.appendLog("Error in getting address for the location");
             Log.e("", "Error in getting address for the location");
         }
 

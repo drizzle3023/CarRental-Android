@@ -220,7 +220,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JsonParser jsonParser = new JsonParser();
@@ -246,7 +247,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         try {
             progressDialog.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
     }
@@ -257,7 +259,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
 
@@ -275,7 +278,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 responseString = body.string();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -283,6 +287,7 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             try {
                 object = new JSONObject(responseString);
             } catch (Exception e) {
+                //Utils.appendLog(System.err.toString());
                 e.printStackTrace();
             }
         } else {
@@ -369,7 +374,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                 Globals.coverage = new Coverage();
             }
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
     }
 
@@ -415,6 +421,12 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             return;
         }
 
+        String strLatitude = String.format("%f", Globals.coverage.getLocation().getLatitude());
+        String strLongitude = String.format("%f", Globals.coverage.getLocation().getLongitude());
+
+        Toast.makeText(this, strLatitude + ", " + strLongitude, Toast.LENGTH_LONG).show();
+
+
         isGettingCompanyListOrSubmitAction = false;
 
         showWaitingScreen();
@@ -440,7 +452,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                             }
 
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                             Toast.makeText(StartCoverageActivity.this, getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -515,7 +528,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                         getCurrentAddress();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                 }
 
                 break;
@@ -577,7 +591,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                             Globals.coverage.setDateFrom(new GregorianCalendar(year, month, dayOfMonth));
                             textViewStartDate.setText(Globals.coverage.getDateFromString());
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         }
 
                     }
@@ -599,7 +614,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                             try {
                                 Globals.coverage.setDateTo(null);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                             }
 
                             textViewEndDate.setText("");
@@ -612,7 +628,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
                                 buttonDone.setBackgroundResource(R.drawable.active_button);
                                 buttonDone.setEnabled(true);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                             }
 
 

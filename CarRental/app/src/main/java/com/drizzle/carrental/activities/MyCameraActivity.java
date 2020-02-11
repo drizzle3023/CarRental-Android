@@ -26,16 +26,10 @@ public class MyCameraActivity extends BaseCameraActivity {
 
         onCreateActivity();
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-
-        videoWidth = width;
-        videoHeight = height;
-        cameraWidth = height;
-        cameraHeight = width;
+        videoWidth = 720;
+        videoHeight = 1280;
+        cameraWidth = 1280;
+        cameraHeight = 720;
     }
 
 }

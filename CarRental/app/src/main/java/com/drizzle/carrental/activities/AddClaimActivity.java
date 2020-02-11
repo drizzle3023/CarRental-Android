@@ -351,7 +351,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             //   mediaMetadataRetriever.setDataSource(videoPath);
             bitmap = mediaMetadataRetriever.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST);
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
             throw new Throwable("Exception in retriveVideoFrameFromVideo(String videoPath)" + e.getMessage());
         } finally {
             if (mediaMetadataRetriever != null) {
@@ -897,7 +898,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 //            try {
 //                bitmap = retriveVideoFrameFromVideo(claim.getVideoURL());
 //            } catch (Throwable throwable) {
-//                throwable.printStackTrace();
+//                throwabl//Utils.appendLog(System.err.toString());
+//                e.printStackTrace();
 //            }
 //            //Bitmap bitmap = retriveVideoThumbnailFromURL(claim.getVideoURL());
 //            imageViewAnswerTakeVideo.setImageBitmap(Bitmap.createScaledBitmap(bitmap, imageViewAnswerTakeVideo.getWidth(), imageViewAnswerTakeVideo.getHeight(), false));
@@ -1079,7 +1081,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                             try {
                                 object = new JSONObject(responseString);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                             }
                         } else {
 
@@ -1140,7 +1143,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         } catch (Exception e) {
 
                             Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
+                            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                         }
                     }
                 }, new com.android.volley.Response.ErrorListener() {
@@ -1208,13 +1212,13 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                         File file = new File(claim.getVideoURL().substring(urlPrefix.length()));
                         if (file.exists()) {
-                            params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath()), "video/mp4"));
+                            params.put("video", new VolleyMultipartRequest.DataPart("video-claim" + ".mp4", AppHelper.getFileDataFromUri(getVideoFilePath(AddClaimActivity.this)), "video/mp4"));
 
                         }
 
                         File file1 = new File(claim.getImageURL().substring(urlPrefix.length()));
                         if (file1.exists()) {
-                            params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath()), "image/png"));
+                            params.put("image", new VolleyMultipartRequest.DataPart("image-claim" + ".png", AppHelper.getFileDataFromUri(getImageFilePath(AddClaimActivity.this)), "image/png"));
                         }
 
                     }
@@ -1236,7 +1240,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         try {
             progressDialog.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
     }
@@ -1246,7 +1251,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
     }
@@ -1462,10 +1468,11 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
         // request camera permission if it has not been grunted.
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
         ) {
 
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
             return false;
         }
 
@@ -1823,7 +1830,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         textViewAnswerWhenHappened.setText(claim.getDateString());
                         updateViewContent();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
                     }
 
                 }
@@ -1891,8 +1899,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                     claimCurrentStep = ClaimCurrentStep.ANSWERED_TAKE_VIDEO;
                 }
 
-                claim.setImageURL("file://" + BaseCameraActivity.getImageFilePath());
-                claim.setVideoURL("file://" + BaseCameraActivity.getVideoFilePath());
+                claim.setImageURL("file://" + BaseCameraActivity.getImageFilePath(AddClaimActivity.this));
+                claim.setVideoURL("file://" + BaseCameraActivity.getVideoFilePath(AddClaimActivity.this));
                 updateViewContent();
             }
         }

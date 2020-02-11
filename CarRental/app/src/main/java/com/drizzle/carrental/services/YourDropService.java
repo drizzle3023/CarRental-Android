@@ -13,6 +13,7 @@ import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
+import com.drizzle.carrental.globals.Utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -73,7 +74,8 @@ public class YourDropService extends DropInService {
             } else
                 return new CallResult(CallResult.ResultType.ERROR_WITH_MESSAGE, data.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         return new CallResult(CallResult.ResultType.ERROR, "Error");

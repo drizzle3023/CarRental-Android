@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
+import com.drizzle.carrental.globals.Utils;
 
 
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest;
@@ -53,7 +54,8 @@ public class ApiClient {
             multipartUploadRequest.addFileToUpload(filePath, "video-vehicle");
             multipartUploadRequest.addParameter("coverage_id", Globals.coverage.getId().toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            //Utils.appendLog(System.err.toString());
+                e.printStackTrace();
         }
 
         multipartUploadRequest.startUpload();

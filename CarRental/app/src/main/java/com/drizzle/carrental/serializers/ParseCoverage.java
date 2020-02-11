@@ -51,4 +51,7 @@ public class ParseCoverage implements Serializable {
 
     @SerializedName("time_left")
     long remainingTime;
+
+    @SerializedName("cancel_date")
+    double operationDate;
 }

@@ -70,4 +70,6 @@ public class Constants {
 
     public static boolean isHabitSDKReady = false;
 
+    public static boolean needHistoryRefresh = false;
+
 }

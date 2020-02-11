@@ -1,15 +1,12 @@
 package com.drizzle.carrental.models;
 
 import android.location.Location;
-import android.security.keystore.StrongBoxUnavailableException;
 
 import com.drizzle.carrental.enumerators.CoverageState;
 import com.drizzle.carrental.globals.Constants;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import lombok.Getter;
@@ -32,6 +29,8 @@ public class Coverage {
     GregorianCalendar dateFrom;
 
     GregorianCalendar dateTo;
+
+    GregorianCalendar dateOperation;
 
     long remainingTime = 0;
 
@@ -65,6 +64,25 @@ public class Coverage {
 
     }
 
+    public String getDateOperationAsString() {
+
+        String strDate = "";
+
+        if (dateOperation == null) {
+            return strDate;
+        }
+
+        DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        try {
+            strDate = df.format(dateOperation.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return strDate;
+
+    }
+
     public String getDateFromString() {
 
         String strDate = "";
@@ -75,15 +93,14 @@ public class Coverage {
         return strDate;
     }
 
-    public  String getDateToString() {
+    public String getDateToString() {
 
         String strDate = "";
 
         try {
             DateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
             strDate = df.format(dateTo.getTime());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
         }
 
@@ -101,7 +118,7 @@ public class Coverage {
             return strPeriod;
         }
 
-         strPeriod = getDateToString();
+        strPeriod = getDateToString();
 
         if (dateFrom != null && dateTo != null) {
 

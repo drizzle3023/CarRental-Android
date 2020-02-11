@@ -663,6 +663,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                         if (object.getString("success").equals("true")) {
 
+                            Constants.needHistoryRefresh = true;
                             Globals.coverage = new Coverage();
                             updateView();
 

@@ -21,6 +21,7 @@ import com.drizzle.carrental.activities.AddClaimActivity;
 import com.drizzle.carrental.activities.ClaimsActivity;
 import com.drizzle.carrental.api.ApiClient;
 import com.drizzle.carrental.api.ApiInterface;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.globals.SharedHelper;
 import com.drizzle.carrental.globals.Utils;
@@ -87,6 +88,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
 
         try {
             if (object.getString("success").equals("true")) {
+
+                Constants.needHistoryRefresh = true;
 
                 JSONObject data = object.getJSONObject("data");
                 Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();

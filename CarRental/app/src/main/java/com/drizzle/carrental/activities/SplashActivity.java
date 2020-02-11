@@ -81,7 +81,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
 //        return;
 //        load saved api token
-        //SharedHelper.putKey(this, "access_token", "rw955jn0nm1lmvfad79kze3uava8o2gj0atg1bfuz7g5nsb0g7sjy967k2y45csjryym7jfx48hhgmce71nqnzjld5q4ej3scnihl2uydixl6ydqh21qwqkukj5rf7dn");
+        //SharedHelper.putKey(this, "access_token", "l1h451kwwzj9qdggb4c1cffkwuy9ttnynf7x4wdq6cbdsi43dbv58nnzvxnkgqq54vgtt1bqvljjke5g8v44t0uq88dpkd9qqmo615aam4wn2ggleft7ssannzxnuuvn");
 //
         String strAccessToken = SharedHelper.getKey(this, "access_token");
 
@@ -143,7 +143,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
         } catch (Exception e) {
 
             //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
         JsonParser jsonParser = new JsonParser();
@@ -168,7 +168,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
             }
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
         JSONObject object = null;
@@ -210,7 +210,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                     vehicleTypeJSON = profileData.getJSONObject("car_type");
                 } catch (Exception e) {
                     //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                    e.printStackTrace();
                 }
 
                 if (vehicleTypeJSON != null) {
@@ -220,37 +220,36 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                         vehicleType.setId(vehicleTypeJSON.getLong("id"));
                     } catch (Exception e) {
                         //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                        e.printStackTrace();
                     }
 
                     try {
                         vehicleType.setName(vehicleTypeJSON.getString("name"));
                     } catch (Exception e) {
                         //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                        e.printStackTrace();
                     }
 
                     try {
                         vehicleType.setPricePerYearUsd(vehicleTypeJSON.getDouble("price_per_year_usd"));
                     } catch (Exception e) {
                         //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                        e.printStackTrace();
                     }
 
                     try {
                         vehicleType.setPricePerYearEur(vehicleTypeJSON.getDouble("price_per_year_eur"));
                     } catch (Exception e) {
                         //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                        e.printStackTrace();
                     }
 
                     try {
                         vehicleType.setIconURL(Constants.MEDIA_PATH_URL + vehicleTypeJSON.getString("icon_url"));
                     } catch (Exception e) {
                         //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                        e.printStackTrace();
                     }
-
 
 
                     Globals.profile.setVehicleType(vehicleType);
@@ -261,8 +260,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
                     if (myProfile.getWorldZone().equals(getString(R.string.worldzone_us_ab))) {
                         serviceArea.setId(1);
                         serviceArea.setAreaName(getString(R.string.worldzone_us));
-                    }
-                    else if (myProfile.getWorldZone().equals(getString(R.string.worldzone_europe_ab))) {
+                    } else if (myProfile.getWorldZone().equals(getString(R.string.worldzone_europe_ab))) {
                         serviceArea.setId(2);
                         serviceArea.setAreaName(getString(R.string.worldzone_europe));
                     }
@@ -292,10 +290,9 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
                 Utils.setAuthHabitSDK(SplashActivity.this);
 
-                if (Globals.profile.getPayState() == 1 ) {
+                if (Globals.profile.getPayState() == 1) {
                     navigateToHomeActivity();
-                }
-                else if (Globals.profile.getPayState() == 0){
+                } else if (Globals.profile.getPayState() == 0) {
                     navigateToOnboardingActivity();
                 }
 
@@ -313,7 +310,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
             Toast.makeText(this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
             navigateToOnboardingActivity();
             //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

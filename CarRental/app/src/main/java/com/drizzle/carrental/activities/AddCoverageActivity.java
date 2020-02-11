@@ -551,6 +551,8 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
                             if (jsonObject.getString("success").equals("true")) {
 
+                                Constants.needHistoryRefresh = true;
+
                                 Toast.makeText(AddCoverageActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
                                 Globals.coverage.setId(data.getLong("coverage_id"));
                                 setResult(RESULT_OK);

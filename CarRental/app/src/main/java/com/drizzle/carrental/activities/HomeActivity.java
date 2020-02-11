@@ -19,6 +19,7 @@ import com.drizzle.carrental.fragments.CoverageFragmentFull;
 import com.drizzle.carrental.fragments.HistoryFragmentEmpty;
 import com.drizzle.carrental.fragments.HistoryFragmentFull;
 import com.drizzle.carrental.fragments.ProfileFragmentFull;
+import com.drizzle.carrental.globals.Constants;
 import com.drizzle.carrental.globals.Globals;
 import com.drizzle.carrental.fragments.ProfileFragmentEmpty;
 import com.drizzle.carrental.R;
@@ -127,6 +128,9 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             } else {
                 fragment.setArguments(bundle);
                 fragmentTransaction.show(fragment);
+                if (layoutId == R.id.frame_history && Globals.isLoggedIn && Constants.needHistoryRefresh) {
+                    fragment.onResume();
+                }
             }
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());

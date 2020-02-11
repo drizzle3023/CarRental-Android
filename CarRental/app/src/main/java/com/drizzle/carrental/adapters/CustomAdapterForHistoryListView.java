@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.ClaimsActivity;
@@ -91,6 +89,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ClaimsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Constants.INTENT_DATA_COVERAGE_ID, historyModel.getCoverage().getId());
                 getContext().startActivity(intent);
             }
@@ -136,7 +135,13 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
             }
             viewHolder.textViewTitle.setText(historyModel.getCoverage().getTitle());
             viewHolder.textViewState.setText(historyModel.getCoverage().getState().toString());
-            viewHolder.textViewPeriod.setText(historyModel.getCoverage().getPeriod());
+            if (historyModel.getCoverage().getState() == CoverageState.CANCELLED) {
+                viewHolder.textViewPeriod.setText(historyModel.getCoverage().getDateOperationAsString());
+            }
+            else {
+                viewHolder.textViewPeriod.setText(historyModel.getCoverage().getPeriod());
+            }
+
 
             Picasso picasso = Picasso.get();
             picasso.invalidate(historyModel.getCoverage().getUrlImageVehicle());

@@ -243,6 +243,16 @@ public class HistoryFragmentFull extends Fragment {
 
                                     }
 
+                                    GregorianCalendar operationDate = new GregorianCalendar();
+                                    try {
+                                        operationDate.setTimeInMillis((long)content.getDouble("cancel_date"));
+                                    } catch (Exception e) {
+                                        //Utils.appendLog(System.err.toString());
+                                        e.printStackTrace();
+                                    }
+                                    coverage.setDateOperation(operationDate);
+
+
                                     historyModel.setCoverage(coverage);
                                     historyModel.setPaymentOrCoverage(false);
 

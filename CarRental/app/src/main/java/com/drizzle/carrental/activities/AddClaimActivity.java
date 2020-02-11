@@ -352,7 +352,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             bitmap = mediaMetadataRetriever.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST);
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+            e.printStackTrace();
             throw new Throwable("Exception in retriveVideoFrameFromVideo(String videoPath)" + e.getMessage());
         } finally {
             if (mediaMetadataRetriever != null) {
@@ -1082,7 +1082,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                                 object = new JSONObject(responseString);
                             } catch (Exception e) {
                                 //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                                e.printStackTrace();
                             }
                         } else {
 
@@ -1098,6 +1098,8 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                         try {
                             if (object.getString("success").equals("true")) {
+
+                                Constants.needHistoryRefresh = true;
 
                                 JSONObject data = object.getJSONObject("data");
                                 Toast.makeText(AddClaimActivity.this, data.getString("message"), Toast.LENGTH_SHORT).show();
@@ -1144,7 +1146,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                             Toast.makeText(AddClaimActivity.this, R.string.message_no_response, Toast.LENGTH_SHORT).show();
                             //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                            e.printStackTrace();
                         }
                     }
                 }, new com.android.volley.Response.ErrorListener() {
@@ -1241,7 +1243,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             progressDialog.show();
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
     }
@@ -1252,7 +1254,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
             progressDialog.dismiss();
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
     }
@@ -1831,7 +1833,7 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
                         updateViewContent();
                     } catch (Exception e) {
                         //Utils.appendLog(System.err.toString());
-                e.printStackTrace();
+                        e.printStackTrace();
                     }
 
                 }

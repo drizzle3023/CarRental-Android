@@ -1,6 +1,7 @@
 package com.drizzle.carrental.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.drizzle.carrental.R;
 import com.drizzle.carrental.activities.OnboardingActivity;
 import com.drizzle.carrental.activities.SubscriptionNewActivity;
+import com.drizzle.carrental.globals.Globals;
 
 public class CoverageFragmentEmpty extends Fragment implements View.OnClickListener {
 
@@ -38,6 +40,10 @@ public class CoverageFragmentEmpty extends Fragment implements View.OnClickListe
 
         buttonInformation = view.findViewById(R.id.button_information);
         buttonInformation.setOnClickListener(this);
+
+        buttonContact = view.findViewById(R.id.coverageButtonContact);
+        buttonContact.setOnClickListener(this);
+
         return view;
     }
 
@@ -54,7 +60,18 @@ public class CoverageFragmentEmpty extends Fragment implements View.OnClickListe
                 navigateToSubscriptionNewActivity();
                 break;
 
+            case R.id.coverageButtonContact:
+
+                callHabit();
+                break;
         }
+    }
+
+    private void callHabit() {
+
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + Globals.habitOfficeNumber));
+        startActivity(intent);
     }
 
     private void navigateToSubscriptionNewActivity() {

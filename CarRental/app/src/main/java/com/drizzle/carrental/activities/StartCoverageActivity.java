@@ -66,6 +66,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -238,12 +239,6 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
     private void showWaitingScreen() {
 
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
-        }
-
         try {
             progressDialog.show();
         } catch (Exception e) {
@@ -332,14 +327,22 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                         for (Iterator i = keys; i.hasNext(); ) {
 
-                            if (i.next().equals("refresh_token")) {
-                                String newPayload = data.get("refresh_token").toString();
-                                String newToken = data.getString("access_token");
+                            if (i.next().equals("refresh_user")) {
 
-                                SharedHelper.putKey(StartCoverageActivity.this, "access_token", newToken);
-                                SharedHelper.putKey(StartCoverageActivity.this, "payload", newPayload);
+                                try {
+                                    JSONObject refreshUserObject = data.getJSONObject("refresh_user");
 
-                                Utils.setAuthHabitSDK(StartCoverageActivity.this);
+                                    String newPayload = refreshUserObject.toString();
+                                    String newToken = refreshUserObject.getString("access_token");
+
+                                    SharedHelper.putKey(StartCoverageActivity.this, "access_token", newToken);
+                                    SharedHelper.putKey(StartCoverageActivity.this, "payload", newPayload);
+                                }
+                                catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                //Utils.setAuthHabitSDK(SplashActivity.this);
                             }
                         }
                     }
@@ -421,8 +424,8 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
             return;
         }
 
-        String strLatitude = String.format("%f", Globals.coverage.getLocation().getLatitude());
-        String strLongitude = String.format("%f", Globals.coverage.getLocation().getLongitude());
+        String strLatitude = Double.toString(Globals.coverage.getLocation().getLatitude());
+        String strLongitude = Double.toString(Globals.coverage.getLocation().getLongitude());
 
         Toast.makeText(this, strLatitude + ", " + strLongitude, Toast.LENGTH_LONG).show();
 
@@ -473,14 +476,14 @@ public class StartCoverageActivity extends AppCompatActivity implements View.OnC
 
                 params.put("name", Utils.encodeAsUTF8(selectedCompany.getName()));
 
-                params.put("latitude", String.format("%f", Globals.coverage.getLocation().getLatitude()));
-                params.put("longitude", String.format("%f", Globals.coverage.getLocation().getLongitude()));
+                params.put("latitude", Double.toString(Globals.coverage.getLocation().getLatitude()));
+                params.put("longitude", Double.toString(Globals.coverage.getLocation().getLongitude()));
                 params.put("address", Utils.encodeAsUTF8(Globals.coverage.getLocationAddress()));
 
-                params.put("company_id", String.format("%d", selectedCompany.getId()));
-                params.put("start_at", String.format("%d", Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
-                params.put("end_at", String.format("%d", Globals.coverage.getDateTo().getTimeInMillis() / 1000 + 3600 * 24 - 1));
-                params.put("state", String.format("%d", CoverageState.UNCOVERED.getIntValue()));
+                params.put("company_id", Long.toString( selectedCompany.getId()));
+                params.put("start_at", Long.toString( Globals.coverage.getDateFrom().getTimeInMillis() / 1000));
+                params.put("end_at", Long.toString(Globals.coverage.getDateTo().getTimeInMillis() / 1000 + 3600 * 24 - 1));
+                params.put("state", Integer.toString(CoverageState.UNCOVERED.getIntValue()));
 
                 return params;
             }

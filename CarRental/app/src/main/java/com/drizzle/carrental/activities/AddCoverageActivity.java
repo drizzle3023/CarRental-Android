@@ -88,6 +88,8 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
     private Coverage coverage = new Coverage();
 
+    ProgressDialog progressDialog;
+
     /**
      * Temporary variables for state
      */
@@ -415,10 +417,13 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
 
         updateView();
 
-
     }
 
     private void initVariables() {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
         if (Globals.coverage == null) {
             coverageCurrentStep = CoverageCurrentStep.NEW;
@@ -503,15 +508,9 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
         }
     }
 
-    ProgressDialog progressDialog;
+
     
     private void showWaitingScreen() {
-
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
-        }
 
         try {
             progressDialog.show();
@@ -581,7 +580,7 @@ public class AddCoverageActivity extends Activity implements View.OnClickListene
                 Map<String, String> params = new HashMap<>();
 
                 params.put("access_token", SharedHelper.getKey(AddCoverageActivity.this, "access_token"));
-                params.put("state", String.format("%d", CoverageState.COVERED.getIntValue()));
+                params.put("state", Integer.toString( CoverageState.COVERED.getIntValue()));
 
                 return params;
             }

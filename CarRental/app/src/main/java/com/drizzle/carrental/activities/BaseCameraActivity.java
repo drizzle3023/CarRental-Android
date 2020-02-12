@@ -34,6 +34,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.ListenableWorker;
 
+import com.adyen.checkout.base.component.BaseActionComponent;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -359,14 +360,22 @@ public class BaseCameraActivity extends AppCompatActivity {
 
                                     for (Iterator i = keys; i.hasNext(); ) {
 
-                                        if (i.next().equals("refresh_token")) {
-                                            String newPayload = data.get("refresh_token").toString();
-                                            String newToken = data.getString("access_token");
+                                        if (i.next().equals("refresh_user")) {
 
-                                            SharedHelper.putKey(BaseCameraActivity.this, "access_token", newToken);
-                                            SharedHelper.putKey(BaseCameraActivity.this, "payload", newPayload);
+                                            try {
+                                                JSONObject refreshUserObject = data.getJSONObject("refresh_user");
 
-                                            Utils.setAuthHabitSDK(BaseCameraActivity.this);
+                                                String newPayload = refreshUserObject.toString();
+                                                String newToken = refreshUserObject.getString("access_token");
+
+                                                SharedHelper.putKey(BaseCameraActivity.this, "access_token", newToken);
+                                                SharedHelper.putKey(BaseCameraActivity.this, "payload", newPayload);
+                                            }
+                                            catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            //Utils.setAuthHabitSDK(SplashActivity.this);
                                         }
                                     }
                                 }
@@ -569,10 +578,14 @@ public class BaseCameraActivity extends AppCompatActivity {
                                     fullscreenVideoView.setVisibility(View.GONE);
                                     FrameLayout frameLayout = findViewById(R.id.wrap_view);
                                     frameLayout.setVisibility(View.VISIBLE);
-                                    sampleGLView.setVisibility(View.VISIBLE);
 
-                                    //Utils.appendLog(System.err.toString());
-                                    e.printStackTrace();
+                                    try {
+                                        sampleGLView.setVisibility(View.VISIBLE);
+                                    }
+                                    catch (Exception e1) {
+                                        e1.printStackTrace();;
+                                    }
+
                                     return;
                                 }
 

@@ -8,6 +8,7 @@ import com.drizzle.carrental.globals.Constants;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -114,7 +115,7 @@ public class Coverage {
 
         if (remainingTime != 0) {
 
-            strPeriod = String.format("%dd %dh %dm", remainingTime / 86400, (remainingTime % 86400) / 3600, (remainingTime % 3600) / 60);
+            strPeriod = String.format(Locale.getDefault(),"%dd %dh %dm", remainingTime / 86400, (remainingTime % 86400) / 3600, (remainingTime % 3600) / 60);
             return strPeriod;
         }
 
@@ -128,7 +129,7 @@ public class Coverage {
 
             long remaining = (timeStampTo - timeStampFrom) / 1000;
 
-            strPeriod = String.format("%dd %dh %dm", remaining / 86400, (remaining % 86400) / 3600, (remaining % 3600) / 60);
+            strPeriod = String.format(Locale.getDefault(), "%dd %dh %dm", remaining / 86400, (remaining % 86400) / 3600, (remaining % 3600) / 60);
         }
 
         return strPeriod;

@@ -53,6 +53,10 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
 
         progressDialog = new ProgressDialog(this);
 
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+
+
         buttonBack = findViewById(R.id.button_back_to_onboarding);
 
         verifyButton = findViewById(R.id.button_verify);
@@ -384,8 +388,7 @@ public class VerifyCodeActivity extends Activity implements View.OnClickListener
     private void showWaitingScreen() {
 
         try {
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
+
             progressDialog.show();
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());

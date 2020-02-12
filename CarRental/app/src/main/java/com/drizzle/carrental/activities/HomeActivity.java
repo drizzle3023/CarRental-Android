@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -43,22 +44,29 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
 
+        if (savedInstanceState == null) {
 
-        if (Globals.isLoggedIn) {
+            Log.d("tiny-debug()", "onCreate: HomeActivity");
+            if (Globals.isLoggedIn) {
 
-            if (Globals.profile.getPayState() == 1) {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
-  //              showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
-            } else {
+                Log.d("tiny-debug()", "onCreate: isLoggedIn");
+                if (Globals.profile.getPayState() == 1) {
+                    Log.d("tiny-debug()", "onCreate: PayState = 1");
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
+                    //              showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
+                } else {
+                    Log.d("tiny-debug()", "onCreate: PayState = 0");
 //                showFragment(R.id.frame_coverage, ProfileFragmentFull.class);
-                bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
+                }
+
+            } else {
+
+                Log.d("tiny-debug()", "onCreate: isLoggedInFalse");
+                bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
+                //        showFragment(R.id.frame_coverage, CoverageFragmentEmpty.class);
             }
-
-        } else {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_coverage);
-    //        showFragment(R.id.frame_coverage, CoverageFragmentEmpty.class);
         }
-
     }
 
     @Override
@@ -66,26 +74,38 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         if (Globals.isLoggedIn) {
 
+            Log.d("tiny-debug()", "onNavigationItemSelected: Globals.isLoggedIn = 1");
             if (menuItem.getItemId() == R.id.navigation_history) {
+                Log.d("tiny-debug()", "onNavigationItemSelected: R.id.navigation_history");
                 showFragment(R.id.frame_history, HistoryFragmentFull.class);
             } else if (menuItem.getItemId() == R.id.navigation_coverage) {
+                Log.d("tiny-debug()", "onNavigationItemSelected: R.id.navigation_coverage");
                 if (Globals.profile.getPayState() == 1) {
 
+                    Log.d("tiny-debug()", "onNavigationItemSelected: R.id.navigation_coverage : PayState = 1");
                     showFragment(R.id.frame_coverage, CoverageFragmentFull.class);
                 } else {
+
+                    Log.d("tiny-debug()", "onNavigationItemSelected: R.id.navigation_coverage : PayState = 0");
                     showFragment(R.id.frame_coverage, CoverageFragmentEmpty.class);
                 }
             } else if (menuItem.getItemId() == R.id.navigation_profile) {
+
+                Log.d("tiny-debug()", "onNavigationItemSelected: R.id.navigation_profile");
                 showFragment(R.id.frame_profile, ProfileFragmentFull.class);
             }
 
         } else {
 
+            Log.d("tiny-debug()", "onNavigationItemSelected: Globals.isLoggedIn = false");
             if (menuItem.getItemId() == R.id.navigation_history) {
+                Log.d("tiny-debug()", "onNavigationItemSelected: menuItem.getItemId() == R.id.navigation_history");
                 showFragment(R.id.frame_history, HistoryFragmentEmpty.class);
             } else if (menuItem.getItemId() == R.id.navigation_coverage) {
+                Log.d("tiny-debug()", "onNavigationItemSelected: menuItem.getItemId() == R.id.navigation_coverage");
                 showFragment(R.id.frame_coverage, CoverageFragmentEmpty.class);
             } else if (menuItem.getItemId() == R.id.navigation_profile) {
+                Log.d("tiny-debug()", "onNavigationItemSelected: menuItem.getItemId() == R.id.navigation_profile");
                 showFragment(R.id.frame_profile, ProfileFragmentEmpty.class);
             }
 
@@ -106,7 +126,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         if (fragClass == null)
             return;
 
-        if (curFragment != null && fragClass.isInstance(curFragment))
+        if (fragClass.isInstance(curFragment))
             return;
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -124,7 +144,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             if (fragment == null) {
                 fragment = (Fragment) fragClass.newInstance();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(layoutId, fragment, fragClass.toString());
+                fragmentTransaction.replace(layoutId, fragment, fragClass.toString());
             } else {
                 fragment.setArguments(bundle);
                 fragmentTransaction.show(fragment);

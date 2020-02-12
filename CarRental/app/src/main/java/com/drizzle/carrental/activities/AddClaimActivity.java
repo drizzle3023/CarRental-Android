@@ -1114,14 +1114,22 @@ public class AddClaimActivity extends AppCompatActivity implements View.OnClickL
 
                                     for (Iterator i = keys; i.hasNext(); ) {
 
-                                        if (i.next().equals("refresh_token")) {
-                                            String newPayload = data.get("refresh_token").toString();
-                                            String newToken = data.getString("access_token");
+                                        if (i.next().equals("refresh_user")) {
 
-                                            SharedHelper.putKey(AddClaimActivity.this, "access_token", newToken);
-                                            SharedHelper.putKey(AddClaimActivity.this, "payload", newPayload);
+                                            try {
+                                                JSONObject refreshUserObject = data.getJSONObject("refresh_user");
 
-                                            Utils.setAuthHabitSDK(AddClaimActivity.this);
+                                                String newPayload = refreshUserObject.toString();
+                                                String newToken = refreshUserObject.getString("access_token");
+
+                                                SharedHelper.putKey(AddClaimActivity.this, "access_token", newToken);
+                                                SharedHelper.putKey(AddClaimActivity.this, "payload", newPayload);
+                                            }
+                                            catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            //Utils.setAuthHabitSDK(SplashActivity.this);
                                         }
                                     }
                                 }

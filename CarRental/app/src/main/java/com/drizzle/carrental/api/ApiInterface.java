@@ -70,5 +70,9 @@ public interface ApiInterface {
     @POST("api/cancel-coverage")
     Call<ResponseBody> cancelCoverage(@Body JsonObject body);
 
+    @Headers("Content-Type: application/json")
+    @POST("api/confirm-expired-coverage")
+    Call<ResponseBody> confirmExpiredCoverage(@Body JsonObject body);
+
 
 }

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,8 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
     private ImageButton imageButtonRemoveCoverage;
 
+    private ImageButton imageButtonContact;
+
     private boolean firstFlag = true;
 
     ProgressDialog progressDialog;
@@ -115,6 +118,9 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
         imageButtonRemoveCoverage = view.findViewById(R.id.imagebutton_remove_coverage);
         imageButtonRemoveCoverage.setOnClickListener(this);
+
+        imageButtonContact = view.findViewById(R.id.coverageButtonContact);
+        imageButtonContact.setOnClickListener(this);
 
         imageButtonStartCoverage.setOnClickListener(this);
         buttonClaims.setOnClickListener(this);
@@ -523,7 +529,7 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
 
                 if (Globals.coverage == null) {
                     navigateToAddCoverageActivity();
-                } else if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0 && Globals.coverage.getState() == CoverageState.COVERED) {
+                } else if (Globals.coverage.getId() != null && Globals.coverage.getId() > 0 && (Globals.coverage.getState() == CoverageState.COVERED || Globals.coverage.getState() == CoverageState.EXPIRED)) {
                     Toast.makeText(getActivity(), "Coverage already exists.", Toast.LENGTH_SHORT).show();
                 } else {
                     navigateToAddCoverageActivity();
@@ -532,8 +538,10 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.button_got_it:
-                Globals.coverage = new Coverage();
-                updateView();
+
+                confirmCoverageExpired();
+//                Globals.coverage = new Coverage();
+//                updateView();
                 //navigateToAddCoverageActivity();
                 break;
             case R.id.button_claims:
@@ -559,11 +567,110 @@ public class CoverageFragmentFull extends Fragment implements View.OnClickListen
             case R.id.imagebutton_cover_theft:
             case R.id.imagebutton_lostkeys:
 
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Notification")
-                        .setMessage("Help is on the way")
-                        .setPositiveButton(android.R.string.yes, null).show();
+                try {
+                    if (Globals.coverage.getState() == CoverageState.COVERED) {
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Notification")
+                                .setMessage("Help is on the way")
+                                .setPositiveButton(android.R.string.yes, null).show();
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
 
+            case R.id.coverageButtonContact:
+
+                callHabit();
+                break;
+
+
+        }
+    }
+
+    private void callHabit() {
+
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + Globals.habitOfficeNumber));
+        startActivity(intent);
+    }
+
+    private void confirmCoverageExpired() {
+
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            //Utils.appendLog(System.err.toString());
+            e.printStackTrace();
+        }
+
+
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+
+        JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject paramObject = new JSONObject();
+
+            paramObject.put("access_token", SharedHelper.getKey(getActivity(), "access_token"));
+            paramObject.put("coverage_id", Globals.coverage.getId());
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(paramObject.toString());
+
+            apiInterface.confirmExpiredCoverage(gsonObject).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        JSONObject object = new JSONObject(response.body().string());
+
+                        if (object.getString("success").equals("true")) {
+
+                            Globals.coverage = new Coverage();
+                            updateView();
+
+
+                        } else {
+
+                            JSONObject data = object.getJSONObject("data");
+                            Toast.makeText(getContext(), data.getString("message"), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                    }
+
+//                    updateView();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        //Utils.appendLog(System.err.toString());
+                        e.printStackTrace();
+                    }
+                    t.printStackTrace();
+                    Toast.makeText(getContext(), "Server connect error", Toast.LENGTH_SHORT).show();
+
+//                    updateView();
+                }
+            });
+
+        } catch (
+                Exception e) {
+            //Utils.appendLog(System.err.toString());
+            e.printStackTrace();
         }
     }
 

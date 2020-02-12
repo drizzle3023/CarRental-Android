@@ -80,8 +80,7 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 //        startActivityForResult(intent, 1);
 
 //        return;
-//        load saved api token
-        //SharedHelper.putKey(this, "access_token", "l1h451kwwzj9qdggb4c1cffkwuy9ttnynf7x4wdq6cbdsi43dbv58nnzvxnkgqq54vgtt1bqvljjke5g8v44t0uq88dpkd9qqmo615aam4wn2ggleft7ssannzxnuuvn");
+//        load saved api tokens
 //
         String strAccessToken = SharedHelper.getKey(this, "access_token");
 
@@ -274,12 +273,20 @@ public class SplashActivity extends Activity implements Callback<ResponseBody> {
 
                     for (Iterator i = keys; i.hasNext(); ) {
 
-                        if (i.next().equals("refresh_token")) {
-                            String newPayload = data.get("refresh_token").toString();
-                            String newToken = data.getString("access_token");
+                        if (i.next().equals("refresh_user")) {
 
-                            SharedHelper.putKey(SplashActivity.this, "access_token", newToken);
-                            SharedHelper.putKey(SplashActivity.this, "payload", newPayload);
+                            try {
+                                JSONObject refreshUserObject = data.getJSONObject("refresh_user");
+
+                                String newPayload = refreshUserObject.toString();
+                                String newToken = refreshUserObject.getString("access_token");
+
+                                SharedHelper.putKey(SplashActivity.this, "access_token", newToken);
+                                SharedHelper.putKey(SplashActivity.this, "payload", newPayload);
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                             //Utils.setAuthHabitSDK(SplashActivity.this);
                         }

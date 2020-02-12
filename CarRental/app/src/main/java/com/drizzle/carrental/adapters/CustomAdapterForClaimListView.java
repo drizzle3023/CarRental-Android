@@ -141,6 +141,8 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
         this.mActivity = activity;
 
         progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
     }
 
@@ -178,8 +180,7 @@ public class CustomAdapterForClaimListView extends ArrayAdapter<Claim> implement
     private void showWaitingScreen() {
 
         try {
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
+
             progressDialog.show();
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());

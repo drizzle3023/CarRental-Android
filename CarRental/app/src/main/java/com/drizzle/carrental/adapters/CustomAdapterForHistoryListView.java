@@ -21,6 +21,7 @@ import com.drizzle.carrental.models.History;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
 
@@ -122,7 +123,7 @@ public class CustomAdapterForHistoryListView extends ArrayAdapter<History> {
                 if (claimCount == 0) {
                     claimDescription = "No claims";
                 } else {
-                    claimDescription = String.format("%d claims", claimCount);
+                    claimDescription = String.format(Locale.getDefault(), "%d claims", claimCount);
                 }
 
                 viewHolder.textViewActiveState.setText(claimDescription);

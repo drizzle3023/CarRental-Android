@@ -106,6 +106,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
         getControlHandlersAndLinkActions(view);
 
         progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
         updateView();
 
@@ -231,8 +233,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener, Ca
 
     private void showWaitingScreen() {
 
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
+
         try {
             progressDialog.show();
         } catch (Exception e) {

@@ -62,6 +62,8 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
         setContentView(R.layout.activity_subscription_new);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
         getControlHandlersAndLinkActions();
 
@@ -115,6 +117,14 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
             textViewPrice.setText(getString(R.string.message_service_is_not_defined));
             return;
         }
+
+        if (Globals.selectedVehicleType == null) {
+
+            Toast.makeText(this, getString(R.string.message_vehicletype_is_not_defined), Toast.LENGTH_SHORT).show();
+            textViewPrice.setText(getString(R.string.message_vehicletype_is_not_defined));
+            return;
+        }
+
         if (Globals.selectedServiceArea.getAreaName().equals(getString(R.string.worldzone_us))) {
 
             textViewPrice.setText(df.format(Globals.selectedVehicleType.getPricePerYearUsd()) + getResources().getString(R.string.usd_character) + " / per year");
@@ -264,8 +274,7 @@ public class SubscriptionNewActivity extends Activity implements AdapterView.OnI
 
 
         try {
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
+
             progressDialog.show();
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());

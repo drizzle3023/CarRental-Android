@@ -117,6 +117,8 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
         setContentView(R.layout.activity_claims);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
         getControlHandlersAndLinkActions();
 
@@ -220,8 +222,7 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
     private void showWaitingScreen() {
 
         try {
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
+
             progressDialog.show();
         } catch (Exception e) {
             //Utils.appendLog(System.err.toString());
@@ -342,14 +343,22 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
                     for (Iterator i = keys; i.hasNext(); ) {
 
-                        if (i.next().equals("refresh_token")) {
-                            String newPayload = data.get("refresh_token").toString();
-                            String newToken = data.getString("access_token");
+                        if (i.next().equals("refresh_user")) {
 
-                            SharedHelper.putKey(ClaimsActivity.this, "access_token", newToken);
-                            SharedHelper.putKey(ClaimsActivity.this, "payload", newPayload);
+                            try {
+                                JSONObject refreshUserObject = data.getJSONObject("refresh_user");
 
-                            Utils.setAuthHabitSDK(ClaimsActivity.this);
+                                String newPayload = refreshUserObject.toString();
+                                String newToken = refreshUserObject.getString("access_token");
+
+                                SharedHelper.putKey(ClaimsActivity.this, "access_token", newToken);
+                                SharedHelper.putKey(ClaimsActivity.this, "payload", newPayload);
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            //Utils.setAuthHabitSDK(SplashActivity.this);
                         }
                     }
                 }
@@ -391,7 +400,12 @@ public class ClaimsActivity extends Activity implements View.OnClickListener, Ca
 
         if (requestCode == CLAIM_ADD_REQUEST) {
             //if (resultCode == RESULT_OK) {
-            fetchClaimListFromServer(coverageId);
+            try {
+                fetchClaimListFromServer(Globals.coverage.getId());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             //}
         }
     }

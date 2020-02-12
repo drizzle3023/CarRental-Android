@@ -33,4 +33,6 @@ public class Globals {
 
     public static Claim selectedClaim = new Claim();
 
+    public static String habitOfficeNumber = "+351911099976";
+
 }
